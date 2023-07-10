@@ -32,31 +32,31 @@ abstract class DataflowGraphNode implements Disposable {
     final selfChanged = buildSelf();
     if (!selfChanged) return;
 
-    /*
-    // TODO only build dependents when buildSelf returns true,
-    //  and only gc nodes when depenency changes
-
-    final disposable = <_DataflowGraphNode>{};
-
-    buildOrder.reversed.where((node) {
-      final dependentsAllDisposable =
-          node.dependents.every(disposable.contains);
-      return node.isSuperPure && dependentsAllDisposable;
-    }).forEach(disposable.add);
-
-    return disposable;
-    */
-
-    // Garbage collect all possible dependents and then build the rest
-    final buildOrder = garbageCollectDisposableNodes(
-      createBuildOrder().skip(1).toList(),
-    );
+    // Build or garbage collect (dispose) all remaining nodes
+    // (We use skip(1) to avoid building this node twice)
+    final buildOrder = _createBuildOrder().skip(1).toList();
+    final disposableNodes = _getDisposableNodesFromBuildOrder(buildOrder);
+    final changedNodes = {this};
     for (final node in buildOrder) {
-      node.buildSelf();
+      final haveDepsChanged = node._dependencies.any(changedNodes.contains);
+      if (!haveDepsChanged) continue;
+
+      if (disposableNodes.contains(node)) {
+        // Note: dependency/dependent relationships will be after this,
+        // since we are disposing all dependents in the build order,
+        // because we are adding this node to changedNodes
+        node.dispose();
+        changedNodes.add(node);
+      } else {
+        final didNodeChange = node.buildSelf();
+        if (didNodeChange) {
+          changedNodes.add(node);
+        }
+      }
     }
   }
 
-  List<DataflowGraphNode> createBuildOrder() {
+  List<DataflowGraphNode> _createBuildOrder() {
     // We need some more information alongside of each node
     // in order to do the topological sort:
     // - False is for the first visit, which adds all deps to be visited,
@@ -85,20 +85,17 @@ abstract class DataflowGraphNode implements Disposable {
     return buildOrderStack.reversed.toList();
   }
 
-  static Iterable<DataflowGraphNode> garbageCollectDisposableNodes(
+  static Set<DataflowGraphNode> _getDisposableNodesFromBuildOrder(
     List<DataflowGraphNode> buildOrder,
   ) {
-    final nonDisposable = <DataflowGraphNode>[];
+    final disposable = <DataflowGraphNode>{};
 
-    for (final node in buildOrder.reversed) {
-      final isDisposable = node.isSuperPure && node._dependents.isEmpty;
-      if (isDisposable) {
-        node.dispose();
-      } else {
-        nonDisposable.add(node);
-      }
-    }
+    buildOrder.reversed.where((node) {
+      final dependentsAllDisposable =
+          node._dependents.every(disposable.contains);
+      return node.isSuperPure && dependentsAllDisposable;
+    }).forEach(disposable.add);
 
-    return nonDisposable.reversed;
+    return disposable;
   }
 }

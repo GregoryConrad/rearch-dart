@@ -115,6 +115,116 @@ void main() {
     expect(states, equals([1, 2, 3, 5, 6, 7]));
   });
 
+  test('== check skips unneeded rebuilds', () {
+    final builds = <Capsule<Object?>, int>{};
+
+    (int, void Function(int)) stateful(CapsuleHandle use) {
+      builds.update(stateful, (count) => count + 1, ifAbsent: () => 1);
+      return use.state(0);
+    }
+
+    int unchangingSuperPureDep(CapsuleHandle use) {
+      builds.update(
+        unchangingSuperPureDep,
+        (count) => count + 1,
+        ifAbsent: () => 1,
+      );
+      use(stateful);
+      return 0;
+    }
+
+    int unchangingWatcher(CapsuleHandle use) {
+      builds.update(
+        unchangingWatcher,
+        (count) => count + 1,
+        ifAbsent: () => 1,
+      );
+      return use(unchangingSuperPureDep);
+    }
+
+    int changingSuperPureDep(CapsuleHandle use) {
+      builds.update(
+        changingSuperPureDep,
+        (count) => count + 1,
+        ifAbsent: () => 1,
+      );
+      return use(stateful).$1;
+    }
+
+    int changingWatcher(CapsuleHandle use) {
+      builds.update(
+        changingWatcher,
+        (count) => count + 1,
+        ifAbsent: () => 1,
+      );
+      return use(changingSuperPureDep);
+    }
+
+    void impureSink(CapsuleHandle use) {
+      use.register((_) {});
+      use(changingWatcher);
+      use(unchangingWatcher);
+    }
+
+    final container = useContainer();
+
+    expect(container.read(unchangingWatcher), equals(0));
+    expect(container.read(changingWatcher), equals(0));
+    expect(builds[stateful], equals(1));
+    expect(builds[unchangingSuperPureDep], equals(1));
+    expect(builds[changingSuperPureDep], equals(1));
+    expect(builds[unchangingWatcher], equals(1));
+    expect(builds[changingWatcher], equals(1));
+
+    container.read(stateful).$2(0);
+    expect(builds[stateful], equals(2));
+    expect(builds[unchangingSuperPureDep], equals(1));
+    expect(builds[changingSuperPureDep], equals(1));
+    expect(builds[unchangingWatcher], equals(1));
+    expect(builds[changingWatcher], equals(1));
+
+    expect(container.read(unchangingWatcher), equals(0));
+    expect(container.read(changingWatcher), equals(0));
+    expect(builds[stateful], equals(2));
+    expect(builds[unchangingSuperPureDep], equals(1));
+    expect(builds[changingSuperPureDep], equals(1));
+    expect(builds[unchangingWatcher], equals(1));
+    expect(builds[changingWatcher], equals(1));
+
+    container.read(stateful).$2(1);
+    expect(builds[stateful], equals(3));
+    expect(builds[unchangingSuperPureDep], equals(1));
+    expect(builds[changingSuperPureDep], equals(1));
+    expect(builds[unchangingWatcher], equals(1));
+    expect(builds[changingWatcher], equals(1));
+
+    expect(container.read(unchangingWatcher), equals(0));
+    expect(container.read(changingWatcher), equals(1));
+    expect(builds[stateful], equals(3));
+    expect(builds[unchangingSuperPureDep], equals(2));
+    expect(builds[changingSuperPureDep], equals(2));
+    expect(builds[unchangingWatcher], equals(2));
+    expect(builds[changingWatcher], equals(2));
+
+    // Disable the super pure gc
+    container.read(impureSink);
+
+    container.read(stateful).$2(2);
+    expect(builds[stateful], equals(4));
+    expect(builds[unchangingSuperPureDep], equals(3));
+    expect(builds[changingSuperPureDep], equals(3));
+    expect(builds[unchangingWatcher], equals(2));
+    expect(builds[changingWatcher], equals(3));
+
+    expect(container.read(unchangingWatcher), equals(0));
+    expect(container.read(changingWatcher), equals(2));
+    expect(builds[stateful], equals(4));
+    expect(builds[unchangingSuperPureDep], equals(3));
+    expect(builds[changingSuperPureDep], equals(3));
+    expect(builds[unchangingWatcher], equals(2));
+    expect(builds[changingWatcher], equals(3));
+  });
+
   // We use a more sophisticated graph here for a more thorough
   // test of all functionality
   //

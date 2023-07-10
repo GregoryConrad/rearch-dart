@@ -42,7 +42,7 @@ abstract class DataflowGraphNode implements Disposable {
       if (!haveDepsChanged) continue;
 
       if (disposableNodes.contains(node)) {
-        // Note: dependency/dependent relationships will be after this,
+        // Note: dependency/dependent relationships will be ok after this,
         // since we are disposing all dependents in the build order,
         // because we are adding this node to changedNodes
         node.dispose();

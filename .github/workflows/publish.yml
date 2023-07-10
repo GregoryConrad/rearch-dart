@@ -8,6 +8,8 @@ on:
 jobs:
   publish_github_release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # this is required for action-gh-release
     steps:
       - uses: actions/checkout@v3
       - uses: softprops/action-gh-release@v1

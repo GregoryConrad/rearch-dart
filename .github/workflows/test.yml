@@ -1,0 +1,26 @@
+name: Build & Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    # runs the CI everyday at 10AM
+    - cron: "0 10 * * *"
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+      - uses: bluefireteam/melos-action@v2
+
+      - name: Check code format
+        run: melos run check-format --no-select
+      - name: Run code analysis
+        run: melos run analyze --no-select
+      - name: Run tests
+        run: melos run test

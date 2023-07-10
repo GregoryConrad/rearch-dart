@@ -1,0 +1,23 @@
+version: 2
+enable-beta-ecosystems: true
+updates:
+  - package-ecosystem: pub
+    directory: "/"
+    schedule:
+      interval: weekly
+  - package-ecosystem: pub
+    directory: "/packages/rearch"
+    schedule:
+      interval: weekly
+  - package-ecosystem: pub
+    directory: "/packages/rearch/example"
+    schedule:
+      interval: weekly
+  - package-ecosystem: pub
+    directory: "/packages/flutter_rearch"
+    schedule:
+      interval: weekly
+  - package-ecosystem: pub
+    directory: "/packages/flutter_rearch/example"
+    schedule:
+      interval: weekly

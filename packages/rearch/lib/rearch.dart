@@ -65,7 +65,7 @@ abstract interface class SideEffectApi {
 class Container implements Disposable {
   final _capsules = <_UntypedCapsule, _UntypedCapsuleManager>{};
 
-  _CapsuleManager<T> _manager<T>(Capsule<T> capsule) {
+  _CapsuleManager<T> _managerOf<T>(Capsule<T> capsule) {
     return _capsules.putIfAbsent(
       capsule,
       () => _CapsuleManager<T>(this, capsule),
@@ -73,7 +73,7 @@ class Container implements Disposable {
   }
 
   /// Reads the current data of the supplied [Capsule].
-  T read<T>(Capsule<T> capsule) => _manager(capsule).data;
+  T read<T>(Capsule<T> capsule) => _managerOf(capsule).data;
 
   /// *Temporarily* listens to changes in a given set of [Capsule]s.
   /// If you want to listen to capsule(s) *not temporarily*,
@@ -114,7 +114,7 @@ class ListenerHandle implements Disposable {
   final _UntypedCapsule _capsule;
 
   @override
-  void dispose() => _container._manager(_capsule).dispose();
+  void dispose() => _container._capsules[_capsule]?.dispose();
 }
 
 typedef _UntypedCapsule = Capsule<Object?>;
@@ -135,7 +135,7 @@ class _CapsuleManager<T> extends DataflowGraphNode
   final toDispose = <SideEffectApiCallback>{};
 
   R read<R>(Capsule<R> otherCapsule) {
-    final otherManager = container._manager(otherCapsule);
+    final otherManager = container._managerOf(otherCapsule);
     addDependency(otherManager);
     return otherManager.data;
   }

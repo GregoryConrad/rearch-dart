@@ -115,6 +115,32 @@ void main() {
     expect(states, equals([1, 2, 3, 5, 6, 7]));
   });
 
+  test('generic capsules', () {
+    var builds = 0;
+    late num value;
+
+    T generic<T extends num>(CapsuleHandle use) {
+      builds++;
+      return value as T;
+    }
+
+    final genericDouble1 = generic<double>;
+    final genericDouble2 = generic<double>;
+
+    final container = useContainer();
+    final toTry = [
+      (generic<int>, 0),
+      (generic<int>, 0),
+      (genericDouble1, 0.0),
+      (genericDouble2, 0.0),
+    ];
+    for (final (f, val) in toTry) {
+      value = val;
+      container.read(f);
+    }
+    expect(builds, equals(2)); // once for int, once for double
+  });
+
   test('== check skips unneeded rebuilds', () {
     final builds = <Capsule<Object?>, int>{};
 

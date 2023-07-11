@@ -1,7 +1,8 @@
 import 'package:meta/meta.dart';
 import 'package:rearch/src/node.dart';
 
-export 'package:rearch/src/side_effects.dart';
+export 'src/side_effects.dart';
+export 'src/types.dart';
 
 // TODO(GregoryConrad): eager garbage collection mode
 
@@ -18,7 +19,7 @@ typedef Capsule<T> = T Function(CapsuleHandle);
 
 /// Capsule listeners are a mechanism to *temporarily* listen to changes
 /// to a set of [Capsule]s.
-/// See [Container.listen].
+/// See [CapsuleContainer.listen].
 typedef CapsuleListener = void Function(CapsuleReader);
 
 /// Provides a mechanism to read the current state of [Capsule]s.
@@ -39,7 +40,12 @@ abstract interface class SideEffectRegistrar {
 abstract interface class CapsuleHandle
     implements CapsuleReader, SideEffectRegistrar {}
 
-/// Represents a side effect.
+/// Defines what a [SideEffect] should look like (a [Function]
+/// that consumes a [SideEffectApi] and returns something).
+///
+/// If your side effect is more advanced or requires parameters,
+/// simply make a callable class instead of just a regular [Function]!
+///
 /// See the documentation for more.
 typedef SideEffect<T> = T Function(SideEffectApi);
 
@@ -62,7 +68,7 @@ abstract interface class SideEffectApi {
 
 /// Contains the data of [Capsule]s.
 /// See the documentation for more.
-class Container implements Disposable {
+class CapsuleContainer implements Disposable {
   final _capsules = <_UntypedCapsule, _UntypedCapsuleManager>{};
 
   _CapsuleManager<T> _managerOf<T>(Capsule<T> capsule) {
@@ -104,13 +110,13 @@ class Container implements Disposable {
   }
 }
 
-/// A handle onto the lifecycle of a listener from [Container.listen].
+/// A handle onto the lifecycle of a listener from [CapsuleContainer.listen].
 /// You *must* [dispose] the [ListenerHandle]
 /// when you no longer need the listener in order to prevent leaks.
 class ListenerHandle implements Disposable {
   ListenerHandle._(this._container, this._capsule);
 
-  final Container _container;
+  final CapsuleContainer _container;
   final _UntypedCapsule _capsule;
 
   @override
@@ -126,7 +132,7 @@ class _CapsuleManager<T> extends DataflowGraphNode
     buildSelf();
   }
 
-  final Container container;
+  final CapsuleContainer container;
   final Capsule<T> capsule;
 
   late T data;

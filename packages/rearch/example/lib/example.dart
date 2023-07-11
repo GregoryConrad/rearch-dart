@@ -23,7 +23,7 @@ int countPlusOne(CapsuleHandle use) => use(count) + 1;
 
 /// Entrypoint of the application.
 void main() {
-  final container = Container();
+  final container = CapsuleContainer();
 
   assert(
     container.read(count) == 0,

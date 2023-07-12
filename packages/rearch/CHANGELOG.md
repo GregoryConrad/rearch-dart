@@ -1,3 +1,7 @@
+## 0.0.0-dev.3
+
+ - **FEAT**: add remaining side effects.
+
 ## 0.0.0-dev.2
 
  - **FIX**: listener handle will not recreate manager on dispose.

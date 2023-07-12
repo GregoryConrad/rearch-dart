@@ -4,8 +4,6 @@ import 'package:rearch/src/node.dart';
 export 'src/side_effects.dart';
 export 'src/types.dart';
 
-// TODO(GregoryConrad): eager garbage collection mode
-
 /// Represents a disposable object.
 // ignore: one_member_abstracts
 abstract interface class Disposable {
@@ -37,15 +35,12 @@ abstract interface class SideEffectRegistrar {
 }
 
 /// The handle given to a [Capsule] to build its data.
+/// See [CapsuleReader] and [SideEffectRegistrar].
 abstract interface class CapsuleHandle
     implements CapsuleReader, SideEffectRegistrar {}
 
 /// Defines what a [SideEffect] should look like (a [Function]
 /// that consumes a [SideEffectApi] and returns something).
-///
-/// If your side effect is more advanced or requires parameters,
-/// simply make a callable class instead of just a regular [Function]!
-///
 /// See the documentation for more.
 typedef SideEffect<T> = T Function(SideEffectApi);
 

@@ -2,7 +2,7 @@ part of '../widgets.dart';
 
 /// Provides [toWarmUpWidget], a mechanism to create a [Widget] from a [List]
 /// of the current states of some "warm up" [Capsule]s.
-extension CapsuleWarmUp on List<AsyncValue<dynamic>> {
+extension CapsuleWarmUp<T> on List<AsyncValue<T>> {
   /// Creates a [Widget] from a [List] of the current states of
   /// some "warm up" [Capsule]s.
   ///
@@ -11,18 +11,18 @@ extension CapsuleWarmUp on List<AsyncValue<dynamic>> {
   /// - [errorBuilder] is called to build the returned [Widget] when any
   /// of the current states are [AsyncError].
   Widget toWarmUpWidget({
-    required Widget Function(List<AsyncError<dynamic>>) errorBuilder,
+    required Widget Function(List<AsyncError<T>>) errorBuilder,
     required Widget loading,
     required Widget child,
   }) {
     // Check for any errors first
-    final asyncErrors = whereType<AsyncError<Object?>>();
+    final asyncErrors = whereType<AsyncError<T>>();
     if (asyncErrors.isNotEmpty) {
       return errorBuilder(asyncErrors.toList());
     }
 
     // Check to see if we have any still loading
-    if (any((value) => value is AsyncLoading)) {
+    if (any((value) => value is AsyncLoading<T>)) {
       return loading;
     }
 

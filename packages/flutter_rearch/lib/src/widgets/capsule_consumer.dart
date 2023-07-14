@@ -22,24 +22,29 @@ class _RearchElement extends ComponentElement {
   final deactivateListeners = <SideEffectApiCallback>{};
   final disposeListeners = <SideEffectApiCallback>{};
   final sideEffectData = <Object?>[];
-  final listenerHandles = <ListenerHandle>[];
 
-  void clearHandles() {
-    for (final handle in listenerHandles) {
-      handle.dispose();
+  /// Represents a [Set] of functions that remove a dependency on a [Capsule].
+  final dependencyDisposers = <void Function()>{};
+
+  /// Clears out the [Capsule] dependencies of this [_RearchElement].
+  void clearDependencies() {
+    for (final dispose in dependencyDisposers) {
+      dispose();
     }
-    listenerHandles.clear();
+    dependencyDisposers.clear();
   }
 
   @override
   Widget build() {
-    clearHandles(); // listeners will be repopulated via _WidgetHandleImpl
+    // Clears the old dependencies (which will be repopulated via WidgetHandle)
+    clearDependencies();
+
     final container = CapsuleContainerProvider.containerOf(this);
     final consumer = super.widget as CapsuleConsumer;
     return consumer.build(
       this,
       _WidgetHandleImpl(
-        _WidgetSideEffectApiImpl(this),
+        _WidgetSideEffectApiProxyImpl(this),
         container,
       ),
     );
@@ -50,7 +55,7 @@ class _RearchElement extends ComponentElement {
     for (final listener in deactivateListeners) {
       listener();
     }
-    clearHandles();
+    clearDependencies();
 
     super.deactivate();
   }
@@ -60,7 +65,6 @@ class _RearchElement extends ComponentElement {
     for (final listener in disposeListeners) {
       listener();
     }
-    clearHandles();
 
     // Clean up after any side effects to avoid possible leaks
     deactivateListeners.clear();
@@ -72,8 +76,8 @@ class _RearchElement extends ComponentElement {
 
 /// This is needed so that [WidgetSideEffectApi.rebuild] doesn't conflict with
 /// [Element.rebuild].
-class _WidgetSideEffectApiImpl implements WidgetSideEffectApi {
-  const _WidgetSideEffectApiImpl(this.manager);
+class _WidgetSideEffectApiProxyImpl implements WidgetSideEffectApi {
+  const _WidgetSideEffectApiProxyImpl(this.manager);
   final _RearchElement manager;
 
   @override
@@ -102,25 +106,14 @@ class _WidgetSideEffectApiImpl implements WidgetSideEffectApi {
 class _WidgetHandleImpl implements WidgetHandle {
   _WidgetHandleImpl(this.api, this.container);
 
-  final _WidgetSideEffectApiImpl api;
+  final _WidgetSideEffectApiProxyImpl api;
   final CapsuleContainer container;
   int sideEffectDataIndex = 0;
 
   @override
   T call<T>(Capsule<T> capsule) {
-    // Add capsule as dependency
-    var hasCalledBefore = false;
-    final handle = container.listen((use) {
-      use(capsule); // mark capsule as a dependency
-
-      // If this isn't the immediate call after registering, rebuild
-      if (hasCalledBefore) {
-        api.rebuild();
-      }
-      hasCalledBefore = true;
-    });
-    api.manager.listenerHandles.add(handle);
-
+    final dispose = container.onNextUpdate(capsule, api.rebuild);
+    api.manager.dependencyDisposers.add(dispose);
     return container.read(capsule);
   }
 

@@ -98,6 +98,31 @@ class CapsuleContainer implements Disposable {
     return ListenerHandle._(this, capsule);
   }
 
+  /// Runs the supplied [callback] the next time [capsule] is
+  /// updated *or* disposed.
+  /// You can also prematurely remove the callback from the container
+  /// via the returned [void Function()] (which does not invoke [callback]).
+  /// It is highly recommended not to use this method as I reserve the right
+  /// to breakingly change or remove it at will in a new *minor* release.
+  @experimental
+  void Function() onNextUpdate<T>(
+    Capsule<T> capsule,
+    void Function() callback,
+  ) {
+    // This uses the fact that if we add a super pure capsule, it will be
+    // automatically disposed whenever the supplied capsule is updated/disposed
+    // via the super pure gc.
+    void tempCapsule(CapsuleHandle use) => use<T>(capsule);
+    final manager = _CapsuleManager(this, tempCapsule);
+    manager.toDispose.add(callback);
+    _capsules[tempCapsule] = manager;
+
+    return () {
+      manager.toDispose.remove(callback);
+      manager.dispose();
+    };
+  }
+
   @override
   void dispose() {
     // We need toList() to prevent container modification during iteration

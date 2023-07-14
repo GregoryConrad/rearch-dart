@@ -86,6 +86,15 @@ extension OptionConvenience<T> on Option<T> {
       None() => null,
     };
   }
+
+  /// Maps an Option<T> into an Option<R> by applying the given [mapper].
+  /// Only calls [mapper] when this [Option] is [Some].
+  Option<R> map<R>(R Function(T) mapper) {
+    return switch (this) {
+      Some(:final value) => Some(mapper(value)),
+      None() => None<R>(),
+    };
+  }
 }
 
 /// The current state of a [Future] or [Stream],
@@ -295,6 +304,18 @@ extension AsyncValueConvenience<T> on AsyncValue<T> {
       AsyncError(:final error, :final stackTrace, previousData: None()) =>
         AsyncError(error, stackTrace, newPreviousData),
       _ => this,
+    };
+  }
+
+  /// Maps an AsyncValue<T> into an AsyncValue<R> by applying
+  /// the given [mapper].
+  AsyncValue<R> map<R>(R Function(T) mapper) {
+    return switch (this) {
+      AsyncData(:final data) => AsyncData(mapper(data)),
+      AsyncLoading(:final previousData) =>
+        AsyncLoading(previousData.map(mapper)),
+      AsyncError(:final error, :final stackTrace, :final previousData) =>
+        AsyncError(error, stackTrace, previousData.map(mapper)),
     };
   }
 }

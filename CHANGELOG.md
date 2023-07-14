@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-07-14
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v0.0.0-dev.4`](#flutter_rearch---v000-dev4)
+ - [`rearch` - `v0.0.0-dev.4`](#rearch---v000-dev4)
+
+---
+
+#### `flutter_rearch` - `v0.0.0-dev.4`
+
+ - **FIX**: flutter bug fixes and prototype todo list example app.
+ - **FEAT**: allow type inference in capsule warm up.
+
+#### `rearch` - `v0.0.0-dev.4`
+
+ - **REFACTOR**: move rearch impl to new file.
+ - **FIX**: flutter bug fixes and prototype todo list example app.
+
+
 ## 2023-07-11
 
 ### Changes

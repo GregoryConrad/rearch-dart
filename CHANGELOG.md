@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-07-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`flutter_rearch` - `v0.0.0-dev.5`](#flutter_rearch---v000-dev5)
+
+Packages with other changes:
+
+ - [`rearch` - `v0.0.0-dev.5`](#rearch---v000-dev5)
+
+---
+
+#### `flutter_rearch` - `v0.0.0-dev.5`
+
+ - **FEAT**: add state side effects for closure capture.
+ - **FEAT**: made todo example app more sophisticated.
+ - **DOCS**: finish the todo example app.
+ - **BREAKING** **REFACTOR**: rename CapsuleConsumer to RearchConsumer.
+
+#### `rearch` - `v0.0.0-dev.5`
+
+ - **PERF**: add state effect == optimization.
+ - **FEAT**: add state side effects for closure capture.
+
+
 ## 2023-07-14
 
 ### Changes

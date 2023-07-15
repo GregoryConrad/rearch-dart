@@ -5,7 +5,7 @@ environment:
   sdk: ^3.0.0
 
 dependencies:
-  rearch: ^0.0.0-dev.4
+  rearch: ^0.0.0-dev.5
 
 dev_dependencies:
   test: ^1.24.4

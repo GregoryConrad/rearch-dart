@@ -1,3 +1,8 @@
+## 0.0.0-dev.5
+
+ - **PERF**: add state effect == optimization.
+ - **FEAT**: add state side effects for closure capture.
+
 ## 0.0.0-dev.4
 
  - **REFACTOR**: move rearch impl to new file.

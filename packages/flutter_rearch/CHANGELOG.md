@@ -1,3 +1,12 @@
+## 0.0.0-dev.5
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: add state side effects for closure capture.
+ - **FEAT**: made todo example app more sophisticated.
+ - **DOCS**: finish the todo example app.
+ - **BREAKING** **REFACTOR**: rename CapsuleConsumer to RearchConsumer.
+
 ## 0.0.0-dev.4
 
  - **FIX**: flutter bug fixes and prototype todo list example app.

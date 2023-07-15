@@ -267,7 +267,7 @@ class Body extends CapsuleConsumer {
                 Positioned(
                   left: 0,
                   right: 0,
-                  bottom: MediaQuery.paddingOf(context).bottom,
+                  bottom: max(MediaQuery.paddingOf(context).bottom, 16),
                   child: Center(
                     child: Card(
                       elevation: 8,

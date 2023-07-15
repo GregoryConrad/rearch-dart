@@ -5,9 +5,9 @@ import 'package:rearch/rearch.dart';
 export 'src/side_effects.dart';
 export 'src/widgets.dart';
 
-/// The API exposed to [CapsuleConsumer]s to extend their functionality.
+/// The API exposed to [RearchConsumer]s to extend their functionality.
 abstract interface class WidgetSideEffectApi implements SideEffectApi {
-  /// The [BuildContext] of the associated [CapsuleConsumer].
+  /// The [BuildContext] of the associated [RearchConsumer].
   BuildContext get context;
 
   /// Adds a deactivate lifecycle listener.

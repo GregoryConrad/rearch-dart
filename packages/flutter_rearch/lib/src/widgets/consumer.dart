@@ -1,12 +1,31 @@
 part of '../widgets.dart';
 
-/// {@template rearch.capsuleConsumer}
-/// A [Widget] that has access to a [WidgetHandle],
+/// {@template rearch.rearchBuilder}
+/// A [Builder]-style [Widget] whose [builder] has access to a [WidgetHandle]
 /// and can consequently consume [Capsule]s and [SideEffect]s.
 /// {@endtemplate}
-abstract class CapsuleConsumer extends Widget {
-  /// {@macro rearch.capsuleConsumer}
-  const CapsuleConsumer({super.key});
+class RearchBuilder extends RearchConsumer {
+  /// {@macro rearch.rearchBuilder}
+  const RearchBuilder({
+    required this.builder,
+    super.key,
+  });
+
+  /// Builds the child [Widget] with the supplied [BuildContext] and
+  /// [WidgetHandle].
+  final Widget Function(BuildContext, WidgetHandle) builder;
+
+  @override
+  Widget build(BuildContext context, WidgetHandle use) => builder(context, use);
+}
+
+/// {@template rearch.rearchConsumer}
+/// A [Widget] that has access to a [WidgetHandle]
+/// and can consequently consume [Capsule]s and [SideEffect]s.
+/// {@endtemplate}
+abstract class RearchConsumer extends Widget {
+  /// {@macro rearch.rearchConsumer}
+  const RearchConsumer({super.key});
 
   @override
   Element createElement() => _RearchElement(this);
@@ -17,7 +36,7 @@ abstract class CapsuleConsumer extends Widget {
 }
 
 class _RearchElement extends ComponentElement {
-  _RearchElement(CapsuleConsumer super.widget);
+  _RearchElement(RearchConsumer super.widget);
 
   final deactivateListeners = <SideEffectApiCallback>{};
   final disposeListeners = <SideEffectApiCallback>{};
@@ -40,7 +59,7 @@ class _RearchElement extends ComponentElement {
     clearDependencies();
 
     final container = CapsuleContainerProvider.containerOf(this);
-    final consumer = super.widget as CapsuleConsumer;
+    final consumer = super.widget as RearchConsumer;
     return consumer.build(
       this,
       _WidgetHandleImpl(

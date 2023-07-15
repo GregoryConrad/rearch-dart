@@ -56,13 +56,13 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
         initialValue: initialValue,
       );
 
-  /// Prevents the associated [CapsuleConsumer] from being disposed when it
+  /// Prevents the associated [RearchConsumer] from being disposed when it
   /// normally would be by its lazy list container (such as in a [ListView]).
   ///
   /// Acts similar to [AutomaticKeepAlive].
   ///
   /// When using [automaticKeepAlive], you *must* use it in a new
-  /// [CapsuleConsumer] that is a child of the container;
+  /// [RearchConsumer] that is a child of the container;
   /// otherwise, the widget might still be disposed.
   void automaticKeepAlive({bool keepAlive = true}) =>
       _automaticKeepAlive(this, keepAlive: keepAlive);

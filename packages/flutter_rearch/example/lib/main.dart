@@ -145,7 +145,7 @@ class TodoApp extends StatelessWidget {
 /// Warms up all of the global warm up capsules so that the rest of the app
 /// doesn't have to individually handle failure states.
 /// {@endtemplate}
-final class GlobalWarmUps extends CapsuleConsumer {
+final class GlobalWarmUps extends RearchConsumer {
   /// {@macro GlobalWarmUps}
   const GlobalWarmUps({required this.child, super.key});
 
@@ -172,7 +172,7 @@ final class GlobalWarmUps extends CapsuleConsumer {
 /// {@template Body}
 /// Wraps around [Scaffold] and serves as the main body of the application.
 /// {@endtemplate}
-class Body extends CapsuleConsumer {
+class Body extends RearchConsumer {
   /// {@macro Body}
   const Body({super.key});
 
@@ -387,7 +387,7 @@ class CustomAppBar extends StatelessWidget {
 /// Displays the search bar at the top of the application
 /// and mutates the [filterCapsule].
 /// {@endtemplate}
-class SearchBar extends CapsuleConsumer {
+class SearchBar extends RearchConsumer {
   /// {@macro SearchBar}
   const SearchBar({required this.close, super.key});
 
@@ -442,7 +442,7 @@ class SearchBar extends CapsuleConsumer {
 /// This example is slightly over-engineered to showcase how to reduce rebuilds
 /// when dealing with slightly larger lists of data.
 /// {@endtemplate}
-class TodoItem extends CapsuleConsumer {
+class TodoItem extends RearchConsumer {
   /// {@macro TodoItem}
   const TodoItem({required this.index, super.key});
 
@@ -504,7 +504,7 @@ class TodoItem extends CapsuleConsumer {
 /// {@template DynamicBackground}
 /// Displays the bubbly dynamic background effect.
 /// {@endtemplate}
-class DynamicBackground extends CapsuleConsumer {
+class DynamicBackground extends RearchConsumer {
   /// {@macro DynamicBackground}
   const DynamicBackground({super.key});
 
@@ -615,7 +615,7 @@ typedef SplashCircleProperties = ({
 /// {@template AnimatedSplashCircle}
 /// An individual animated circle in the [DynamicBackground].
 /// {@endtemplate}
-class AnimatedSplashCircle extends CapsuleConsumer {
+class AnimatedSplashCircle extends RearchConsumer {
   /// {@macro AnimatedSplashCircle}
   const AnimatedSplashCircle({
     required this.color,

@@ -28,12 +28,14 @@ extension BuiltinSideEffects on SideEffectRegistrar {
 
   /// Side effect that provides a way for capsules to contain some state,
   /// where the initial state is computationally expensive.
+  /// Further, instead of returning the state directly, this instead returns
+  /// a getter that is safe to capture in closures.
   /// Similar to the `useState` hook from React;
   /// see https://react.dev/reference/react/useState
-  (T, void Function(T)) lazyState<T>(T Function() init) {
+  (T Function(), void Function(T)) lazyStateGetterSetter<T>(T Function() init) {
     // We use register directly to keep the same setter function
     // across rebuilds, which actually can help skip certain rebuilds
-    final (getter, setter) = register((api) {
+    return register((api) {
       var state = init();
 
       T getter() => state;
@@ -44,6 +46,22 @@ extension BuiltinSideEffects on SideEffectRegistrar {
 
       return (getter, setter);
     });
+  }
+
+  /// Side effect that provides a way for capsules to contain some state.
+  /// Further, instead of returning the state directly, this instead returns
+  /// a getter that is safe to capture in closures.
+  /// Similar to the `useState` hook from React;
+  /// see https://react.dev/reference/react/useState
+  (T Function(), void Function(T)) stateGetterSetter<T>(T initial) =>
+      lazyStateGetterSetter(() => initial);
+
+  /// Side effect that provides a way for capsules to contain some state,
+  /// where the initial state is computationally expensive.
+  /// Similar to the `useState` hook from React;
+  /// see https://react.dev/reference/react/useState
+  (T, void Function(T)) lazyState<T>(T Function() init) {
+    final (getter, setter) = lazyStateGetterSetter(init);
     return (getter(), setter);
   }
 

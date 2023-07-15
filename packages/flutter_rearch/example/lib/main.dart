@@ -519,28 +519,26 @@ class DynamicBackground extends CapsuleConsumer {
 
     // We need to use this more advanced side effect since we need to be able
     // to grab the most up-to-date copy of the circles when we check to see
-    // if we actually need to add a new circle.
-    final (getCircles, setCirclesRaw) =
-        use.rawValueWrapper(() => <SplashCircleProperties>{});
-    final rebuild = use.rebuilder();
+    // if we actually need to add a new circle (if we used the regular state
+    // effect, the closure would capture an outdated copy).
+    final (getCircles, setCircles) =
+        use.stateGetterSetter(<SplashCircleProperties>{});
 
     final addCircle = use.memo(
       () => (SplashCircleProperties circle) {
         if (getCircles().length >= goalCircleCount) return;
-        setCirclesRaw({...getCircles(), circle});
-        rebuild();
+        setCircles({...getCircles(), circle});
       },
-      [getCircles, goalCircleCount, setCirclesRaw, rebuild],
+      [getCircles, goalCircleCount, setCircles],
     );
 
     final removeCircle = use.memo(
       () => (int id) {
-        setCirclesRaw({
+        setCircles({
           ...getCircles().where((circle) => circle.id != id),
         });
-        rebuild();
       },
-      [getCircles, setCirclesRaw, rebuild],
+      [getCircles, setCircles],
     );
 
     use.effect(

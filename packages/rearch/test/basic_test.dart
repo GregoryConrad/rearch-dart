@@ -203,7 +203,7 @@ void main() {
     expect(builds[changingWatcher], equals(1));
 
     container.read(stateful).$2(0);
-    expect(builds[stateful], equals(2));
+    expect(builds[stateful], equals(1));
     expect(builds[unchangingSuperPureDep], equals(1));
     expect(builds[changingSuperPureDep], equals(1));
     expect(builds[unchangingWatcher], equals(1));
@@ -211,14 +211,14 @@ void main() {
 
     expect(container.read(unchangingWatcher), equals(0));
     expect(container.read(changingWatcher), equals(0));
-    expect(builds[stateful], equals(2));
+    expect(builds[stateful], equals(1));
     expect(builds[unchangingSuperPureDep], equals(1));
     expect(builds[changingSuperPureDep], equals(1));
     expect(builds[unchangingWatcher], equals(1));
     expect(builds[changingWatcher], equals(1));
 
     container.read(stateful).$2(1);
-    expect(builds[stateful], equals(3));
+    expect(builds[stateful], equals(2));
     expect(builds[unchangingSuperPureDep], equals(1));
     expect(builds[changingSuperPureDep], equals(1));
     expect(builds[unchangingWatcher], equals(1));
@@ -226,7 +226,7 @@ void main() {
 
     expect(container.read(unchangingWatcher), equals(0));
     expect(container.read(changingWatcher), equals(1));
-    expect(builds[stateful], equals(3));
+    expect(builds[stateful], equals(2));
     expect(builds[unchangingSuperPureDep], equals(2));
     expect(builds[changingSuperPureDep], equals(2));
     expect(builds[unchangingWatcher], equals(2));
@@ -236,7 +236,7 @@ void main() {
     container.read(impureSink);
 
     container.read(stateful).$2(2);
-    expect(builds[stateful], equals(4));
+    expect(builds[stateful], equals(3));
     expect(builds[unchangingSuperPureDep], equals(3));
     expect(builds[changingSuperPureDep], equals(3));
     expect(builds[unchangingWatcher], equals(2));
@@ -244,7 +244,7 @@ void main() {
 
     expect(container.read(unchangingWatcher), equals(0));
     expect(container.read(changingWatcher), equals(2));
-    expect(builds[stateful], equals(4));
+    expect(builds[stateful], equals(3));
     expect(builds[unchangingSuperPureDep], equals(3));
     expect(builds[changingSuperPureDep], equals(3));
     expect(builds[unchangingWatcher], equals(2));
@@ -321,7 +321,7 @@ void main() {
     container.read(a).$2(0);
     expect(container.read(d), equals(1));
     expect(container.read(g), equals(2));
-    expect(builds[a], equals(2));
+    expect(builds[a], equals(1));
     expect(builds[b], equals(1));
     expect(builds[c], equals(1));
     expect(builds[d], equals(1));
@@ -331,7 +331,7 @@ void main() {
     expect(builds[h], equals(1));
 
     container.read(a).$2(1);
-    expect(builds[a], equals(3));
+    expect(builds[a], equals(2));
     expect(builds[b], equals(2));
     expect(builds[c], equals(1));
     expect(builds[d], equals(1));
@@ -342,7 +342,7 @@ void main() {
 
     expect(container.read(d), equals(3));
     expect(container.read(g), equals(5));
-    expect(builds[a], equals(3));
+    expect(builds[a], equals(2));
     expect(builds[b], equals(2));
     expect(builds[c], equals(2));
     expect(builds[d], equals(2));

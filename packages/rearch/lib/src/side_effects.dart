@@ -33,13 +33,13 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// Similar to the `useState` hook from React;
   /// see https://react.dev/reference/react/useState
   (T Function(), void Function(T)) lazyStateGetterSetter<T>(T Function() init) {
-    // We use register directly to keep the same setter function
-    // across rebuilds, which actually can help skip certain rebuilds
+    // We use register directly to keep the same setter function across rebuilds
     return register((api) {
       var state = init();
 
       T getter() => state;
       void setter(T newState) {
+        if (newState == state) return;
         state = newState;
         api.rebuild();
       }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mimir/flutter_mimir.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
@@ -175,73 +177,19 @@ class Body extends CapsuleConsumer {
 
   @override
   Widget build(BuildContext context, WidgetHandle use) {
-    final (isSearching, setIsSearching) = use.state(false);
+    const searchBarHeight = 56.0;
+    const animationDuration = Duration(milliseconds: 125);
 
     final (
       filter: (query: _, :completionStatus),
       setQueryString: _,
       :toggleCompletionStatus,
     ) = use(filterCapsule);
+    final completionText = completionStatus ? 'completed' : 'incomplete';
 
-    final (:updateTodo, deleteTodo: _) = use(todoListManagerCapsule);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'rearch todos',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
-        toolbarOpacity: 0.75,
-        bottomOpacity: 0.75,
-        actions: [
-          IconButton(
-            icon: Icon(
-              completionStatus
-                  ? Icons.task_alt_rounded
-                  : Icons.radio_button_unchecked_rounded,
-            ),
-            onPressed: toggleCompletionStatus,
-          ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () => setIsSearching(!isSearching),
-          ),
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () => showCreateTodoDialog(context, updateTodo),
-          )
-        ],
-        // TODO(GregoryConrad): bottom: PreferredSizeWidget,
-      ),
-      // TODO(GregoryConrad): lets do that fun bubble effect
-      body: const TodoList(),
-    );
-  }
-}
-
-/// {@template TodoList}
-/// Displays the current list of todos based on the [filterCapsule],
-/// including support for when the todos are [AsyncLoading] and [AsyncError].
-/// {@endtemplate}
-class TodoList extends CapsuleConsumer {
-  /// {@macro TodoList}
-  const TodoList({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetHandle use) {
-    final completionFilter = use(filterCapsule).filter.completionStatus;
-    final completionText = completionFilter ? 'completed' : 'incomplete';
-
-    final todoListLength = use(todoListLengthCapsule);
-
-    final todoListWidget = todoListLength.data.map((length) {
-      return ListView.builder(
-        itemCount: length,
-        itemBuilder: (context, index) => TodoItem(index: index),
-      );
-    }).asNullable();
-
-    final infoWidget = switch (todoListLength) {
+    final todoListLengthState = use(todoListLengthCapsule);
+    final todoListLength = todoListLengthState.dataOr(0);
+    final statusWidget = switch (todoListLengthState) {
       AsyncLoading() => const CircularProgressIndicator.adaptive(),
       AsyncError(:final error) => Text('$error'),
       AsyncData(data: final length) when length == 0 =>
@@ -249,28 +197,193 @@ class TodoList extends CapsuleConsumer {
       _ => null,
     };
 
-    return Stack(
-      children: [
-        if (todoListWidget != null)
-          Positioned.fill(
-            child: todoListWidget,
-          ),
-        if (infoWidget != null)
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 32,
-            child: Center(
-              child: Card(
-                elevation: 8,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: infoWidget,
+    final (:updateTodo, deleteTodo: _) = use(todoListManagerCapsule);
+
+    final bottomHeightAnimationController =
+        use.animationController(duration: animationDuration);
+
+    final (isSearching, setIsSearching) = use.state(false);
+    use.effect(
+      () {
+        if (isSearching) {
+          bottomHeightAnimationController.forward();
+        } else {
+          bottomHeightAnimationController.reverse();
+        }
+        return null;
+      },
+      [isSearching, bottomHeightAnimationController],
+    );
+
+    return Scaffold(
+      body: AnimatedBuilder(
+        animation: bottomHeightAnimationController,
+        builder: (context, _) {
+          final bottomHeight =
+              bottomHeightAnimationController.value * searchBarHeight;
+          return Stack(
+            children: [
+              // The dynamic background
+              const Positioned.fill(child: DynamicBackground()),
+
+              // The main todos content
+              Positioned.fill(
+                child: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: kToolbarHeight + 12 + bottomHeight,
+                      ),
+                    ),
+                    SliverSafeArea(
+                      sliver: SliverList.builder(
+                        itemCount: todoListLength,
+                        itemBuilder: (context, index) => TodoItem(index: index),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
+
+              // The app bar
+              Positioned(
+                left: 0,
+                right: 0,
+                top: 0,
+                child: SizedBox(
+                  height: MediaQuery.paddingOf(context).top +
+                      kToolbarHeight +
+                      bottomHeight,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(16),
+                    ),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                      child: AppBar(
+                        title: const Text(
+                          'rearch todos',
+                          style: TextStyle(fontWeight: FontWeight.w900),
+                        ),
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .surface
+                            .withOpacity(0.8),
+                        elevation: 1,
+                        scrolledUnderElevation: 1,
+                        actions: [
+                          IconButton(
+                            icon: Icon(
+                              completionStatus
+                                  ? Icons.task_alt_rounded
+                                  : Icons.radio_button_unchecked_rounded,
+                            ),
+                            onPressed: toggleCompletionStatus,
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.search),
+                            onPressed: () => setIsSearching(!isSearching),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () =>
+                                showCreateTodoDialog(context, updateTodo),
+                          ),
+                        ],
+                        bottom: PreferredSize(
+                          preferredSize: Size.fromHeight(bottomHeight),
+                          child: SizedBox(
+                            height: bottomHeight,
+                            child: AnimatedSwitcher(
+                              duration: animationDuration,
+                              child: isSearching
+                                  ? SearchBar(
+                                      close: () => setIsSearching(false),
+                                    )
+                                  : null,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // The info/status widget at the bottom
+              if (statusWidget != null)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: MediaQuery.paddingOf(context).bottom,
+                  child: Center(
+                    child: Card(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: statusWidget,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// {@template SearchBar}
+/// Displays the search bar at the top of the application
+/// and mutates the [filterCapsule].
+/// {@endtemplate}
+class SearchBar extends CapsuleConsumer {
+  /// {@macro SearchBar}
+  const SearchBar({required this.close, super.key});
+
+  /// Callback that will close the search bar.
+  final void Function() close;
+
+  @override
+  Widget build(BuildContext context, WidgetHandle use) {
+    final textController = use.textEditingController();
+
+    final (
+      filter: _,
+      :setQueryString,
+      toggleCompletionStatus: _,
+    ) = use(filterCapsule);
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+      child: TextField(
+        controller: textController,
+        onChanged: setQueryString,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.zero,
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(100)),
           ),
-      ],
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.cancel),
+                onPressed: () {
+                  if (textController.text == '') {
+                    close();
+                  } else {
+                    textController.text = '';
+                    setQueryString('');
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -319,6 +432,7 @@ class TodoItem extends CapsuleConsumer {
     }
 
     return Padding(
+      key: ValueKey(timestamp),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Card(
         child: ListTile(
@@ -330,10 +444,24 @@ class TodoItem extends CapsuleConsumer {
                 : Icons.radio_button_unchecked_rounded,
           ),
           onTap: toggleCompletionStatus,
-          onLongPress: delete,
+          onLongPress: () => showDeletionConfirmationDialog(context, delete),
         ),
       ),
     );
+  }
+}
+
+/// {@template DynamicBackground}
+/// Displays the bubbly dynamic background effect.
+/// {@endtemplate}
+class DynamicBackground extends CapsuleConsumer {
+  /// {@macro DynamicBackground}
+  const DynamicBackground({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetHandle use) {
+    // TODO(GregoryConrad): make the dynamic background effect
+    return const Placeholder();
   }
 }
 
@@ -354,9 +482,11 @@ Future<void> showCreateTodoDialog(
           children: [
             TextField(
               onChanged: (newTitle) => title = newTitle,
+              decoration: const InputDecoration(labelText: 'Title'),
             ),
             TextField(
               onChanged: (newDescription) => description = newDescription,
+              decoration: const InputDecoration(labelText: 'Description'),
             ),
           ],
         ),
@@ -378,6 +508,36 @@ Future<void> showCreateTodoDialog(
               Navigator.of(context).pop();
             },
             child: const Text('Save'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+/// Shows a deletion confirmation dialog.
+Future<void> showDeletionConfirmationDialog(
+  BuildContext context,
+  void Function() delete,
+) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        icon: const Icon(Icons.delete),
+        title: const Text('Delete Todo'),
+        content: const Text('Are you sure you want to delete this todo?'),
+        actions: [
+          TextButton(
+            onPressed: Navigator.of(context).pop,
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              delete();
+              Navigator.of(context).pop();
+            },
+            child: const Text('Delete'),
           ),
         ],
       );

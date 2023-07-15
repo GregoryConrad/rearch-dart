@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -232,7 +233,7 @@ class Body extends CapsuleConsumer {
                   slivers: [
                     SliverToBoxAdapter(
                       child: SizedBox(
-                        height: kToolbarHeight + 12 + bottomHeight,
+                        height: kToolbarHeight + bottomHeight + 12,
                       ),
                     ),
                     SliverSafeArea(
@@ -250,63 +251,14 @@ class Body extends CapsuleConsumer {
                 left: 0,
                 right: 0,
                 top: 0,
-                child: SizedBox(
-                  height: MediaQuery.paddingOf(context).top +
-                      kToolbarHeight +
-                      bottomHeight,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(16),
-                    ),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-                      child: AppBar(
-                        title: const Text(
-                          'rearch todos',
-                          style: TextStyle(fontWeight: FontWeight.w900),
-                        ),
-                        backgroundColor: Theme.of(context)
-                            .colorScheme
-                            .surface
-                            .withOpacity(0.8),
-                        elevation: 1,
-                        scrolledUnderElevation: 1,
-                        actions: [
-                          IconButton(
-                            icon: Icon(
-                              completionStatus
-                                  ? Icons.task_alt_rounded
-                                  : Icons.radio_button_unchecked_rounded,
-                            ),
-                            onPressed: toggleCompletionStatus,
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.search),
-                            onPressed: () => setIsSearching(!isSearching),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () =>
-                                showCreateTodoDialog(context, updateTodo),
-                          ),
-                        ],
-                        bottom: PreferredSize(
-                          preferredSize: Size.fromHeight(bottomHeight),
-                          child: SizedBox(
-                            height: bottomHeight,
-                            child: AnimatedSwitcher(
-                              duration: animationDuration,
-                              child: isSearching
-                                  ? SearchBar(
-                                      close: () => setIsSearching(false),
-                                    )
-                                  : null,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                child: CustomAppBar(
+                  bottomHeight: bottomHeight,
+                  completionStatus: completionStatus,
+                  toggleCompletionStatus: toggleCompletionStatus,
+                  toggleIsSearching: () => setIsSearching(!isSearching),
+                  isSearching: isSearching,
+                  updateTodo: updateTodo,
+                  animationDuration: animationDuration,
                 ),
               ),
 
@@ -329,6 +281,103 @@ class Body extends CapsuleConsumer {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+/// {@template CustomAppBar}
+/// The custom [AppBar] featured in the application.
+/// {@endtemplate}
+class CustomAppBar extends StatelessWidget {
+  /// {@macro CustomAppBar}
+  const CustomAppBar({
+    required this.bottomHeight,
+    required this.completionStatus,
+    required this.toggleCompletionStatus,
+    required this.isSearching,
+    required this.toggleIsSearching,
+    required this.updateTodo,
+    required this.animationDuration,
+    super.key,
+  });
+
+  /// The height of the [AppBar.bottom] (this should be an animated value).
+  final double bottomHeight;
+
+  /// Whether we are displaying completed or incomplete todos.
+  final bool completionStatus;
+
+  /// Callback that toggles the type of todos we are displaying.
+  final void Function() toggleCompletionStatus;
+
+  /// Whether or not the AppBar should be displayed with the [SearchBar].
+  final bool isSearching;
+
+  /// Toggle for [isSearching].
+  final void Function() toggleIsSearching;
+
+  /// Function that creates/updates a given [Todo].
+  final void Function(Todo) updateTodo;
+
+  /// The [Duration] of the [SearchBar] open/close animation.
+  final Duration animationDuration;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.paddingOf(context).top + kToolbarHeight + bottomHeight,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(
+          bottom: Radius.circular(16),
+        ),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+          child: AppBar(
+            title: const Text(
+              'rearch todos',
+              style: TextStyle(fontWeight: FontWeight.w900),
+            ),
+            elevation: 2,
+            scrolledUnderElevation: 2,
+            backgroundColor:
+                Theme.of(context).colorScheme.surface.withOpacity(0.7),
+            actions: [
+              IconButton(
+                tooltip: completionStatus
+                    ? 'Show incomplete todos'
+                    : 'Show completed todos',
+                icon: Icon(
+                  completionStatus
+                      ? Icons.task_alt_rounded
+                      : Icons.radio_button_unchecked_rounded,
+                ),
+                onPressed: toggleCompletionStatus,
+              ),
+              IconButton(
+                tooltip: 'Search todos',
+                icon: const Icon(Icons.search_rounded),
+                onPressed: toggleIsSearching,
+              ),
+              IconButton(
+                tooltip: 'Create todo',
+                icon: const Icon(Icons.edit_rounded),
+                onPressed: () => showCreateTodoDialog(context, updateTodo),
+              ),
+            ],
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(bottomHeight),
+              child: SizedBox(
+                height: bottomHeight,
+                child: AnimatedSwitcher(
+                  duration: animationDuration,
+                  child:
+                      isSearching ? SearchBar(close: toggleIsSearching) : null,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -365,18 +414,18 @@ class SearchBar extends CapsuleConsumer {
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(100)),
           ),
-          prefixIcon: const Icon(Icons.search),
+          prefixIcon: const Icon(Icons.search_rounded),
           suffixIcon: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                icon: const Icon(Icons.cancel),
+                icon: const Icon(Icons.cancel_rounded),
                 onPressed: () {
-                  if (textController.text == '') {
-                    close();
-                  } else {
+                  if (textController.text != '') {
                     textController.text = '';
                     setQueryString('');
+                  } else {
+                    close();
                   }
                 },
               ),
@@ -435,6 +484,7 @@ class TodoItem extends CapsuleConsumer {
       key: ValueKey(timestamp),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Card(
+        color: Theme.of(context).colorScheme.surface.withOpacity(0.6),
         child: ListTile(
           title: Text(title),
           subtitle: description != null ? Text(description) : null,
@@ -460,8 +510,190 @@ class DynamicBackground extends CapsuleConsumer {
 
   @override
   Widget build(BuildContext context, WidgetHandle use) {
-    // TODO(GregoryConrad): make the dynamic background effect
-    return const Placeholder();
+    const color1 = Color(0xFFD223E4);
+    const color2 = Color(0xFF0157F5);
+
+    const avgCircleRadius = 0.07;
+    final numCirclesToFillScreen = 1 / (pi * pow(avgCircleRadius, 2));
+    final goalCircleCount = numCirclesToFillScreen / 2;
+
+    // We need to use this more advanced side effect since we need to be able
+    // to grab the most up-to-date copy of the circles when we check to see
+    // if we actually need to add a new circle.
+    final (getCircles, setCirclesRaw) =
+        use.rawValueWrapper(() => <SplashCircleProperties>{});
+    final rebuild = use.rebuilder();
+
+    final addCircle = use.memo(
+      () => (SplashCircleProperties circle) {
+        if (getCircles().length >= goalCircleCount) return;
+        setCirclesRaw({...getCircles(), circle});
+        rebuild();
+      },
+      [getCircles, goalCircleCount, setCirclesRaw, rebuild],
+    );
+
+    final removeCircle = use.memo(
+      () => (int id) {
+        setCirclesRaw({
+          ...getCircles().where((circle) => circle.id != id),
+        });
+        rebuild();
+      },
+      [getCircles, setCirclesRaw, rebuild],
+    );
+
+    use.effect(
+      () {
+        final random = Random();
+        final circleStream = Stream.periodic(
+          const Duration(milliseconds: 50),
+          (i) {
+            return (
+              id: i,
+              centerX: random.nextDouble(),
+              centerY: random.nextDouble(),
+              color: Color.lerp(color1, color2, random.nextDouble())!
+                  .withOpacity(0.3),
+              radius: avgCircleRadius +
+                  avgCircleRadius * (random.nextDouble() - 0.5),
+              appear: Duration(
+                seconds: 2 + (random.nextDouble() * 3).round(),
+              ),
+              disappear: Duration(
+                seconds: 2 + (random.nextDouble() * 3).round(),
+              ),
+              remove: () => removeCircle(i),
+            );
+          },
+        );
+        final subscription = circleStream.listen(addCircle);
+        return subscription.cancel;
+      },
+      [addCircle, removeCircle, color1, color2, avgCircleRadius],
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Stack(
+          children: [
+            for (final circle in getCircles())
+              Positioned(
+                key: ValueKey(circle.id),
+                left: (circle.centerX - circle.radius) * constraints.maxWidth,
+                top: (circle.centerY - circle.radius) * constraints.maxHeight,
+                child: AnimatedSplashCircle(
+                  color: circle.color,
+                  radius: circle.radius * constraints.maxHeight,
+                  appear: circle.appear,
+                  disappear: circle.disappear,
+                  remove: circle.remove,
+                ),
+              ),
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+              child: const SizedBox.expand(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Represents the mathematical properties of an [AnimatedSplashCircle]
+/// in a [DynamicBackground].
+typedef SplashCircleProperties = ({
+  int id,
+  double centerX,
+  double centerY,
+  Color color,
+  double radius,
+  Duration appear,
+  Duration disappear,
+  void Function() remove,
+});
+
+/// {@template AnimatedSplashCircle}
+/// An individual animated circle in the [DynamicBackground].
+/// {@endtemplate}
+class AnimatedSplashCircle extends CapsuleConsumer {
+  /// {@macro AnimatedSplashCircle}
+  const AnimatedSplashCircle({
+    required this.color,
+    required this.radius,
+    required this.appear,
+    required this.disappear,
+    required this.remove,
+    super.key,
+  });
+
+  /// The color of this circle.
+  final Color color;
+
+  /// The radius of this circle.
+  final double radius;
+
+  /// The time it takes for the circle to fully appear.
+  final Duration appear;
+
+  /// The time it takes for the circle to fully disappear.
+  final Duration disappear;
+
+  /// A callback that removes this circle from the [DynamicBackground]
+  /// for when its animations complete.
+  final void Function() remove;
+
+  @override
+  Widget build(BuildContext context, WidgetHandle use) {
+    final controller = use.animationController(
+      duration: appear,
+      reverseDuration: disappear,
+    );
+    use.effect(
+      () {
+        controller.forward();
+        return null;
+      },
+      [controller],
+    );
+
+    final animation = use.memo(
+      () {
+        return CurvedAnimation(
+          parent: controller,
+          curve: Curves.easeInOutQuint,
+          reverseCurve: Curves.linear,
+        );
+      },
+      [controller],
+    );
+    use.effect(
+      () {
+        void statusListener(AnimationStatus status) {
+          switch (status) {
+            case AnimationStatus.completed:
+              controller.reverse();
+            case AnimationStatus.dismissed:
+              remove();
+            case _:
+              break;
+          }
+        }
+
+        animation.addStatusListener(statusListener);
+        return animation.dispose;
+      },
+      [controller, remove, animation],
+    );
+
+    return ScaleTransition(
+      scale: animation,
+      child: CircleAvatar(
+        backgroundColor: color,
+        radius: radius,
+      ),
+    );
   }
 }
 
@@ -475,7 +707,7 @@ Future<void> showCreateTodoDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        icon: const Icon(Icons.edit),
+        icon: const Icon(Icons.edit_rounded),
         title: const Text('Create Todo'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -524,7 +756,7 @@ Future<void> showDeletionConfirmationDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        icon: const Icon(Icons.delete),
+        icon: const Icon(Icons.delete_rounded),
         title: const Text('Delete Todo'),
         content: const Text('Are you sure you want to delete this todo?'),
         actions: [

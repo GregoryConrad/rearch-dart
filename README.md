@@ -22,6 +22,7 @@ Specifically, rearch is a:
 - 🧱 Composable
 - 🔌 Extendable
 - ⬆️ Scalable
+- 🧮 Functional
 - 🪢 Databinding 
 - 💉 Dependency Injection
 
@@ -203,10 +204,10 @@ to accomodate one-off situations, all in addition to a barrage of types to suppo
 `AutoDispose...`, [etc.](https://pub.dev/documentation/riverpod/latest/riverpod/riverpod-library.html)).
 
 Instead of AutoDispose, rearch:
-- Introduces the novel concept of _super pure_ capsules when dealing with global state.
-  - You don't need to know anything about super pure capsules when using rearch;
+- Introduces the novel concept of _idempotent_ capsules when dealing with global state.
+  - You don't need to know anything about idempotent capsules when using rearch;
 they are identified internally and are automatically cleaned up for you!
-- Embraces the use factories and side effects for ephemeral state.
+- Embraces the use of factories and side effects for ephemeral state.
 
 ### Why not Hooks?
 I actually love `flutter_hooks`! Just a few grievances:

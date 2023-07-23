@@ -85,8 +85,8 @@ class CapsuleContainer implements Disposable {
   /// and then after any capsules its listening to change.
   @UseResult('ListenerHandle will leak its listener if it is not disposed')
   ListenerHandle listen(CapsuleListener listener) {
-    // Create a temporary *impure* capsule so that it doesn't get super-pure
-    // garbage collected
+    // Create a temporary *non-idempotent* capsule so that it doesn't get
+    // idempotent garbage collected
     void capsule(CapsuleHandle use) {
       use.register((_) {});
       listener(use);
@@ -109,9 +109,9 @@ class CapsuleContainer implements Disposable {
     Capsule<T> capsule,
     void Function() callback,
   ) {
-    // This uses the fact that if we add a super pure capsule, it will be
+    // This uses the fact that if we add an idempotent capsule, it will be
     // automatically disposed whenever the supplied capsule is updated/disposed
-    // via the super pure gc.
+    // via the idempotent gc.
     void tempCapsule(CapsuleHandle use) => use<T>(capsule);
     final manager = _CapsuleManager(this, tempCapsule);
     manager.toDispose.add(callback);

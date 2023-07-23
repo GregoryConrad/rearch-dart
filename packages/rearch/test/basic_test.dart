@@ -149,9 +149,9 @@ void main() {
       return use.state(0);
     }
 
-    int unchangingSuperPureDep(CapsuleHandle use) {
+    int unchangingIdempotentDep(CapsuleHandle use) {
       builds.update(
-        unchangingSuperPureDep,
+        unchangingIdempotentDep,
         (count) => count + 1,
         ifAbsent: () => 1,
       );
@@ -165,12 +165,12 @@ void main() {
         (count) => count + 1,
         ifAbsent: () => 1,
       );
-      return use(unchangingSuperPureDep);
+      return use(unchangingIdempotentDep);
     }
 
-    int changingSuperPureDep(CapsuleHandle use) {
+    int changingIdempotentDep(CapsuleHandle use) {
       builds.update(
-        changingSuperPureDep,
+        changingIdempotentDep,
         (count) => count + 1,
         ifAbsent: () => 1,
       );
@@ -183,7 +183,7 @@ void main() {
         (count) => count + 1,
         ifAbsent: () => 1,
       );
-      return use(changingSuperPureDep);
+      return use(changingIdempotentDep);
     }
 
     void impureSink(CapsuleHandle use) {
@@ -197,56 +197,56 @@ void main() {
     expect(container.read(unchangingWatcher), equals(0));
     expect(container.read(changingWatcher), equals(0));
     expect(builds[stateful], equals(1));
-    expect(builds[unchangingSuperPureDep], equals(1));
-    expect(builds[changingSuperPureDep], equals(1));
+    expect(builds[unchangingIdempotentDep], equals(1));
+    expect(builds[changingIdempotentDep], equals(1));
     expect(builds[unchangingWatcher], equals(1));
     expect(builds[changingWatcher], equals(1));
 
     container.read(stateful).$2(0);
     expect(builds[stateful], equals(1));
-    expect(builds[unchangingSuperPureDep], equals(1));
-    expect(builds[changingSuperPureDep], equals(1));
+    expect(builds[unchangingIdempotentDep], equals(1));
+    expect(builds[changingIdempotentDep], equals(1));
     expect(builds[unchangingWatcher], equals(1));
     expect(builds[changingWatcher], equals(1));
 
     expect(container.read(unchangingWatcher), equals(0));
     expect(container.read(changingWatcher), equals(0));
     expect(builds[stateful], equals(1));
-    expect(builds[unchangingSuperPureDep], equals(1));
-    expect(builds[changingSuperPureDep], equals(1));
+    expect(builds[unchangingIdempotentDep], equals(1));
+    expect(builds[changingIdempotentDep], equals(1));
     expect(builds[unchangingWatcher], equals(1));
     expect(builds[changingWatcher], equals(1));
 
     container.read(stateful).$2(1);
     expect(builds[stateful], equals(2));
-    expect(builds[unchangingSuperPureDep], equals(1));
-    expect(builds[changingSuperPureDep], equals(1));
+    expect(builds[unchangingIdempotentDep], equals(1));
+    expect(builds[changingIdempotentDep], equals(1));
     expect(builds[unchangingWatcher], equals(1));
     expect(builds[changingWatcher], equals(1));
 
     expect(container.read(unchangingWatcher), equals(0));
     expect(container.read(changingWatcher), equals(1));
     expect(builds[stateful], equals(2));
-    expect(builds[unchangingSuperPureDep], equals(2));
-    expect(builds[changingSuperPureDep], equals(2));
+    expect(builds[unchangingIdempotentDep], equals(2));
+    expect(builds[changingIdempotentDep], equals(2));
     expect(builds[unchangingWatcher], equals(2));
     expect(builds[changingWatcher], equals(2));
 
-    // Disable the super pure gc
+    // Disable the idempotent gc
     container.read(impureSink);
 
     container.read(stateful).$2(2);
     expect(builds[stateful], equals(3));
-    expect(builds[unchangingSuperPureDep], equals(3));
-    expect(builds[changingSuperPureDep], equals(3));
+    expect(builds[unchangingIdempotentDep], equals(3));
+    expect(builds[changingIdempotentDep], equals(3));
     expect(builds[unchangingWatcher], equals(2));
     expect(builds[changingWatcher], equals(3));
 
     expect(container.read(unchangingWatcher), equals(0));
     expect(container.read(changingWatcher), equals(2));
     expect(builds[stateful], equals(3));
-    expect(builds[unchangingSuperPureDep], equals(3));
-    expect(builds[changingSuperPureDep], equals(3));
+    expect(builds[unchangingIdempotentDep], equals(3));
+    expect(builds[changingIdempotentDep], equals(3));
     expect(builds[unchangingWatcher], equals(2));
     expect(builds[changingWatcher], equals(3));
   });
@@ -258,7 +258,7 @@ void main() {
   //      \      / \
   //  H -> E -> F -> G
   //
-  // C, D, E, G, H are super pure. A, B, F are not.
+  // C, D, E, G, H are idempotent. A, B, F are not.
   test('complex dependency graph', () {
     final builds = <Capsule<Object?>, int>{};
 

@@ -1,3 +1,7 @@
+## 0.0.0-dev.6
+
+ - **DOCS**: update terminology.
+
 ## 0.0.0-dev.5
 
  - **PERF**: add state effect == optimization.

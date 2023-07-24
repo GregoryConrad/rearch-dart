@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://github.com/GregoryConrad/rearch-dart/actions"><img src="https://github.com/GregoryConrad/rearch-rs/actions/workflows/test.yml/badge.svg" alt="CI Status"></a>
+<a href="https://github.com/GregoryConrad/rearch-dart/actions"><img src="https://github.com/GregoryConrad/rearch-dart/actions/workflows/test.yml/badge.svg" alt="CI Status"></a>
 <a href="https://github.com/GregoryConrad/rearch-dart"><img src="https://img.shields.io/github/stars/GregoryConrad/rearch-dart.svg?style=flat&logo=github&colorB=deeppink&label=stars" alt="Github Stars"></a>
 <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="MIT License"></a>
 </p>

@@ -8,7 +8,7 @@ import 'package:rearch/rearch.dart';
 
 void main() => runApp(const TodoApp());
 
-/// Represents the [MimirIndex] that contains the movie dataset.
+/// Represents the [MimirIndex] that contains the todos.
 Future<MimirIndex> indexAsyncCapsule(CapsuleHandle use) async {
   final instance = await Mimir.defaultInstance;
   return instance.openIndex('todos', primaryKey: 'timestamp');
@@ -23,9 +23,9 @@ AsyncValue<MimirIndex> indexWarmUpCapsule(CapsuleHandle use) {
 
 /// Acts as a proxy to the warmed-up [indexAsyncCapsule].
 MimirIndex indexCapsule(CapsuleHandle use) {
-  return use(indexWarmUpCapsule).data.unwrapOrElse(
-        () => throw StateError('indexAsyncCapsule was not warmed up!'),
-      );
+  return use(indexWarmUpCapsule).dataOrElse(
+    () => throw StateError('indexAsyncCapsule was not warmed up!'),
+  );
 }
 
 /// Represents an item in the todos list.
@@ -454,16 +454,15 @@ class TodoItem extends RearchConsumer {
     // The following uses a more advanced technique in rearch: inline capsules.
     // This is similar to `select` in other state management frameworks, but
     // inline capsules are much more powerful because they are full capsules.
-    // Please read the documentation to learn more about inline capsules
-    // *before using them*, because:
-    // > with great power comes great responsibility
-    // (you can accidentally cause leaks if you're not careful)
+    // Please read the documentation for more.
     final (:title, :description, :timestamp, :completed) = use(
-      (CapsuleReader use) => use(todoListCapsule).dataOrElse(
-        () => throw StateError(
-          'In order to display a TodoItem, the todo list must have data!',
-        ),
-      )[index],
+      todoListCapsule.map(
+        (asyncList) => asyncList.dataOrElse(
+          () => throw StateError(
+            'In order to display a TodoItem, the todo list must have data!',
+          ),
+        )[index],
+      ),
     );
 
     final (:updateTodo, :deleteTodo) = use(todoListManagerCapsule);
@@ -520,7 +519,7 @@ class DynamicBackground extends RearchConsumer {
     // We need to use this more advanced side effect since we need to be able
     // to grab the most up-to-date copy of the circles when we check to see
     // if we actually need to add a new circle (if we used the regular state
-    // effect, the closure would capture an outdated copy).
+    // effect, the closure would capture an outdated copy of the state).
     final (getCircles, setCircles) =
         use.stateGetterSetter(<SplashCircleProperties>{});
 

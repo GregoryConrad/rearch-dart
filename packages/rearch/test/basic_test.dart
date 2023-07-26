@@ -97,19 +97,19 @@ void main() {
     void listener(CapsuleReader use) => states.add(use(stateful).$1);
 
     setState(1);
-    final handle1 = container.listen(listener);
+    final dispose1 = container.listen(listener);
     setState(2);
     setState(3);
 
-    handle1.dispose();
+    dispose1();
     setState(4);
 
     setState(5);
-    final handle2 = container.listen(listener);
+    final dispose2 = container.listen(listener);
     setState(6);
     setState(7);
 
-    handle2.dispose();
+    dispose2();
     setState(8);
 
     expect(states, equals([1, 2, 3, 5, 6, 7]));

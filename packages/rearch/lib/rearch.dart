@@ -75,16 +75,21 @@ class CapsuleContainer implements Disposable {
     ) as _CapsuleManager<T>;
   }
 
-  /// Reads the current data of the supplied [Capsule].
+  /// Reads the current data of the supplied [Capsule],
+  /// initializing it if needed.
   T read<T>(Capsule<T> capsule) => _managerOf(capsule).data;
 
   /// *Temporarily* listens to changes in a given set of [Capsule]s.
-  /// If you want to listen to capsule(s) *not temporarily*,
-  /// instead just make an impure capsule and [read] it once to initialize it.
-  /// `listen` calls the supplied listener immediately,
+  ///
+  /// Calls the supplied [listener] immediately,
   /// and then after any capsules its listening to change.
-  @UseResult('ListenerHandle will leak its listener if it is not disposed')
-  ListenerHandle listen(CapsuleListener listener) {
+  /// You *must* call the returned dispose [Function]
+  /// when you no longer need the listener in order to prevent leaks.
+  ///
+  /// If you want to listen to capsule(s) *not temporarily*, instead just make
+  /// a non-idempotent capsule and [read] it once to initialize it.
+  @UseResult('Listener will leak in the container if it is not disposed')
+  void Function() listen(CapsuleListener listener) {
     // Create a temporary *non-idempotent* capsule so that it doesn't get
     // idempotent garbage collected
     void capsule(CapsuleHandle use) {
@@ -93,9 +98,9 @@ class CapsuleContainer implements Disposable {
     }
 
     // Put the temporary capsule into the container so it gets data updates
-    read(capsule);
+    final manager = _managerOf(capsule);
 
-    return ListenerHandle._(this, capsule);
+    return manager.dispose;
   }
 
   /// Runs the supplied [callback] the next time [capsule] is
@@ -113,9 +118,8 @@ class CapsuleContainer implements Disposable {
     // automatically disposed whenever the supplied capsule is updated/disposed
     // via the idempotent gc.
     void tempCapsule(CapsuleHandle use) => use<T>(capsule);
-    final manager = _CapsuleManager(this, tempCapsule);
+    final manager = _managerOf(tempCapsule);
     manager.toDispose.add(callback);
-    _capsules[tempCapsule] = manager;
 
     return () {
       manager.toDispose.remove(callback);
@@ -132,15 +136,14 @@ class CapsuleContainer implements Disposable {
   }
 }
 
-/// A handle onto the lifecycle of a listener from [CapsuleContainer.listen].
-/// You *must* [dispose] the [ListenerHandle]
-/// when you no longer need the listener in order to prevent leaks.
-class ListenerHandle implements Disposable {
-  ListenerHandle._(this._container, this._capsule);
-
-  final CapsuleContainer _container;
-  final _UntypedCapsule _capsule;
-
-  @override
-  void dispose() => _container._capsules[_capsule]?.dispose();
+/// Provides the [map] convenience method on [Capsule]s.
+extension CapsuleMapper<T> on Capsule<T> {
+  /// Maps this [Capsule] (of type [T]) into
+  /// a new idempotent [Capsule] (of type [R])
+  /// by applying the given [mapper].
+  ///
+  /// This is similar to `.select()` in some other libraries.
+  Capsule<R> map<R>(R Function(T) mapper) {
+    return (CapsuleReader use) => mapper(use(this));
+  }
 }

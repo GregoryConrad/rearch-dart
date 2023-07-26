@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-07-25
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`flutter_rearch` - `v0.0.0-dev.7`](#flutter_rearch---v000-dev7)
+ - [`rearch` - `v0.0.0-dev.7`](#rearch---v000-dev7)
+
+Packages with other changes:
+
+ - There are no other changes in this release.
+
+---
+
+#### `flutter_rearch` - `v0.0.0-dev.7`
+
+ - **BREAKING** **FEAT**: add Capsule.map and remove ListenerHandle.
+
+#### `rearch` - `v0.0.0-dev.7`
+
+ - **BREAKING** **FEAT**: add Capsule.map and remove ListenerHandle.
+
+
 ## 2023-07-23
 
 ### Changes

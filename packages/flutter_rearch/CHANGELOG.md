@@ -1,3 +1,9 @@
+## 0.0.0-dev.7
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: add Capsule.map and remove ListenerHandle.
+
 ## 0.0.0-dev.6
 
  - Update a dependency to the latest release.

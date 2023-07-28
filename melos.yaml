@@ -34,3 +34,10 @@ scripts:
     packageFilters:
       flutter: true
       dirExists: test
+
+  test:linux-integration:
+    run: melos exec -c 1 --fail-fast -- "flutter test -d linux integration_test"
+    description: Run Flutter integration tests for a specific package in this project on linux.
+    packageFilters:
+      flutter: true
+      dirExists: integration_test

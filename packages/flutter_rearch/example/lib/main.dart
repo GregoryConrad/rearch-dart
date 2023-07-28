@@ -24,7 +24,7 @@ AsyncValue<MimirIndex> indexWarmUpCapsule(CapsuleHandle use) {
 /// Acts as a proxy to the warmed-up [indexAsyncCapsule].
 MimirIndex indexCapsule(CapsuleHandle use) {
   return use(indexWarmUpCapsule).dataOrElse(
-    () => throw StateError('indexAsyncCapsule was not warmed up!'),
+    () => throw StateError('indexWarmUpCapsule was not warmed up!'),
   );
 }
 

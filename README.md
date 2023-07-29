@@ -40,20 +40,13 @@ Define your "capsules" (en-_capsulated_ pieces of state) at the top level:
 //
 // This particular capsule manages a count from a classic example counter app,
 // using the state side effect.
-(int, void Function()) _countManagerCapsule(CapsuleHandle use) {
+(int, void Function()) countCapsule(CapsuleHandle use) {
   final (count, setCount) = use.state(0);
   return (count, () => setCount(count + 1));
 }
 
-// This capsule provides the current count.
-int countCapsule(CapsuleHandle use) => use(_countManagerCapsule).$1;
-
-// This capsule provides a function that increments the count.
-void Function() incrementCountCapsule(CapsuleHandle use) =>
-    use(_countManagerCapsule).$2;
-
 // This capsule provides the current count, plus one.
-int countPlusOneCapsule(CapsuleHandle use) => use(countCapsule) + 1;
+int countPlusOneCapsule(CapsuleHandle use) => use(countCapsule).$1 + 1;
 ```
 
 You can then use capsules in your widgets in the same fashion;

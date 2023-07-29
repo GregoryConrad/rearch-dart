@@ -37,7 +37,7 @@ Define your "capsules" (en-_capsulated_ pieces of state) at the top level:
 // Capsules are simply functions that consume a CapsuleHandle.
 // The CapsuleHandle lets you get the state of other capsules,
 // in addition to using a large variety of side effects.
-//
+
 // This particular capsule manages a count from a classic example counter app,
 // using the state side effect.
 (int, void Function()) countCapsule(CapsuleHandle use) {

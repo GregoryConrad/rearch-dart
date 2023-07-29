@@ -1,0 +1,19 @@
+name: infinite_scroll
+description: Rearch example application showcasing infinite scroll.
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_rearch: ^0.0.0-dev.7
+  rearch: ^0.0.0-dev.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

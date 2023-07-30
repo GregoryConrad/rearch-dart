@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-07-30
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v0.0.0-dev.8`](#flutter_rearch---v000-dev8)
+ - [`rearch` - `v0.0.0-dev.8`](#rearch---v000-dev8)
+
+---
+
+#### `flutter_rearch` - `v0.0.0-dev.8`
+
+ - **DOCS**: add count warm up example ([#2](https://github.com/GregoryConrad/rearch-dart/issues/2)).
+
+#### `rearch` - `v0.0.0-dev.8`
+
+ - **FIX**: add proper handling for capsule self reads.
+ - **FEAT**: add isFirstBuild side effect.
+
+
 ## 2023-07-25
 
 ### Changes

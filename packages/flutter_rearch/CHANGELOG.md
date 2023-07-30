@@ -1,3 +1,7 @@
+## 0.0.0-dev.8
+
+ - **DOCS**: add count warm up example ([#2](https://github.com/GregoryConrad/rearch-dart/issues/2)).
+
 ## 0.0.0-dev.7
 
 > Note: This release has breaking changes.

@@ -1,3 +1,8 @@
+## 0.0.0-dev.8
+
+ - **FIX**: add proper handling for capsule self reads.
+ - **FEAT**: add isFirstBuild side effect.
+
 ## 0.0.0-dev.7
 
 > Note: This release has breaking changes.

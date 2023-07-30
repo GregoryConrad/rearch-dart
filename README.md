@@ -49,8 +49,36 @@ Define your "capsules" (en-_capsulated_ pieces of state) at the top level:
 int countPlusOneCapsule(CapsuleHandle use) => use(countCapsule).$1 + 1;
 ```
 
-You can then use capsules in your widgets in the same fashion;
-an example of this will be here soon.
+And then, if you are using Flutter, define some widgets:
+```dart
+// Widgets are just like a special kind of capsule!
+// Instead of a CapsuleHandle, they consume a WidgetHandle.
+// They also live at the top level.
+@rearchWidget
+Widget counterAppBody(BuildContext context, WidgetHandle use) {
+  final (count, incrementCount) = use(countCapsule);
+  final countPlusOne = use(countPlusOneCapsule);
+  return Scaffold(
+    appBar: AppBar(title: Text('Rearch Demo')),
+    floatingActionButton: FloatingActionButton(
+      onPressed: incrementCount,
+      tooltip: 'Increment',
+      child: Icon(Icons.add),
+    ),
+    body: Center(
+      child: Text(
+        '$count + 1 = $countPlusOne',
+        style: TextTheme.of(context).headlineLarge,
+      ),
+    ),
+  );
+}
+```
+
+*Note: the `@rearchWidget` above requires
+[static metaprogramming](https://github.com/dart-lang/language/issues/1482),
+which has not yet been released.
+In the meantime, there is a custom widget, `RearchConsumer`, which you can extend.*
 
 
 ## Getting Started

@@ -18,6 +18,19 @@ class _CapsuleManager<T> extends DataflowGraphNode
   final toDispose = <SideEffectApiCallback>{};
 
   R read<R>(Capsule<R> otherCapsule) {
+    if (otherCapsule == capsule) {
+      if (hasBuilt) {
+        return data as R;
+      } else {
+        throw StateError(
+          'A capsule cannot read its own data in its first build '
+          "(as its data won't exist yet)! "
+          'Consider using the isFirstBuild() side effect to avoid reading '
+          "a capsule's data in its first build.",
+        );
+      }
+    }
+
     final otherManager = container._managerOf(otherCapsule);
     addDependency(otherManager);
     return otherManager.data;

@@ -141,6 +141,25 @@ void main() {
     expect(builds, equals(2)); // once for int, once for double
   });
 
+  test('capsule can read self after first build', () {
+    void shouldThrow(CapsuleHandle use) => use(shouldThrow);
+    (int, void Function()) buildCounter(CapsuleHandle use) {
+      final isFirstBuild = use.isFirstBuild();
+      final buildCount = isFirstBuild ? 1 : (use(buildCounter).$1 + 1);
+      final rebuild = use.rebuilder();
+      return (buildCount, rebuild);
+    }
+
+    final container = useContainer();
+
+    expect(() => container.read(shouldThrow), throwsStateError);
+    for (final i in Iterable.generate(3, (i) => i + 1)) {
+      final (buildCount, rebuild) = container.read(buildCounter);
+      expect(buildCount, equals(i));
+      rebuild();
+    }
+  });
+
   test('== check skips unneeded rebuilds', () {
     final builds = <Capsule<Object?>, int>{};
 

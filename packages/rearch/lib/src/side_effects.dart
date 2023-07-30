@@ -91,6 +91,13 @@ extension BuiltinSideEffects on SideEffectRegistrar {
     return prev;
   }
 
+  /// Returns true on the first build and false on subsequent builds.
+  ///
+  /// Useful for a capsule wishing to read its own current data,
+  /// as capsules cannot read their own data on their first build
+  /// (as it won't exist yet).
+  bool isFirstBuild() => previous(false) ?? true;
+
   /// Equivalent to the `useMemo` hook from React.
   /// See https://react.dev/reference/react/useMemo
   T memo<T>(T Function() memo, [List<Object?> dependencies = const []]) {

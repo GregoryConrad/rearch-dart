@@ -276,6 +276,22 @@ extension BuiltinSideEffects on SideEffectRegistrar {
       clear: () => setFuture(null),
     );
   }
+
+  /// A side effect that allows you to watch a future that can be refreshed
+  /// by invoking the supplied callback.
+  ///
+  /// You supply a [futureFactory], which is a function that must
+  /// return a new instance of a future to be watched.
+  ///
+  /// Internally creates the future to watch on the first build
+  /// and then again whenever the returned callback is invoked.
+  (AsyncValue<T>, void Function()) refreshableFuture<T>(
+    Future<T> Function() futureFactory,
+  ) {
+    final (currFuture, setFuture) = lazyState(futureFactory);
+    final futureState = future(currFuture);
+    return (futureState, () => setFuture(futureFactory()));
+  }
 }
 
 /// Checks to see whether [newDeps] has changed from [oldDeps]

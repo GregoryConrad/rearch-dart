@@ -32,21 +32,21 @@ That's a mouthful! But in short, rearch is an entirely new approach to building 
 
 
 ## In a Nutshell
-Define your "capsules" (en-_capsulated_ pieces of state) at the top level:
+Define your "capsules" (en-_capsulated_ pieces of data) at the top level:
 ```dart
 // Capsules are simply functions that consume a CapsuleHandle.
-// The CapsuleHandle lets you get the state of other capsules,
+// The CapsuleHandle lets you get the data of other capsules,
 // in addition to using a large variety of side effects.
 
 // This particular capsule manages a count from a classic example counter app,
 // using the state side effect.
-(int, void Function()) countCapsule(CapsuleHandle use) {
+(int, void Function()) countManager(CapsuleHandle use) {
   final (count, setCount) = use.state(0);
   return (count, () => setCount(count + 1));
 }
 
 // This capsule provides the current count, plus one.
-int countPlusOneCapsule(CapsuleHandle use) => use(countCapsule).$1 + 1;
+int countPlusOneCapsule(CapsuleHandle use) => use(countManager).$1 + 1;
 ```
 
 And then, if you are using Flutter, define some widgets:
@@ -56,7 +56,7 @@ And then, if you are using Flutter, define some widgets:
 // They also live at the top level.
 @rearchWidget
 Widget counterAppBody(BuildContext context, WidgetHandle use) {
-  final (count, incrementCount) = use(countCapsule);
+  final (count, incrementCount) = use(countManager);
   final countPlusOne = use(countPlusOneCapsule);
   return Scaffold(
     appBar: AppBar(title: Text('Rearch Demo')),
@@ -121,8 +121,8 @@ two key observations:
 Accordingly, rearch allows you to *simply* define functions of state + side effects
 for creating both state and UI,
 and in doing so allows you to create applications of great scale.
-Also because of this insight, I'd argue rearch is
-*the most testable state management solution available for Flutter today*.
+Also because of this insight, I'd argue that rearch is
+*the most testable approach to building applications today*.
 With rearch, all of your capsule/widget code will be pure functions
 (despite having arbitrary side effects!),
 and you will *never need complicated mocks*.
@@ -203,7 +203,7 @@ That is a lot of effort for something that could be done simply with the factory
 
 For some quick context, factories are a way to create an object on demand based on some dynamic arguments,
 such as those provided by a user or some external mechanism.
-Factories allow you to create an object for however long you need it, and gracefully handle its state and disposale.
+Factories allow you to create an object for however long you need it, and gracefully handle its state and disposal.
 
 For that reason, rearch exposes a way to make working with the factory pattern easier;
 see the [documentation] for more.

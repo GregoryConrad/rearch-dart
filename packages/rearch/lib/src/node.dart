@@ -8,7 +8,7 @@ abstract class DataflowGraphNode implements Disposable {
   final _dependencies = <DataflowGraphNode>{};
   final _dependents = <DataflowGraphNode>{};
 
-  bool get isSuperPure;
+  bool get isIdempotent;
   bool buildSelf();
 
   @override
@@ -93,7 +93,7 @@ abstract class DataflowGraphNode implements Disposable {
     buildOrder.reversed.where((node) {
       final dependentsAllDisposable =
           node._dependents.every(disposable.contains);
-      return node.isSuperPure && dependentsAllDisposable;
+      return node.isIdempotent && dependentsAllDisposable;
     }).forEach(disposable.add);
 
     return disposable;

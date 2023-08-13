@@ -50,7 +50,7 @@ class _CapsuleManager<T> extends DataflowGraphNode
   }
 
   @override
-  bool get isSuperPure => sideEffectData.isEmpty;
+  bool get isIdempotent => sideEffectData.isEmpty;
 
   @override
   void dispose() {

@@ -108,7 +108,7 @@ class CapsuleContainer implements Disposable {
   /// You can also prematurely remove the callback from the container
   /// via the returned [void Function()] (which does not invoke [callback]).
   /// It is highly recommended not to use this method as I reserve the right
-  /// to breakingly change or remove it at will in a new *minor* release.
+  /// to breakingly change or remove it at will in any new release.
   @experimental
   void Function() onNextUpdate<T>(
     Capsule<T> capsule,
@@ -117,7 +117,7 @@ class CapsuleContainer implements Disposable {
     // This uses the fact that if we add an idempotent capsule, it will be
     // automatically disposed whenever the supplied capsule is updated/disposed
     // via the idempotent gc.
-    void tempCapsule(CapsuleHandle use) => use<T>(capsule);
+    void tempCapsule(CapsuleReader use) => use<T>(capsule);
     final manager = _managerOf(tempCapsule);
     manager.toDispose.add(callback);
 
@@ -129,7 +129,9 @@ class CapsuleContainer implements Disposable {
 
   @override
   void dispose() {
-    // We need toList() to prevent container modification during iteration
+    // We need toList() to copy the list in order to
+    // prevent container modification during iteration
+    // (dispose() removes the manager from the container).
     for (final manager in _capsules.values.toList()) {
       manager.dispose();
     }

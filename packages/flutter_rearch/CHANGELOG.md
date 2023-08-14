@@ -1,3 +1,7 @@
+## 1.0.0-dev.0
+
+ - Bump "flutter_rearch" to `1.0.0-dev.0`.
+
 ## 0.0.0-dev.8
 
  - **DOCS**: add count warm up example ([#2](https://github.com/GregoryConrad/rearch-dart/issues/2)).

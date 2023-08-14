@@ -1,3 +1,7 @@
+## 1.0.0-dev.0
+
+ - **FEAT**: add refreshableFuture side effect.
+
 ## 0.0.0-dev.8
 
  - **FIX**: add proper handling for capsule self reads.

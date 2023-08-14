@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-08-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`rearch` - `v1.0.0-dev.0`](#rearch---v100-dev0)
+ - [`flutter_rearch` - `v1.0.0-dev.0`](#flutter_rearch---v100-dev0)
+
+---
+
+#### `rearch` - `v1.0.0-dev.0`
+
+ - **FEAT**: add refreshableFuture side effect.
+
+#### `flutter_rearch` - `v1.0.0-dev.0`
+
+ - Bump "flutter_rearch" to `1.0.0-dev.0`.
+
+
 ## 2023-07-30
 
 ### Changes

@@ -9,6 +9,9 @@ extension _UseConvenience on SideEffectRegistrar {
 
 /// A collection of builtin side effects.
 extension BuiltinSideEffects on SideEffectRegistrar {
+  /// Declares the associated capsule as a non-idempotent listener.
+  void asListener() => use.register((_) {});
+
   /// Convenience side effect that gives a copy of the [SideEffectApi].
   SideEffectApi api() => use.register((api) => api);
 

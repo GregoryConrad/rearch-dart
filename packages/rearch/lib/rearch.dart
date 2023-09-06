@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:rearch/src/node.dart';
+import 'package:rearch/src/side_effects.dart';
 
 export 'src/side_effects.dart';
 export 'src/types.dart';
@@ -20,7 +21,7 @@ typedef Capsule<T> = T Function(CapsuleHandle);
 /// Capsule listeners are a mechanism to *temporarily* listen to changes
 /// to a set of [Capsule]s.
 /// See [CapsuleContainer.listen].
-typedef CapsuleListener = void Function(CapsuleReader);
+typedef CapsuleListener = void Function(CapsuleHandle);
 
 /// Provides a mechanism to read the current state of [Capsule]s.
 // ignore: one_member_abstracts
@@ -82,18 +83,19 @@ class CapsuleContainer implements Disposable {
   /// *Temporarily* listens to changes in a given set of [Capsule]s.
   ///
   /// Calls the supplied [listener] immediately,
-  /// and then after any capsules its listening to change.
+  /// and then after any capsules it's listening to change.
   /// You *must* call the returned dispose [Function]
   /// when you no longer need the listener in order to prevent leaks.
   ///
   /// If you want to listen to capsule(s) *not temporarily*, instead just make
   /// a non-idempotent capsule and [read] it once to initialize it.
+  /// (See the documentation for more on this topic.)
   @UseResult('Listener will leak in the container if it is not disposed')
   void Function() listen(CapsuleListener listener) {
     // Create a temporary *non-idempotent* capsule so that it doesn't get
     // idempotent garbage collected
     void capsule(CapsuleHandle use) {
-      use.register((_) {});
+      use.asListener();
       listener(use);
     }
 

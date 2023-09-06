@@ -1,3 +1,7 @@
+## 1.0.0-dev.1
+
+ - **FEAT**: add improvements for listeners.
+
 ## 1.0.0-dev.0
 
  - **FEAT**: add refreshableFuture side effect.

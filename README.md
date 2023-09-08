@@ -109,11 +109,11 @@ void main() {
 ```
 
 ### Documentation
-Now go take a look at [documentation]!
+Now go take a look at the [documentation]!
 
 
 ## Why Rearch?
-Rearch is different than other state management frameworks because it acts upon
+Rearch is different than other approaches to build applications because it acts upon
 two key observations:
 1. UI is a function of state and side effect(s).
 2. State is a function of other state and side effect(s).
@@ -127,9 +127,13 @@ With rearch, all of your capsule/widget code will be pure functions
 (despite having arbitrary side effects!),
 and you will *never need complicated mocks*.
 
+While rearch can be used for state management, it is also much more;
+it provides a solution to build *any* application by borrowing from the fields of
+component-based software engineering and incremental computation.
+
 > Rearch is the subject of my master's thesis;
 check back here later for a link to the final write up
-if you want to learn about the theory behind rearch.
+if you want to learn more about the theory behind rearch.
 
 Further, rearch has an *extremely powerful* side effects system, and that is not an understatement.
 You will *never* have to wait on a new feature; you can just create a side effect!

@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-09-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`flutter_rearch` - `v1.0.0`](#flutter_rearch---v100)
+ - [`rearch` - `v1.0.0`](#rearch---v100)
+
+Packages with other changes:
+
+ - There are no other changes in this release.
+
+Packages graduated to a stable release (see pre-releases prior to the stable version for changelog entries):
+
+ - `flutter_rearch` - `v1.0.0`
+ - `rearch` - `v1.0.0`
+
+---
+
+#### `flutter_rearch` - `v1.0.0`
+
+#### `rearch` - `v1.0.0`
+
+
 ## 2023-09-06
 
 ### Changes

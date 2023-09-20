@@ -1,6 +1,6 @@
 name: flutter_rearch
 description: A re-imagined declarative approach to application design and architecture
-version: 1.0.0
+version: 1.0.0+0
 homepage: https://rearch.gsconrad.com
 documentation: https://rearch.gsconrad.com
 repository: https://github.com/GregoryConrad/rearch-dart
@@ -13,7 +13,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  rearch: ^1.0.0
+  rearch: ^1.0.0+0
 
 dev_dependencies:
   flutter_test:

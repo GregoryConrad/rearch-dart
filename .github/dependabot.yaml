@@ -1,23 +1,39 @@
 version: 2
 enable-beta-ecosystems: true
 updates:
+
+  # Workspace root
   - package-ecosystem: pub
     directory: "/"
     schedule:
       interval: weekly
+
+  # Two main packages
   - package-ecosystem: pub
     directory: "/packages/rearch"
-    schedule:
-      interval: weekly
-  - package-ecosystem: pub
-    directory: "/packages/rearch/example"
     schedule:
       interval: weekly
   - package-ecosystem: pub
     directory: "/packages/flutter_rearch"
     schedule:
       interval: weekly
+
+  # Direct examples of the two main packages
+  - package-ecosystem: pub
+    directory: "/packages/rearch/example"
+    schedule:
+      interval: weekly
   - package-ecosystem: pub
     directory: "/packages/flutter_rearch/example"
+    schedule:
+      interval: weekly
+
+  # Other examples (excluding dart_only and todo_list_app since they're symlinks)
+  - package-ecosystem: pub
+    directory: "/examples/count_warm_up"
+    schedule:
+      interval: weekly
+  - package-ecosystem: pub
+    directory: "/examples/infinite_scroll"
     schedule:
       interval: weekly

@@ -3,6 +3,12 @@ repository: https://github.com/GregoryConrad/rearch-dart
 
 packages:
   - packages/**
+  - examples/*
+
+# These are symlinks, so melos fails to bootstrap unless they are ignored
+ignore:
+  - examples/dart_only
+  - examples/todo_list_app
 
 scripts:
   analyze:

@@ -27,6 +27,8 @@ abstract class DataflowGraphNode implements Disposable {
     _dependencies.clear();
   }
 
+  bool get hasNoDependents => _dependents.isEmpty;
+
   void buildSelfAndDependents() {
     // We must build self, so we preemptively build it before other checks
     final selfChanged = buildSelf();

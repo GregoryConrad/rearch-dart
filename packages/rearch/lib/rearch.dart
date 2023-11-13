@@ -107,8 +107,13 @@ class CapsuleContainer implements Disposable {
 
   /// Runs the supplied [callback] the next time [capsule] is
   /// updated *or* disposed.
+  ///
   /// You can also prematurely remove the callback from the container
   /// via the returned [void Function()] (which does not invoke [callback]).
+  /// It also will free [capsule] from the container if possible
+  /// (i.e., if it is idempotent and has no dependents) when invoked.
+  ///
+  /// # WARNING!
   /// It is highly recommended not to use this method as I reserve the right
   /// to breakingly change or remove it at will in any new release.
   @experimental
@@ -120,12 +125,22 @@ class CapsuleContainer implements Disposable {
     // automatically disposed whenever the supplied capsule is updated/disposed
     // via the idempotent gc.
     void tempCapsule(CapsuleReader use) => use<T>(capsule);
-    final manager = _managerOf(tempCapsule);
-    manager.toDispose.add(callback);
+    final tempManager = _managerOf(tempCapsule);
+    tempManager.toDispose.add(callback);
 
     return () {
-      manager.toDispose.remove(callback);
-      manager.dispose();
+      tempManager.toDispose.remove(callback);
+      tempManager.dispose();
+
+      // Eagerly garbage collect capsule if possible to prevent possible leaks
+      // when inline capsules are used.
+      // We could also employ a more sophisticated GC strategy
+      // by searching the graph and finding other disposable nodes,
+      // but this should cover 99% of cases effectively with no extra cost.
+      final capManager = _managerOf(capsule);
+      if (capManager.isIdempotent && capManager.hasNoDependents) {
+        capManager.dispose();
+      }
     };
   }
 

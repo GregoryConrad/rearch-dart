@@ -1,3 +1,7 @@
+## 1.0.1
+
+ - **FIX**: add gc in onNextUpdate to prevent possible leak ([#10](https://github.com/GregoryConrad/rearch-dart/issues/10)).
+
 ## 1.0.0+0
 
  - Bump "rearch" to `1.0.0+0`.

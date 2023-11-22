@@ -18,8 +18,8 @@ jobs:
         run: flutter build web
         working-directory: examples/presentation
       - uses: FirebaseExtended/action-hosting-deploy@v0
-        working-directory: examples/presentation
         with:
+          entryPoint: examples/presentation
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_REARCH_PRESENTATION }}'
           channelId: live

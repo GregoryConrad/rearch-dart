@@ -1,0 +1,19 @@
+name: presentation
+description: Interactive presentation introducing ReArch.
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_deck: ^0.8.0
+  flutter_rearch: ^1.0.1
+  rearch: ^1.0.1
+
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/

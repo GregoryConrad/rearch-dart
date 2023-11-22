@@ -2,18 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_deck/flutter_deck.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:rearch/rearch.dart';
 
 // ignore_for_file: public_member_api_docs
 
-void main() => runApp(const App());
-
-class App extends StatelessWidget {
-  const App({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const RearchBootstrapper(child: PresentationApp());
-  }
+void main() {
+  usePathUrlStrategy();
+  runApp(const PresentationApp());
 }
 
 class PresentationApp extends StatelessWidget {
@@ -21,182 +17,184 @@ class PresentationApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FlutterDeckApp(
-      speakerInfo: const FlutterDeckSpeakerInfo(
-        name: 'Gregory Conrad',
-        description: 'Advisor: Professor George Heineman',
-        socialHandle: 'github.com/GregoryConrad',
-        imagePath: 'assets/portrait.jpg',
+    return RearchBootstrapper(
+      child: FlutterDeckApp(
+        speakerInfo: const FlutterDeckSpeakerInfo(
+          name: 'Gregory Conrad',
+          description: 'Advisor: Professor George Heineman',
+          socialHandle: 'github.com/GregoryConrad',
+          imagePath: 'assets/portrait.jpg',
+        ),
+        configuration: const FlutterDeckConfiguration(
+          transition: FlutterDeckTransition.fade(),
+          // TODO(GregoryConrad): either change these defaults or delete
+          // transition: FlutterDeckTransition.none(),
+          // background: FlutterDeckBackgroundConfiguration(
+          //   light: FlutterDeckBackground.solid(Color(0xFFB5FFFC)),
+          //   dark: FlutterDeckBackground.solid(Color(0xFF16222A)),
+          // ),
+          // Override controls so that TextFields can receive "m" and "."
+          controls: FlutterDeckControlsConfiguration(
+            openDrawerKey: LogicalKeyboardKey.arrowUp,
+            toggleMarkerKey: LogicalKeyboardKey.arrowDown,
+          ),
+          footer: FlutterDeckFooterConfiguration(
+            showSlideNumbers: true,
+            // TODO(GregoryConrad): WPI logo
+            // widget: FlutterLogo(),
+          ),
+          progressIndicator: FlutterDeckProgressIndicator.gradient(
+            backgroundColor: Colors.black,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Colors.pink, Colors.purple],
+            ),
+          ),
+        ),
+        slides: const [
+          FunctionalSlide(
+            builder: intro,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/intro',
+            ),
+          ),
+          FunctionalSlide(
+            builder: agenda,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/agenda',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Agenda',
+              ),
+            ),
+          ),
+
+          // Motivation
+          // - Many tried and true for OOP, not as many functional
+          // - Need to build an application around data and ops on the data
+          // - Declarative ONLY approach to application building
+          // - loose coupling
+
+          // Background
+          // Background (State Management)
+          // - Dart/Flutter, Widgets
+          // Background (Component-Based Software Engineering)
+          // Background (Incremental Computation)
+
+          // Design
+          // - Capsules, Containers, Side Effects
+          // Design (Capsules)
+          // - stateless, declarative, pure functions, despite side effects
+          // - spreadsheet analogy with cells, A1 and B1
+          // - capsule composition forms a *directed acyclic graph*
+          // - graph is formed internally from capsule dependencies
+          // Design (Containers)
+          // - a mapping of capsule to their states (often backed by hash map)
+          // - operates in entire states, strong consistency across capsules
+          // - contain state of a set of capsules
+          // - store side effect state, which are the crux of an application
+          // - as idempotent capsules can be calcualted on teh fly
+          // Design (Side Effects)
+          // - tuple of private data coupled with a way to mutate that data,
+          // - triggering a rebuild
+          // - Are stored directly in the container
+          // - side effects compose into a tree
+          // Design (Side Effects Cont.)
+          // - I lied--a simplistic model is a DAG.
+          // - side effects are actually equivalent to self reads,
+          //   which is allowed:
+          // - example of a counter with both self reads and side effects
+
+          // Paradigms
+          FunctionalSlide(
+            builder: paradigms,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/paradigms',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Paradigms',
+              ),
+            ),
+          ),
+          FunctionalSlide(
+            builder: factories,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/paradigms/factories',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Paradigms (Factories)',
+              ),
+            ),
+          ),
+          FunctionalSlide(
+            builder: actions,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/paradigms/actions',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Paradigms (Actions)',
+              ),
+            ),
+          ),
+          FunctionalSlide(
+            builder: asynchrony,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/paradigms/asynchrony',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Paradigms (Asynchrony)',
+              ),
+            ),
+          ),
+
+          // Implementations
+          // Implementations (Algorithms)
+          // - graph is formed from capsules
+          // Implementations (Algorithms Cont.)
+          // - idempotent garbage collection
+          // Implementations (Dart and Flutter Library)
+          // - special features for functional style UI development
+          //   (functional widgets)
+          // - todos ui application (include dep graph pic)
+          FunctionalSlide(
+            builder: counterExample,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/implementations/counter-example',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Implementations (Dart and Flutter Library Cont.)',
+              ),
+            ),
+          ),
+          // Implementations (Rust Library)
+          // - geared toward server and systems needs
+          // - Rust container is safe across multithreaded environments,
+          //   with high reads and mutex blocked writes
+          // - todos web server (include endpoints, dep graph pic)
+          // Implementations (Rust Library Benchmark)
+
+          // Future Works
+          // - grab from paper
+
+          // Conclusion
+          FunctionalSlide(
+            builder: conclusion,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/conclusion',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Conclusion',
+              ),
+            ),
+          ),
+          FunctionalSlide(
+            builder: builtWithRearch,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/conclusion/built-with-rearch',
+            ),
+          ),
+          FunctionalSlide(
+            builder: qAndA,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/conclusion/q-and-a',
+            ),
+          ),
+        ],
       ),
-      configuration: const FlutterDeckConfiguration(
-        transition: FlutterDeckTransition.fade(),
-        // TODO(GregoryConrad): either change these defaults or delete
-        // transition: FlutterDeckTransition.none(),
-        // background: FlutterDeckBackgroundConfiguration(
-        //   light: FlutterDeckBackground.solid(Color(0xFFB5FFFC)),
-        //   dark: FlutterDeckBackground.solid(Color(0xFF16222A)),
-        // ),
-        // Override controls so that TextFields can receive "m" and "."
-        controls: FlutterDeckControlsConfiguration(
-          openDrawerKey: LogicalKeyboardKey.arrowUp,
-          toggleMarkerKey: LogicalKeyboardKey.arrowDown,
-        ),
-        footer: FlutterDeckFooterConfiguration(
-          showSlideNumbers: true,
-          // TODO(GregoryConrad): WPI logo
-          // widget: FlutterLogo(),
-        ),
-        progressIndicator: FlutterDeckProgressIndicator.gradient(
-          backgroundColor: Colors.black,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.pink, Colors.purple],
-          ),
-        ),
-      ),
-      slides: const [
-        FunctionalSlide(
-          builder: intro,
-          configuration: FlutterDeckSlideConfiguration(
-            route: '/intro',
-          ),
-        ),
-        FunctionalSlide(
-          builder: agenda,
-          configuration: FlutterDeckSlideConfiguration(
-            route: '/agenda',
-            header: FlutterDeckHeaderConfiguration(
-              title: 'Agenda',
-            ),
-          ),
-        ),
-
-        // Motivation
-        // - Many tried and true for OOP, not as many functional
-        // - Need to build an application around data and simple ops on the data
-        // - Declarative ONLY approach to application building
-        // - loose coupling
-
-        // Background
-        // Background (State Management)
-        // - Dart/Flutter, Widgets
-        // Background (Component-Based Software Engineering)
-        // Background (Incremental Computation)
-
-        // Design
-        // - Capsules, Containers, Side Effects
-        // Design (Capsules)
-        // - stateless, declarative, pure functions, despite side effects
-        // - spreadsheet analogy with cells, A1 and B1
-        // - capsule composition forms a *directed acyclic graph*
-        // - graph is formed internally from capsule dependencies
-        // Design (Containers)
-        // - a mapping of capsule to their states (often backed by hash map)
-        // - operates in entire states, strong consistency across capsules
-        // - contain state of a set of capsules
-        // - store side effect state, which are the crux of an application
-        // - as idempotent capsules can be calcualted on teh fly
-        // Design (Side Effects)
-        // - tuple of private data coupled with a way to mutate that data,
-        // - triggering a rebuild
-        // - Are stored directly in the container
-        // - side effects compose into a tree
-        // Design (Side Effects Cont.)
-        // - I lied--a simplistic model is a DAG.
-        // - side effects are actually equivalent to self reads,
-        //   which is allowed:
-        // - example of a counter with both self reads and side effects
-
-        // Paradigms
-        FunctionalSlide(
-          builder: paradigms,
-          configuration: FlutterDeckSlideConfiguration(
-            route: '/paradigms',
-            header: FlutterDeckHeaderConfiguration(
-              title: 'Paradigms',
-            ),
-          ),
-        ),
-        FunctionalSlide(
-          builder: factories,
-          configuration: FlutterDeckSlideConfiguration(
-            route: '/paradigms/factories',
-            header: FlutterDeckHeaderConfiguration(
-              title: 'Paradigms (Factories)',
-            ),
-          ),
-        ),
-        FunctionalSlide(
-          builder: actions,
-          configuration: FlutterDeckSlideConfiguration(
-            route: '/paradigms/actions',
-            header: FlutterDeckHeaderConfiguration(
-              title: 'Paradigms (Actions)',
-            ),
-          ),
-        ),
-        FunctionalSlide(
-          builder: asynchrony,
-          configuration: FlutterDeckSlideConfiguration(
-            route: '/paradigms/asynchrony',
-            header: FlutterDeckHeaderConfiguration(
-              title: 'Paradigms (Asynchrony)',
-            ),
-          ),
-        ),
-
-        // Implementations
-        // Implementations (Algorithms)
-        // - graph is formed from capsules
-        // Implementations (Algorithms Cont.)
-        // - idempotent garbage collection
-        // Implementations (Dart and Flutter Library)
-        // - special features for functional style UI development
-        //   (functional widgets)
-        // - todos ui application (include dep graph pic)
-        FunctionalSlide(
-          builder: counterExample,
-          configuration: FlutterDeckSlideConfiguration(
-            route: '/implementations/counter-example',
-            header: FlutterDeckHeaderConfiguration(
-              title: 'Implementations (Dart and Flutter Library Cont.)',
-            ),
-          ),
-        ),
-        // Implementations (Rust Library)
-        // - geared toward server and systems needs
-        // - Rust container is safe across multithreaded environments,
-        //   with high reads and mutex blocked writes
-        // - todos web server (include endpoints, dep graph pic)
-        // Implementations (Rust Library Benchmark)
-
-        // Future Works
-        // - grab from paper
-
-        // Conclusion
-        FunctionalSlide(
-          builder: conclusion,
-          configuration: FlutterDeckSlideConfiguration(
-            route: '/conclusion',
-            header: FlutterDeckHeaderConfiguration(
-              title: 'Conclusion',
-            ),
-          ),
-        ),
-        FunctionalSlide(
-          builder: builtWithRearch,
-          configuration: FlutterDeckSlideConfiguration(
-            route: '/conclusion/built-with-rearch',
-          ),
-        ),
-        FunctionalSlide(
-          builder: qAndA,
-          configuration: FlutterDeckSlideConfiguration(
-            route: '/conclusion/q-and-a',
-          ),
-        ),
-      ],
     );
   }
 }

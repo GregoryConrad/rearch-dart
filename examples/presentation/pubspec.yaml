@@ -10,6 +10,8 @@ dependencies:
     sdk: flutter
   flutter_deck: ^0.8.0
   flutter_rearch: ^1.0.1
+  flutter_web_plugins:
+    sdk: flutter
   rearch: ^1.0.1
 
 

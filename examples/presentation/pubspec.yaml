@@ -10,10 +10,8 @@ dependencies:
     sdk: flutter
   flutter_deck: ^0.8.0
   flutter_rearch: ^1.0.1
-  flutter_web_plugins:
-    sdk: flutter
   rearch: ^1.0.1
-
+  url_strategy: ^0.2.0
 
 flutter:
   uses-material-design: true

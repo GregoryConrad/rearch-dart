@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_deck/flutter_deck.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:rearch/rearch.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 // ignore_for_file: public_member_api_docs
 
 void main() {
-  usePathUrlStrategy();
+  setPathUrlStrategy();
   runApp(const PresentationApp());
 }
 
@@ -25,25 +25,18 @@ class PresentationApp extends StatelessWidget {
           socialHandle: 'github.com/GregoryConrad',
           imagePath: 'assets/portrait.jpg',
         ),
-        configuration: const FlutterDeckConfiguration(
-          transition: FlutterDeckTransition.fade(),
-          // TODO(GregoryConrad): either change these defaults or delete
-          // transition: FlutterDeckTransition.none(),
-          // background: FlutterDeckBackgroundConfiguration(
-          //   light: FlutterDeckBackground.solid(Color(0xFFB5FFFC)),
-          //   dark: FlutterDeckBackground.solid(Color(0xFF16222A)),
-          // ),
+        configuration: FlutterDeckConfiguration(
           // Override controls so that TextFields can receive "m" and "."
-          controls: FlutterDeckControlsConfiguration(
+          controls: const FlutterDeckControlsConfiguration(
             openDrawerKey: LogicalKeyboardKey.arrowUp,
             toggleMarkerKey: LogicalKeyboardKey.arrowDown,
           ),
+          transition: const FlutterDeckTransition.fade(),
           footer: FlutterDeckFooterConfiguration(
             showSlideNumbers: true,
-            // TODO(GregoryConrad): WPI logo
-            // widget: FlutterLogo(),
+            widget: Image.asset('assets/wpi-logo.png', height: 32),
           ),
-          progressIndicator: FlutterDeckProgressIndicator.gradient(
+          progressIndicator: const FlutterDeckProgressIndicator.gradient(
             backgroundColor: Colors.black,
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -99,6 +92,15 @@ class PresentationApp extends StatelessWidget {
           // - triggering a rebuild
           // - Are stored directly in the container
           // - side effects compose into a tree
+          FunctionalSlide(
+            builder: counterExample,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/design/side-effects/counter-example',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Design (Side Effects Cont.)',
+              ),
+            ),
+          ),
           // Design (Side Effects Cont.)
           // - I lied--a simplistic model is a DAG.
           // - side effects are actually equivalent to self reads,
@@ -152,15 +154,6 @@ class PresentationApp extends StatelessWidget {
           // - special features for functional style UI development
           //   (functional widgets)
           // - todos ui application (include dep graph pic)
-          FunctionalSlide(
-            builder: counterExample,
-            configuration: FlutterDeckSlideConfiguration(
-              route: '/implementations/counter-example',
-              header: FlutterDeckHeaderConfiguration(
-                title: 'Implementations (Dart and Flutter Library Cont.)',
-              ),
-            ),
-          ),
           // Implementations (Rust Library)
           // - geared toward server and systems needs
           // - Rust container is safe across multithreaded environments,
@@ -402,6 +395,7 @@ FlutterDeckSlide actions(BuildContext context) {
           'Directly derived from application feature requirements',
           'Often perform side effects (in the container or externally)',
           'Enables *easy* loose coupling for a particular functionality',
+          'Billing application: what may you need?',
         ],
       );
     },
@@ -429,14 +423,30 @@ fn increment_x_action(
 }
 
 FlutterDeckSlide asynchrony(BuildContext context) {
-  return FlutterDeckSlide.blank(
-    builder: (context) {
+  return FlutterDeckSlide.split(
+    leftBuilder: (context) {
       return FlutterDeckBulletList(
         items: const [
-          'TODO',
-          'Long or delayed computations',
-          'Interfacing with I/O',
+          'Async is inevitable in any growing application',
+          'Interfacing with I/O, long computations',
+          'Issue: capsules are only synchronous!',
+          'Solution: treat as a state machine and use side effects',
+          'AsyncValue: Loading, Completed (Data/Error)',
         ],
+      );
+    },
+    rightBuilder: (context) {
+      return const FlutterDeckCodeHighlight(
+        fileName: 'example_async_capsule.dart',
+        code: '''
+Future<int> xAsyncCapsule(CapsuleHandle use) {
+  return Future.delayed(const Duration(seconds: 1), () => 1234);
+}
+
+AsyncValue<int> xCapsule(CapsuleHandle use) {
+  final xFuture = use(xAsyncCapsule);
+  return use.future(xFuture);
+}''',
       );
     },
   );

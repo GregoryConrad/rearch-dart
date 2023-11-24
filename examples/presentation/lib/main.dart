@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_deck/flutter_deck.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
+import 'package:graphview/GraphView.dart';
 import 'package:rearch/rearch.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -146,10 +147,25 @@ class PresentationApp extends StatelessWidget {
           ),
 
           // Implementations
-          // Implementations (Algorithms)
-          // - graph is formed from capsules
-          // Implementations (Algorithms Cont.)
-          // - idempotent garbage collection
+          FunctionalSlide(
+            builder: implementations,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/implementations',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Implementations',
+              ),
+            ),
+          ),
+          FunctionalSlide(
+            builder: algorithms,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/implementations/algorithms',
+              steps: 37,
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Implementations (Algorithms)',
+              ),
+            ),
+          ),
           // Implementations (Dart and Flutter Library)
           // - special features for functional style UI development
           //   (functional widgets)
@@ -447,6 +463,254 @@ AsyncValue<int> xCapsule(CapsuleHandle use) {
   final xFuture = use(xAsyncCapsule);
   return use.future(xFuture);
 }''',
+      );
+    },
+  );
+}
+
+FlutterDeckSlide implementations(BuildContext context) {
+  return FlutterDeckSlide.blank(
+    builder: (context) {
+      return FlutterDeckBulletList(
+        items: const [
+          'Some underlying algorithms',
+          'Dart and Flutter Library',
+          'Rust Library',
+          "Benchmarks (spoiler: it's quick!)",
+        ],
+      );
+    },
+  );
+}
+
+FlutterDeckSlide algorithms(BuildContext context) {
+  return FlutterDeckSlide.split(
+    splitRatio: const SplitSlideRatio(left: 2, right: 4),
+    leftBuilder: (context) {
+      return FlutterDeckSlideStepsBuilder(
+        builder: (context, step) {
+          return FlutterDeckBulletList(
+            items: [
+              if (step > 0) 'Forming a capsule dependency graph',
+              if (step > 1) 'Topological sort',
+              if (step > 18) 'Idempotent garbage collection',
+              if (step > 29) 'Capsule rebuilds (bringing it all together)',
+              if (step > 36) 'NOTE: actual rebuild algorithm has optimizations',
+            ],
+          );
+        },
+      );
+    },
+    rightBuilder: (context) {
+      return RearchBuilder(
+        builder: (context, use) {
+          final (step, setStep) = use.state(1);
+
+          // Graph:
+          //   0 -> 1 -> 2 -> 3
+          //     \      /  \   \
+          // 4 -> 5 -> 6 -> 7 -> 8
+          // 0, 3 are nonidempotent; rest are idempotent
+          final nodes = List.generate(9, Node.Id);
+          final graph = Graph()
+            ..addEdge(nodes[0], nodes[1])
+            ..addEdge(nodes[1], nodes[2])
+            ..addEdge(nodes[2], nodes[3])
+            ..addEdge(nodes[4], nodes[5])
+            ..addEdge(nodes[0], nodes[5])
+            ..addEdge(nodes[5], nodes[6])
+            ..addEdge(nodes[6], nodes[2])
+            ..addEdge(nodes[6], nodes[7])
+            ..addEdge(nodes[2], nodes[7])
+            ..addEdge(nodes[7], nodes[8])
+            ..addEdge(nodes[3], nodes[8]);
+
+          String? infoDisplayText;
+          int? selectedNode;
+
+          // Topological sort steps in form of (stack, output)
+          const topologicalSortSteps = [
+            ('A', ''),
+            ('AB', ''),
+            ('ABC', ''),
+            ('ABCD', ''),
+            ('ABCDI', ''),
+            ('ABCD', 'I'),
+            ('ABC', 'ID'),
+            ('ABCH', 'ID'),
+            ('ABC', 'IDH'),
+            ('AB', 'IDHC'),
+            ('A', 'IDHCB'),
+            ('AF', 'IDHCB'),
+            ('AFG', 'IDHCB'),
+            ('AF', 'IDHCBG'),
+            ('A', 'IDHCBGF'),
+            ('', 'IDHCBGFA'),
+          ];
+
+          // GC and rebuild steps that are all called one by one
+          final gcAndRebuildSteps = [
+            // GC Steps
+            () {
+              infoDisplayText = 'IDHCBGFA';
+              selectedNode = 8;
+            },
+            () => graph.removeNode(graph.getNodeUsingId(8)),
+            () => selectedNode = 3,
+            () => selectedNode = 7,
+            () => graph.removeNode(graph.getNodeUsingId(7)),
+            () => selectedNode = 2,
+            () => selectedNode = 1,
+            () => selectedNode = 6,
+            () => selectedNode = 5,
+            () => selectedNode = 0,
+
+            // Capsule rebuild steps (highlight in order AFGBCD)
+            () {
+              selectedNode = null;
+              infoDisplayText = null;
+            },
+            () {
+              selectedNode = 0;
+              infoDisplayText = 'AFGBCD';
+            },
+            () => selectedNode = 5,
+            () => selectedNode = 6,
+            () => selectedNode = 1,
+            () => selectedNode = 2,
+            () => selectedNode = 3,
+          ];
+
+          if (step == 1) {
+            // Introduce forming dep graph
+            infoDisplayText = 'A, D are non-idempotent';
+          } else if (step == 2) {
+            // Introduce topological sort
+          } else if (step < topologicalSortSteps.length + 2) {
+            // Start topological sort
+            int charToId(String char) => char.codeUnitAt(0) - 'A'.codeUnitAt(0);
+
+            final (stack, output) = topologicalSortSteps[step - 3];
+            selectedNode = charToId(stack[stack.length - 1]);
+            infoDisplayText = 'Output: [$output]';
+
+            for (final i in Iterable<int>.generate(stack.length - 1)) {
+              final (src, dst) = (stack[i], stack[i + 1]);
+              graph
+                  .getEdgeBetween(
+                    graph.getNodeUsingId(charToId(src)),
+                    graph.getNodeUsingId(charToId(dst)),
+                  )!
+                  .paint = Paint()
+                ..color = Colors.pinkAccent
+                ..strokeWidth = 3;
+            }
+          } else if (step == topologicalSortSteps.length + 2) {
+            // Concluding topological sort (reversed output)
+            infoDisplayText = 'IDHCBGFA -> AFGBCHDI';
+          } else if (step == topologicalSortSteps.length + 3) {
+            // Starting up GC step
+          } else if (step <=
+              topologicalSortSteps.length + 3 + gcAndRebuildSteps.length) {
+            // GC and capsule rebuild steps
+            final remainingStepsToExecute =
+                step - topologicalSortSteps.length - 3;
+            gcAndRebuildSteps.take(remainingStepsToExecute).forEach((f) => f());
+          } else {
+            // Note about actual rebuild optimizations
+          }
+
+          final interactiveGraph = InteractiveViewer(
+            constrained: false,
+            boundaryMargin: const EdgeInsets.all(double.infinity),
+            child: GraphView(
+              graph: graph,
+              algorithm: SugiyamaAlgorithm(
+                SugiyamaConfiguration()
+                  ..nodeSeparation = 32
+                  ..levelSeparation = 56
+                  ..bendPointShape = MaxCurvedBendPointShape()
+                  ..coordinateAssignment = CoordinateAssignment.DownRight
+                  ..orientation = SugiyamaConfiguration.ORIENTATION_LEFT_RIGHT,
+              ),
+              builder: (node) {
+                final id = node.key!.value as int;
+                final charId = String.fromCharCode('A'.codeUnitAt(0) + id);
+
+                final color = id == selectedNode
+                    ? Colors.pinkAccent
+                    : (id == 0 || id == 3
+                        ? Colors.purpleAccent
+                        : Colors.blueAccent);
+
+                return Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: color,
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: Text(charId),
+                );
+              },
+            ),
+          );
+
+          // We need this workaround instead of FlutterDeckSlideStepsBuilder
+          // because the GraphView impl is bugged and needs a forceful rebuild,
+          // which setStep from use.state will provide.
+          final stepListener = FlutterDeckSlideStepsListener(
+            listener: (context, step) => setStep(step),
+            child: interactiveGraph,
+          );
+
+          // We need this workaround to get around an issue with split slides
+          // where the right split has an imposed padding.
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              const footerHeight = 80.0;
+              const horizontalPadding = 16.0;
+              final headerHeight = MediaQuery.of(context).size.height -
+                  constraints.maxHeight -
+                  footerHeight;
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Positioned(
+                    top: -headerHeight,
+                    bottom: -footerHeight,
+                    left: -horizontalPadding,
+                    right: -horizontalPadding,
+                    child: stepListener,
+                  ),
+                  if (infoDisplayText != null)
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: Center(
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Text(
+                              infoDisplayText!,
+                              style: FlutterDeckTheme.of(context)
+                                  .textTheme
+                                  .subtitle
+                                  .copyWith(
+                                    color: FlutterDeckTheme.of(context)
+                                        .splitSlideTheme
+                                        .rightBackgroundColor,
+                                  ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          );
+        },
       );
     },
   );

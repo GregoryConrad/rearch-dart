@@ -1,3 +1,4 @@
+import 'package:device_frame/device_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_deck/flutter_deck.dart';
@@ -166,16 +167,42 @@ class PresentationApp extends StatelessWidget {
               ),
             ),
           ),
-          // Implementations (Dart and Flutter Library)
-          // - special features for functional style UI development
-          //   (functional widgets)
-          // - todos ui application (include dep graph pic)
-          // Implementations (Rust Library)
-          // - geared toward server and systems needs
-          // - Rust container is safe across multithreaded environments,
-          //   with high reads and mutex blocked writes
-          // - todos web server (include endpoints, dep graph pic)
-          // Implementations (Rust Library Benchmark)
+          FunctionalSlide(
+            builder: dartAndFlutterLibrary,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/implementations/dart-and-flutter',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Implementations (Dart and Flutter Library)',
+              ),
+            ),
+          ),
+          FunctionalSlide(
+            builder: rustLibrary,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/implementations/rust',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Implementations (Rust Library)',
+              ),
+            ),
+          ),
+          FunctionalSlide(
+            builder: benchmarkRead,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/implementations/benchmark-read',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Implementations (Rust Library Benchmarks)',
+              ),
+            ),
+          ),
+          FunctionalSlide(
+            builder: benchmarkWrite,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/implementations/benchmark-write',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Implementations (Rust Library Benchmarks)',
+              ),
+            ),
+          ),
 
           // Future Works
           // - grab from paper
@@ -728,6 +755,137 @@ FlutterDeckSlide algorithms(BuildContext context) {
         },
       );
     },
+  );
+}
+
+FlutterDeckSlide dartAndFlutterLibrary(BuildContext context) {
+  return FlutterDeckSlide.split(
+    splitRatio: const SplitSlideRatio(left: 3),
+    leftBuilder: (context) {
+      return Column(
+        children: [
+          const Text(
+            'Promotes a functional style for UI development, '
+            'including Flutter-specifc features.',
+            style: TextStyle(fontSize: 24),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 32),
+          Card(
+            color: Colors.white.withOpacity(0.4),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  Image.asset(
+                    height: 400,
+                    'assets/todos-app-dep-graph.png',
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'TODOs application capsule dependency graph',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+    rightBuilder: (context) {
+      final child = Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            DeviceFrame(
+              device: Devices.android.samsungGalaxyNote20,
+              screen: Image.asset('assets/todos-app-screenshot.gif'),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'TODOs application UI',
+              style: TextStyle(
+                fontSize: 16,
+                fontStyle: FontStyle.italic,
+                color: FlutterDeckTheme.of(context).splitSlideTheme.rightColor,
+              ),
+            ),
+          ],
+        ),
+      );
+
+      // Layout hack to remove split slide padding
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          const footerHeight = 80.0;
+          const horizontalPadding = 16.0;
+          final headerHeight = MediaQuery.of(context).size.height -
+              constraints.maxHeight -
+              footerHeight;
+          return Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                top: -headerHeight,
+                bottom: -footerHeight,
+                left: -horizontalPadding,
+                right: -horizontalPadding,
+                child: child,
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+FlutterDeckSlide rustLibrary(BuildContext context) {
+  return FlutterDeckSlide.split(
+    leftBuilder: (context) {
+      return FlutterDeckBulletList(
+        items: const [
+          'Tailored toward server/systems workloads',
+          'Safe and performant in multithreaded environments',
+          'Lock-free reads and mutex-blocked writes',
+        ],
+      );
+    },
+    rightBuilder: (context) {
+      return Column(
+        children: [
+          Image.asset('assets/todos-server.png'),
+          const SizedBox(height: 8),
+          Text(
+            'TODOs web server capsule dependency graph',
+            style: TextStyle(
+              fontSize: 16,
+              fontStyle: FontStyle.italic,
+              color: FlutterDeckTheme.of(context).splitSlideTheme.rightColor,
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+FlutterDeckSlide benchmarkRead(BuildContext context) {
+  return FlutterDeckSlide.bigFact(
+    title: '>30,000,000',
+    subtitle: 'Reads per second (M1 MacBook Pro)',
+  );
+}
+
+FlutterDeckSlide benchmarkWrite(BuildContext context) {
+  return FlutterDeckSlide.bigFact(
+    title: '>1,500,000',
+    subtitle: 'Writes per second (M1 MacBook Pro)',
   );
 }
 

@@ -137,8 +137,10 @@ class CapsuleContainer implements Disposable {
       // We could also employ a more sophisticated GC strategy
       // by searching the graph and finding other disposable nodes,
       // but this should cover 99% of cases effectively with no extra cost.
-      final capManager = _managerOf(capsule);
-      if (capManager.isIdempotent && capManager.hasNoDependents) {
+      final capManager = _capsules[capsule];
+      if (capManager != null &&
+          capManager.isIdempotent &&
+          capManager.hasNoDependents) {
         capManager.dispose();
       }
     };

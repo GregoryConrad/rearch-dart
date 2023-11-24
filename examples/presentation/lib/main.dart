@@ -160,7 +160,7 @@ class PresentationApp extends StatelessWidget {
             builder: algorithms,
             configuration: FlutterDeckSlideConfiguration(
               route: '/implementations/algorithms',
-              steps: 37,
+              steps: 38,
               header: FlutterDeckHeaderConfiguration(
                 title: 'Implementations (Algorithms)',
               ),
@@ -483,6 +483,142 @@ FlutterDeckSlide implementations(BuildContext context) {
   );
 }
 
+({Graph graph, String? infoDisplayText, int? selectedNode})
+    calculateGraphViewStateFromStep(int step) {
+  // Graph:
+  //   0 -> 1 -> 2 -> 3
+  //     \      /  \   \
+  // 4 -> 5 -> 6 -> 7 -> 8
+  // 0, 3 are nonidempotent; rest are idempotent
+  final nodes = List.generate(9, Node.Id);
+  final graph = Graph();
+  String? infoDisplayText;
+  int? selectedNode;
+
+  void resetGraph() {
+    graph
+      ..removeNodes(nodes)
+      ..addEdge(nodes[0], nodes[1])
+      ..addEdge(nodes[1], nodes[2])
+      ..addEdge(nodes[2], nodes[3])
+      ..addEdge(nodes[4], nodes[5])
+      ..addEdge(nodes[0], nodes[5])
+      ..addEdge(nodes[5], nodes[6])
+      ..addEdge(nodes[6], nodes[2])
+      ..addEdge(nodes[6], nodes[7])
+      ..addEdge(nodes[2], nodes[7])
+      ..addEdge(nodes[7], nodes[8])
+      ..addEdge(nodes[3], nodes[8]);
+  }
+
+  void resetInfoAndSelection() {
+    infoDisplayText = null;
+    selectedNode = null;
+  }
+
+  // Topological sort steps in form of (stack, output)
+  const topologicalSortSteps = [
+    ('A', ''),
+    ('AB', ''),
+    ('ABC', ''),
+    ('ABCD', ''),
+    ('ABCDI', ''),
+    ('ABCD', 'I'),
+    ('ABC', 'ID'),
+    ('ABCH', 'ID'),
+    ('ABC', 'IDH'),
+    ('AB', 'IDHC'),
+    ('A', 'IDHCB'),
+    ('AF', 'IDHCB'),
+    ('AFG', 'IDHCB'),
+    ('AF', 'IDHCBG'),
+    ('A', 'IDHCBGF'),
+    ('', 'IDHCBGFA'),
+  ];
+
+  // Functions to be called per each step (cumulatively).
+  // This isn't the most particularly efficient way to get the graph
+  // in the right state, but it may be the easiest and most readable.
+  final functionsPerStep = [
+    // Forming capsule dep graph
+    () {
+      resetGraph();
+      infoDisplayText = 'A, D are non-idempotent';
+    },
+
+    // Start topological sort
+    resetInfoAndSelection,
+    for (final topSortStep in topologicalSortSteps)
+      () {
+        resetGraph();
+
+        int charToId(String char) => char.codeUnitAt(0) - 'A'.codeUnitAt(0);
+
+        final (stack, output) = topSortStep;
+        selectedNode = stack.isEmpty ? null : charToId(stack[stack.length - 1]);
+        infoDisplayText = 'Output: [$output]';
+
+        for (final i in Iterable<int>.generate(stack.length - 1)) {
+          final (src, dst) = (stack[i], stack[i + 1]);
+          graph
+              .getEdgeBetween(
+                graph.getNodeUsingId(charToId(src)),
+                graph.getNodeUsingId(charToId(dst)),
+              )!
+              .paint = Paint()
+            ..color = Colors.pinkAccent
+            ..strokeWidth = 3;
+        }
+      },
+    () {
+      resetGraph();
+      resetInfoAndSelection();
+      infoDisplayText = 'IDHCBGFA -> AFGBCHDI';
+    },
+
+    // GC steps
+    resetInfoAndSelection,
+    () {
+      infoDisplayText = 'IDHCBGFA';
+      selectedNode = 8;
+    },
+    () => graph.removeNode(graph.getNodeUsingId(8)),
+    () => selectedNode = 3,
+    () => selectedNode = 7,
+    () => graph.removeNode(graph.getNodeUsingId(7)),
+    () => selectedNode = 2,
+    () => selectedNode = 1,
+    () => selectedNode = 6,
+    () => selectedNode = 5,
+    () => selectedNode = 0,
+
+    // Capsule rebuild steps (highlight in order AFGBCD)
+    resetInfoAndSelection,
+    () {
+      infoDisplayText = 'AFGBCD';
+      selectedNode = 0;
+    },
+    () => selectedNode = 5,
+    () => selectedNode = 6,
+    () => selectedNode = 1,
+    () => selectedNode = 2,
+    () => selectedNode = 3,
+
+    // Note about build optimizations
+    () {
+      resetGraph();
+      resetInfoAndSelection();
+    },
+  ];
+  functionsPerStep.take(step).forEach((f) => f());
+
+  return (
+    graph: graph,
+    infoDisplayText: infoDisplayText,
+    selectedNode: selectedNode
+  );
+}
+
 FlutterDeckSlide algorithms(BuildContext context) {
   return FlutterDeckSlide.split(
     splitRatio: const SplitSlideRatio(left: 2, right: 4),
@@ -493,132 +629,19 @@ FlutterDeckSlide algorithms(BuildContext context) {
             items: [
               if (step > 0) 'Forming a capsule dependency graph',
               if (step > 1) 'Topological sort',
-              if (step > 18) 'Idempotent garbage collection',
-              if (step > 29) 'Capsule rebuilds (bringing it all together)',
-              if (step > 36) 'NOTE: actual rebuild algorithm has optimizations',
+              if (step > 19) 'Idempotent garbage collection',
+              if (step > 30) 'Capsule rebuilds (bringing it all together)',
+              if (step > 37) 'NOTE: actual rebuild algorithm has optimizations',
             ],
           );
         },
       );
     },
     rightBuilder: (context) {
-      return RearchBuilder(
-        builder: (context, use) {
-          final (step, setStep) = use.state(1);
-
-          // Graph:
-          //   0 -> 1 -> 2 -> 3
-          //     \      /  \   \
-          // 4 -> 5 -> 6 -> 7 -> 8
-          // 0, 3 are nonidempotent; rest are idempotent
-          final nodes = List.generate(9, Node.Id);
-          final graph = Graph()
-            ..addEdge(nodes[0], nodes[1])
-            ..addEdge(nodes[1], nodes[2])
-            ..addEdge(nodes[2], nodes[3])
-            ..addEdge(nodes[4], nodes[5])
-            ..addEdge(nodes[0], nodes[5])
-            ..addEdge(nodes[5], nodes[6])
-            ..addEdge(nodes[6], nodes[2])
-            ..addEdge(nodes[6], nodes[7])
-            ..addEdge(nodes[2], nodes[7])
-            ..addEdge(nodes[7], nodes[8])
-            ..addEdge(nodes[3], nodes[8]);
-
-          String? infoDisplayText;
-          int? selectedNode;
-
-          // Topological sort steps in form of (stack, output)
-          const topologicalSortSteps = [
-            ('A', ''),
-            ('AB', ''),
-            ('ABC', ''),
-            ('ABCD', ''),
-            ('ABCDI', ''),
-            ('ABCD', 'I'),
-            ('ABC', 'ID'),
-            ('ABCH', 'ID'),
-            ('ABC', 'IDH'),
-            ('AB', 'IDHC'),
-            ('A', 'IDHCB'),
-            ('AF', 'IDHCB'),
-            ('AFG', 'IDHCB'),
-            ('AF', 'IDHCBG'),
-            ('A', 'IDHCBGF'),
-            ('', 'IDHCBGFA'),
-          ];
-
-          // GC and rebuild steps that are all called one by one
-          final gcAndRebuildSteps = [
-            // GC Steps
-            () {
-              infoDisplayText = 'IDHCBGFA';
-              selectedNode = 8;
-            },
-            () => graph.removeNode(graph.getNodeUsingId(8)),
-            () => selectedNode = 3,
-            () => selectedNode = 7,
-            () => graph.removeNode(graph.getNodeUsingId(7)),
-            () => selectedNode = 2,
-            () => selectedNode = 1,
-            () => selectedNode = 6,
-            () => selectedNode = 5,
-            () => selectedNode = 0,
-
-            // Capsule rebuild steps (highlight in order AFGBCD)
-            () {
-              selectedNode = null;
-              infoDisplayText = null;
-            },
-            () {
-              selectedNode = 0;
-              infoDisplayText = 'AFGBCD';
-            },
-            () => selectedNode = 5,
-            () => selectedNode = 6,
-            () => selectedNode = 1,
-            () => selectedNode = 2,
-            () => selectedNode = 3,
-          ];
-
-          if (step == 1) {
-            // Introduce forming dep graph
-            infoDisplayText = 'A, D are non-idempotent';
-          } else if (step == 2) {
-            // Introduce topological sort
-          } else if (step < topologicalSortSteps.length + 2) {
-            // Start topological sort
-            int charToId(String char) => char.codeUnitAt(0) - 'A'.codeUnitAt(0);
-
-            final (stack, output) = topologicalSortSteps[step - 3];
-            selectedNode = charToId(stack[stack.length - 1]);
-            infoDisplayText = 'Output: [$output]';
-
-            for (final i in Iterable<int>.generate(stack.length - 1)) {
-              final (src, dst) = (stack[i], stack[i + 1]);
-              graph
-                  .getEdgeBetween(
-                    graph.getNodeUsingId(charToId(src)),
-                    graph.getNodeUsingId(charToId(dst)),
-                  )!
-                  .paint = Paint()
-                ..color = Colors.pinkAccent
-                ..strokeWidth = 3;
-            }
-          } else if (step == topologicalSortSteps.length + 2) {
-            // Concluding topological sort (reversed output)
-            infoDisplayText = 'IDHCBGFA -> AFGBCHDI';
-          } else if (step == topologicalSortSteps.length + 3) {
-            // Starting up GC step
-          } else if (step <=
-              topologicalSortSteps.length + 3 + gcAndRebuildSteps.length) {
-            // GC and capsule rebuild steps
-            final remainingStepsToExecute =
-                step - topologicalSortSteps.length - 3;
-            gcAndRebuildSteps.take(remainingStepsToExecute).forEach((f) => f());
-          } else {
-            // Note about actual rebuild optimizations
-          }
+      return FlutterDeckSlideStepsBuilder(
+        builder: (context, step) {
+          final (:graph, :infoDisplayText, :selectedNode) =
+              calculateGraphViewStateFromStep(step);
 
           final interactiveGraph = InteractiveViewer(
             constrained: false,
@@ -655,14 +678,6 @@ FlutterDeckSlide algorithms(BuildContext context) {
             ),
           );
 
-          // We need this workaround instead of FlutterDeckSlideStepsBuilder
-          // because the GraphView impl is bugged and needs a forceful rebuild,
-          // which setStep from use.state will provide.
-          final stepListener = FlutterDeckSlideStepsListener(
-            listener: (context, step) => setStep(step),
-            child: interactiveGraph,
-          );
-
           // We need this workaround to get around an issue with split slides
           // where the right split has an imposed padding.
           return LayoutBuilder(
@@ -680,7 +695,7 @@ FlutterDeckSlide algorithms(BuildContext context) {
                     bottom: -footerHeight,
                     left: -horizontalPadding,
                     right: -horizontalPadding,
-                    child: stepListener,
+                    child: interactiveGraph,
                   ),
                   if (infoDisplayText != null)
                     Positioned(
@@ -692,7 +707,7 @@ FlutterDeckSlide algorithms(BuildContext context) {
                           child: Padding(
                             padding: const EdgeInsets.all(8),
                             child: Text(
-                              infoDisplayText!,
+                              infoDisplayText,
                               style: FlutterDeckTheme.of(context)
                                   .textTheme
                                   .subtitle

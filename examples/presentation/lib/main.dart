@@ -268,6 +268,37 @@ class FunctionalSlide extends FlutterDeckSlideWidget {
   FlutterDeckSlide build(BuildContext context) => builder(context);
 }
 
+// A layout hack to remove split slide padding
+class RemoveSplitSlidePadding extends StatelessWidget {
+  const RemoveSplitSlidePadding({required this.child, super.key});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const footerHeight = 80.0;
+        const horizontalPadding = 16.0;
+        final headerHeight = MediaQuery.of(context).size.height -
+            constraints.maxHeight -
+            footerHeight;
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              top: -headerHeight,
+              bottom: -footerHeight,
+              left: -horizontalPadding,
+              right: -horizontalPadding,
+              child: child,
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
 FlutterDeckSlide intro(BuildContext context) {
   return FlutterDeckSlide.title(
     title: 'ReArch',
@@ -365,64 +396,43 @@ FlutterDeckSlide sideEffects(BuildContext context) {
 
       final graphConfig = BuchheimWalkerConfiguration();
 
-      final interactiveGraph = InteractiveViewer(
-        constrained: false,
-        boundaryMargin: const EdgeInsets.all(double.infinity),
-        child: GraphView(
-          graph: graph,
-          algorithm: BuchheimWalkerAlgorithm(
-            graphConfig,
-            TreeEdgeRenderer(graphConfig),
+      return RemoveSplitSlidePadding(
+        child: InteractiveViewer(
+          constrained: false,
+          boundaryMargin: const EdgeInsets.all(double.infinity),
+          child: GraphView(
+            graph: graph,
+            algorithm: BuchheimWalkerAlgorithm(
+              graphConfig,
+              TreeEdgeRenderer(graphConfig),
+            ),
+            builder: (node) {
+              final id = node.key!.value as int;
+
+              return Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: FlutterDeckTheme.of(context)
+                      .splitSlideTheme
+                      .leftBackgroundColor,
+                ),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    Text(
+                      idsToDescription[id].$1,
+                      style: const TextStyle(fontSize: 28),
+                    ),
+                    Text(
+                      idsToDescription[id].$2,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
-          builder: (node) {
-            final id = node.key!.value as int;
-
-            return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: FlutterDeckTheme.of(context)
-                    .splitSlideTheme
-                    .leftBackgroundColor,
-              ),
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Text(
-                    idsToDescription[id].$1,
-                    style: const TextStyle(fontSize: 28),
-                  ),
-                  Text(
-                    idsToDescription[id].$2,
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                ],
-              ),
-            );
-          },
         ),
-      );
-
-      // Layout hack to remove split slide padding
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          const footerHeight = 80.0;
-          const horizontalPadding = 16.0;
-          final headerHeight = MediaQuery.of(context).size.height -
-              constraints.maxHeight -
-              footerHeight;
-          return Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Positioned(
-                top: -headerHeight,
-                bottom: -footerHeight,
-                left: -horizontalPadding,
-                right: -horizontalPadding,
-                child: interactiveGraph,
-              ),
-            ],
-          );
-        },
       );
     },
   );
@@ -465,23 +475,51 @@ Widget counter(WidgetHandle use) {
 
 FlutterDeckSlide selfReads(BuildContext context) {
   return FlutterDeckSlide.split(
-    splitRatio: const SplitSlideRatio(left: 3),
+    splitRatio: const SplitSlideRatio(left: 2, right: 3),
     leftBuilder: (context) {
       return FlutterDeckBulletList(
         items: const [
-// - I lied--a simplistic model is a DAG.
-// - side effects are actually equivalent to self reads,
-//   which is allowed:
-// - example of a counter with both self reads and side effects
-          '',
+          'Capsules are not always a DAG; they can have self-dependencies!',
+          'Self-dependencies are achieved via a capsule reading itself',
+          'Self-reads are equivalent to side effects, if given a rebuild api',
         ],
       );
     },
     rightBuilder: (context) {
-      return const FlutterDeckCodeHighlight(
-        fileName: 'self_reads.dart',
-        code: r'''
-''',
+      return const RemoveSplitSlidePadding(
+        child: Center(
+          child: FlutterDeckCodeHighlight(
+            language: 'rust',
+            fileName: 'self_reads.rs',
+            code: '''
+fn x_capsule(_: CapsuleHandle) -> u32 {
+    0
+}
+
+fn x_changes_side_effect_capsule(
+    CapsuleHandle { mut get, register }: CapsuleHandle
+) -> u32 {
+    get(x_capsule); // mark as dep so we get updates
+
+    let changes = register(side_effects::value(0));
+    *changes += 1;
+    return *changes;
+}
+
+fn x_changes_self_read_capsule(
+    CapsuleHandle { mut get, register }: CapsuleHandle
+) -> u32 {
+    get(x_capsule); // mark as dep so we get updates
+
+    let is_first_build = register(side_effects::is_first_build());
+    if is_first_build {
+        1
+    } else {
+        get(x_changes_self_read_capsule) + 1
+    }
+}''',
+          ),
+        ),
       );
     },
   );
@@ -952,49 +990,29 @@ FlutterDeckSlide dartAndFlutterLibrary(BuildContext context) {
       );
     },
     rightBuilder: (context) {
-      final child = Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            DeviceFrame(
-              device: Devices.android.samsungGalaxyNote20,
-              screen: Image.asset('assets/todos-app-screenshot.gif'),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'TODOs application UI',
-              style: TextStyle(
-                fontSize: 16,
-                fontStyle: FontStyle.italic,
-                color: FlutterDeckTheme.of(context).splitSlideTheme.rightColor,
-              ),
-            ),
-          ],
-        ),
-      );
-
-      // Layout hack to remove split slide padding
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          const footerHeight = 80.0;
-          const horizontalPadding = 16.0;
-          final headerHeight = MediaQuery.of(context).size.height -
-              constraints.maxHeight -
-              footerHeight;
-          return Stack(
-            clipBehavior: Clip.none,
+      return RemoveSplitSlidePadding(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Positioned(
-                top: -headerHeight,
-                bottom: -footerHeight,
-                left: -horizontalPadding,
-                right: -horizontalPadding,
-                child: child,
+              DeviceFrame(
+                device: Devices.android.samsungGalaxyNote20,
+                screen: Image.asset('assets/todos-app-screenshot.gif'),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'TODOs application UI',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic,
+                  color:
+                      FlutterDeckTheme.of(context).splitSlideTheme.rightColor,
+                ),
               ),
             ],
-          );
-        },
+          ),
+        ),
       );
     },
   );
@@ -1014,6 +1032,7 @@ FlutterDeckSlide rustLibrary(BuildContext context) {
     rightBuilder: (context) {
       return Column(
         children: [
+          // TODO(GregoryConrad): add the REST API table here from thesis
           Image.asset('assets/todos-server.png'),
           const SizedBox(height: 8),
           Text(

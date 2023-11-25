@@ -205,7 +205,15 @@ class PresentationApp extends StatelessWidget {
           ),
 
           // Future Works
-          // - grab from paper
+          FunctionalSlide(
+            builder: futureWorks,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/future-works',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Future Works',
+              ),
+            ),
+          ),
 
           // Conclusion
           FunctionalSlide(
@@ -886,6 +894,20 @@ FlutterDeckSlide benchmarkWrite(BuildContext context) {
   return FlutterDeckSlide.bigFact(
     title: '>1,500,000',
     subtitle: 'Writes per second (M1 MacBook Pro)',
+  );
+}
+
+FlutterDeckSlide futureWorks(BuildContext context) {
+  return FlutterDeckSlide.blank(
+    builder: (context) {
+      return FlutterDeckBulletList(
+        items: const [
+          'A language with capsules/side effects as first class citizens',
+          'Transactional side effect mutations (across capsules)',
+          'Dynamically named capsules (at runtime)',
+        ],
+      );
+    },
   );
 }
 

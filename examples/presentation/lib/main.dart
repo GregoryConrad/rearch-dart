@@ -915,7 +915,13 @@ FlutterDeckSlide conclusion(BuildContext context) {
   return FlutterDeckSlide.blank(
     builder: (context) {
       return FlutterDeckBulletList(
-        items: const ['TODO grab this from the pres we got from prof heineman'],
+        items: const [
+          'ReArch is data-driven and highly functional',
+          'Capsules may utilize side effects despite remaining pure',
+          'Containers orchestrate the lifecycle of capsules and side effect(s)',
+          'Paradigms are used to build more complex applications',
+          'There are two library implementations: Dart/Flutter and Rust',
+        ],
       );
     },
   );

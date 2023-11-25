@@ -1,6 +1,6 @@
 name: rearch
 description: A re-imagined declarative approach to application design and architecture
-version: 1.0.1
+version: 1.0.2
 homepage: https://rearch.gsconrad.com
 documentation: https://rearch.gsconrad.com
 repository: https://github.com/GregoryConrad/rearch-dart

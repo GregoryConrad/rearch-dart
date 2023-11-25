@@ -94,11 +94,15 @@ class PresentationApp extends StatelessWidget {
           // - contain state of a set of capsules
           // - store side effect state, which are the crux of an application
           // - as idempotent capsules can be calcualted on teh fly
-          // Design (Side Effects)
-          // - tuple of private data coupled with a way to mutate that data,
-          // - triggering a rebuild
-          // - Are stored directly in the container
-          // - side effects compose into a tree
+          FunctionalSlide(
+            builder: sideEffects,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/design/side-effects',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Design (Side Effects)',
+              ),
+            ),
+          ),
           FunctionalSlide(
             builder: counterExample,
             configuration: FlutterDeckSlideConfiguration(
@@ -108,11 +112,15 @@ class PresentationApp extends StatelessWidget {
               ),
             ),
           ),
-          // Design (Side Effects Cont.)
-          // - I lied--a simplistic model is a DAG.
-          // - side effects are actually equivalent to self reads,
-          //   which is allowed:
-          // - example of a counter with both self reads and side effects
+          FunctionalSlide(
+            builder: selfReads,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/design/side-effects/self-reads',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Design (Side Effects Cont.)',
+              ),
+            ),
+          ),
 
           // Paradigms
           FunctionalSlide(
@@ -325,6 +333,101 @@ class Counter extends RearchConsumer {
   }
 }
 
+FlutterDeckSlide sideEffects(BuildContext context) {
+  return FlutterDeckSlide.split(
+    leftBuilder: (context) {
+      return FlutterDeckBulletList(
+        items: const [
+          'Tuple of private data coupled with a way to mutate that data',
+          'Mutating the private data triggers capsule rebuilds',
+          'State is stored directly in the container alongside capsule data',
+          'Compose together into a tree',
+        ],
+      );
+    },
+    rightBuilder: (context) {
+      final idsToDescription = [
+        ('Memo', 'Creates/caches expensive object'),
+        ('Previous', 'Returns value from last build'),
+        ('Value', 'Holds object across builds'),
+        ('Value', 'Holds object across builds'),
+      ];
+
+      final memo = Node.Id(0);
+      final prev = Node.Id(1);
+      final value = Node.Id(2);
+      final value2 = Node.Id(3);
+      final graph = Graph()
+        ..isTree = true
+        ..addEdge(memo, value)
+        ..addEdge(memo, prev)
+        ..addEdge(prev, value2);
+
+      final graphConfig = BuchheimWalkerConfiguration();
+
+      final interactiveGraph = InteractiveViewer(
+        constrained: false,
+        boundaryMargin: const EdgeInsets.all(double.infinity),
+        child: GraphView(
+          graph: graph,
+          algorithm: BuchheimWalkerAlgorithm(
+            graphConfig,
+            TreeEdgeRenderer(graphConfig),
+          ),
+          builder: (node) {
+            final id = node.key!.value as int;
+
+            return Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: FlutterDeckTheme.of(context)
+                    .splitSlideTheme
+                    .leftBackgroundColor,
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  Text(
+                    idsToDescription[id].$1,
+                    style: const TextStyle(fontSize: 28),
+                  ),
+                  Text(
+                    idsToDescription[id].$2,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+
+      // Layout hack to remove split slide padding
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          const footerHeight = 80.0;
+          const horizontalPadding = 16.0;
+          final headerHeight = MediaQuery.of(context).size.height -
+              constraints.maxHeight -
+              footerHeight;
+          return Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                top: -headerHeight,
+                bottom: -footerHeight,
+                left: -horizontalPadding,
+                right: -horizontalPadding,
+                child: interactiveGraph,
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
 FlutterDeckSlide counterExample(BuildContext context) {
   return FlutterDeckSlide.split(
     splitRatio: const SplitSlideRatio(left: 3),
@@ -355,6 +458,30 @@ Widget counter(WidgetHandle use) {
     rightBuilder: (context) {
       return const Center(
         child: SizedBox(height: 48, child: Counter()),
+      );
+    },
+  );
+}
+
+FlutterDeckSlide selfReads(BuildContext context) {
+  return FlutterDeckSlide.split(
+    splitRatio: const SplitSlideRatio(left: 3),
+    leftBuilder: (context) {
+      return FlutterDeckBulletList(
+        items: const [
+// - I lied--a simplistic model is a DAG.
+// - side effects are actually equivalent to self reads,
+//   which is allowed:
+// - example of a counter with both self reads and side effects
+          '',
+        ],
+      );
+    },
+    rightBuilder: (context) {
+      return const FlutterDeckCodeHighlight(
+        fileName: 'self_reads.dart',
+        code: r'''
+''',
       );
     },
   );

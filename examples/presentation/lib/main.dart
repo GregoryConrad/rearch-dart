@@ -65,10 +65,15 @@ class PresentationApp extends StatelessWidget {
           ),
 
           // Motivation
-          // - Many tried and true for OOP, not as many functional
-          // - Need to build an application around data and ops on the data
-          // - Declarative ONLY approach to application building
-          // - loose coupling
+          FunctionalSlide(
+            builder: motivation,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/motivation',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Motivation',
+              ),
+            ),
+          ),
 
           // Background
           // Background (State Management)
@@ -275,6 +280,21 @@ FlutterDeckSlide agenda(BuildContext context) {
           'Implementations',
           'Future Works',
           'Conclusion',
+        ],
+      );
+    },
+  );
+}
+
+FlutterDeckSlide motivation(BuildContext context) {
+  return FlutterDeckSlide.blank(
+    builder: (context) {
+      return FlutterDeckBulletList(
+        items: const [
+          'Many proven techniques for OOP; not as many for FP',
+          'Reactive, declarative, and data-driven approach to applications',
+          'Lack of simplicity and consistency',
+          'Existing solutions have problems and/or shortcomings',
         ],
       );
     },

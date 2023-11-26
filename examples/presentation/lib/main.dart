@@ -24,7 +24,7 @@ class PresentationApp extends StatelessWidget {
         speakerInfo: const FlutterDeckSpeakerInfo(
           name: 'Gregory Conrad',
           description: 'Advisor: Professor George Heineman',
-          socialHandle: 'github.com/GregoryConrad',
+          socialHandle: 'https://github.com/GregoryConrad',
           imagePath: 'assets/portrait.jpg',
         ),
         configuration: FlutterDeckConfiguration(
@@ -48,6 +48,7 @@ class PresentationApp extends StatelessWidget {
           ),
         ),
         slides: const [
+          // Introduction
           FunctionalSlide(
             builder: intro,
             configuration: FlutterDeckSlideConfiguration(
@@ -69,6 +70,7 @@ class PresentationApp extends StatelessWidget {
             builder: motivation,
             configuration: FlutterDeckSlideConfiguration(
               route: '/motivation',
+              steps: 4,
               header: FlutterDeckHeaderConfiguration(
                 title: 'Motivation',
               ),
@@ -76,24 +78,41 @@ class PresentationApp extends StatelessWidget {
           ),
 
           // Background
+          // TODO(GregoryConrad): these few slides
           // Background (State Management)
           // - Dart/Flutter, Widgets
           // Background (Component-Based Software Engineering)
           // Background (Incremental Computation)
 
           // Design
-          // - Capsules, Containers, Side Effects
-          // Design (Capsules)
-          // - stateless, declarative, pure functions, despite side effects
-          // - spreadsheet analogy with cells, A1 and B1
-          // - capsule composition forms a *directed acyclic graph*
-          // - graph is formed internally from capsule dependencies
-          // Design (Containers)
-          // - a mapping of capsule to their states (often backed by hash map)
-          // - operates in entire states, strong consistency across capsules
-          // - contain state of a set of capsules
-          // - store side effect state, which are the crux of an application
-          // - as idempotent capsules can be calcualted on teh fly
+          FunctionalSlide(
+            builder: design,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/design',
+              steps: 5,
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Design',
+              ),
+            ),
+          ),
+          FunctionalSlide(
+            builder: capsules,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/design/capsules',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Design (Capsules)',
+              ),
+            ),
+          ),
+          FunctionalSlide(
+            builder: containers,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/design/containers',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Design (Containers)',
+              ),
+            ),
+          ),
           FunctionalSlide(
             builder: sideEffects,
             configuration: FlutterDeckSlideConfiguration(
@@ -329,12 +348,94 @@ FlutterDeckSlide motivation(BuildContext context) {
   return FlutterDeckSlide.blank(
     builder: (context) {
       return FlutterDeckBulletList(
+        useSteps: true,
         items: const [
           'Many proven techniques for OOP; not as many for FP',
           'Reactive, declarative, and data-driven approach to applications',
           'Lack of simplicity and consistency',
           'Existing solutions have problems and/or shortcomings',
         ],
+      );
+    },
+  );
+}
+
+FlutterDeckSlide design(BuildContext context) {
+  return FlutterDeckSlide.blank(
+    builder: (context) {
+      return FlutterDeckBulletList(
+        useSteps: true,
+        items: const [
+          'Three high level pieces: Capsules, Containers, Side Effects',
+          'Small API footprint with extensibility',
+          'Create components and side effects via composition',
+          'Reactivity through declarative code',
+          'Applicability across domains',
+        ],
+      );
+    },
+  );
+}
+
+FlutterDeckSlide capsules(BuildContext context) {
+  return FlutterDeckSlide.split(
+    leftBuilder: (context) {
+      return FlutterDeckBulletList(
+        items: const [
+          'Encapsulate some data (including functions—functions are data!)',
+          'Pure functions that consume a "CapsuleHandle" and return their data',
+          'Are "built" (invoked) to produce their output data',
+          'Stateless, declarative, and reactive',
+          'Are composed together into new capsules forming a dependency graph',
+          'Dependency graph is directed and acyclic (DAG)',
+        ],
+      );
+    },
+    rightBuilder: (context) {
+      return Column(
+        children: [
+          Image.asset('assets/spreadsheet-capsule-example.png', scale: .6),
+          const SizedBox(height: 32),
+          const FlutterDeckCodeHighlight(
+            fileName: 'spreadsheet_capsules.dart',
+            code: '''
+int a1Capsule(CapsuleHandle use) {
+  return 0;
+}
+
+int b1Capsule(CapsuleHandle use) {
+  return use(a1Capsule) + 1;
+}
+''',
+          ),
+        ],
+      );
+    },
+  );
+}
+
+FlutterDeckSlide containers(BuildContext context) {
+  return FlutterDeckSlide.split(
+    splitRatio: const SplitSlideRatio(left: 4, right: 5),
+    leftBuilder: (context) {
+      return FlutterDeckBulletList(
+        items: const [
+          'Provide a way to read, rebuild, (and often) listen to capsules',
+          'Interally a mapping of capsules to their states (i.e., hash map)',
+          'Operate lazily and maintains strong consistency across capsules',
+          'Store/cache capsule output and side effect states',
+          'What about concurrency?',
+        ],
+      );
+    },
+    rightBuilder: (context) {
+      return Card(
+        clipBehavior: Clip.antiAlias,
+        child: Container(
+          color: Colors.white,
+          padding: const EdgeInsets.all(16),
+          child: Image.asset('assets/container-lazy.png'),
+        ),
       );
     },
   );

@@ -1030,13 +1030,68 @@ FlutterDeckSlide rustLibrary(BuildContext context) {
       );
     },
     rightBuilder: (context) {
+      const tableHeaderStyle = TextStyle(fontWeight: FontWeight.w700);
+      const tableData = [
+        [
+          Text('HTTP Verb', style: tableHeaderStyle),
+          Text('Endpoint', style: tableHeaderStyle),
+          Text('Description', style: tableHeaderStyle),
+        ],
+        [
+          Text('GET'),
+          Text('/todos'),
+          Text('Returns a list of todos'),
+        ],
+        [
+          Text('POST'),
+          Text('/todos'),
+          Text('Creates a new todo'),
+        ],
+        [
+          Text('GET'),
+          Text('/todos/:id'),
+          Text('Returns todo with the given id'),
+        ],
+        [
+          Text('DELETE'),
+          Text('/todos/:id'),
+          Text('Deletes todo with the given id'),
+        ],
+      ];
+
       return Column(
         children: [
-          // TODO(GregoryConrad): add the REST API table here from thesis
+          DefaultTextStyle(
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              color: FlutterDeckTheme.of(context).splitSlideTheme.rightColor,
+            ),
+            child: Table(
+              defaultColumnWidth: const IntrinsicColumnWidth(),
+              border: TableBorder.all(),
+              children: [
+                for (final row in tableData)
+                  TableRow(
+                    children: [
+                      for (final cell in row)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          child: cell,
+                        ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 32),
           Image.asset('assets/todos-server.png'),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           Text(
-            'TODOs web server capsule dependency graph',
+            'TODOs web server endpoints and capsule dependency graph',
             style: TextStyle(
               fontSize: 16,
               fontStyle: FontStyle.italic,

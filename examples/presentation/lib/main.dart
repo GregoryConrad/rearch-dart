@@ -78,11 +78,42 @@ class PresentationApp extends StatelessWidget {
           ),
 
           // Background
-          // TODO(GregoryConrad): these few slides
-          // Background (State Management)
-          // - Dart/Flutter, Widgets
-          // Background (Component-Based Software Engineering)
-          // Background (Incremental Computation)
+          FunctionalSlide(
+            builder: background,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/background',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Background',
+              ),
+            ),
+          ),
+          FunctionalSlide(
+            builder: stateManagement,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/background/state-management',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Background (State Management)',
+              ),
+            ),
+          ),
+          FunctionalSlide(
+            builder: componentBasedSoftwareEngineering,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/background/component-based-software-engineering',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Background (Component-Based Software Engineering)',
+              ),
+            ),
+          ),
+          FunctionalSlide(
+            builder: incrementalComputation,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/background/incremental-computation',
+              header: FlutterDeckHeaderConfiguration(
+                title: 'Background (Incremental Computation)',
+              ),
+            ),
+          ),
 
           // Design
           FunctionalSlide(
@@ -354,6 +385,57 @@ FlutterDeckSlide motivation(BuildContext context) {
           'Reactive, declarative, and data-driven approach to applications',
           'Lack of simplicity and consistency',
           'Existing solutions have problems and/or shortcomings',
+        ],
+      );
+    },
+  );
+}
+
+FlutterDeckSlide background(BuildContext context) {
+  return FlutterDeckSlide.blank(
+    builder: (context) {
+      return FlutterDeckBulletList(
+        items: const [
+          'ReArch provides a solution across several domains',
+          'State Management',
+          'Component-Based Software Engineering',
+          'Incremental Computation',
+        ],
+      );
+    },
+  );
+}
+
+FlutterDeckSlide stateManagement(BuildContext context) {
+  return FlutterDeckSlide.blank(
+    builder: (context) {
+      return FlutterDeckBulletList(
+        items: const [
+          'TODO',
+        ],
+      );
+    },
+  );
+}
+
+FlutterDeckSlide componentBasedSoftwareEngineering(BuildContext context) {
+  return FlutterDeckSlide.blank(
+    builder: (context) {
+      return FlutterDeckBulletList(
+        items: const [
+          'TODO',
+        ],
+      );
+    },
+  );
+}
+
+FlutterDeckSlide incrementalComputation(BuildContext context) {
+  return FlutterDeckSlide.blank(
+    builder: (context) {
+      return FlutterDeckBulletList(
+        items: const [
+          'TODO',
         ],
       );
     },
@@ -730,8 +812,8 @@ FlutterDeckSlide actions(BuildContext context) {
       return FlutterDeckBulletList(
         items: const [
           'Directly derived from application feature requirements',
-          'Often perform side effects (in the container or externally)',
-          'Enables *easy* loose coupling for a particular functionality',
+          'Often trigger side effects (in the container or externally)',
+          'Enable *easy* loose coupling for a particular functionality',
           'Billing application: what may you need?',
         ],
       );

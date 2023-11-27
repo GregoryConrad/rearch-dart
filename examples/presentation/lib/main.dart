@@ -91,6 +91,7 @@ class PresentationApp extends StatelessWidget {
             builder: stateManagement,
             configuration: FlutterDeckSlideConfiguration(
               route: '/background/state-management',
+              steps: 7,
               header: FlutterDeckHeaderConfiguration(
                 title: 'Background (State Management)',
               ),
@@ -100,6 +101,7 @@ class PresentationApp extends StatelessWidget {
             builder: componentBasedSoftwareEngineering,
             configuration: FlutterDeckSlideConfiguration(
               route: '/background/component-based-software-engineering',
+              steps: 5,
               header: FlutterDeckHeaderConfiguration(
                 title: 'Background (Component-Based Software Engineering)',
               ),
@@ -109,6 +111,7 @@ class PresentationApp extends StatelessWidget {
             builder: incrementalComputation,
             configuration: FlutterDeckSlideConfiguration(
               route: '/background/incremental-computation',
+              steps: 4,
               header: FlutterDeckHeaderConfiguration(
                 title: 'Background (Incremental Computation)',
               ),
@@ -410,8 +413,15 @@ FlutterDeckSlide stateManagement(BuildContext context) {
   return FlutterDeckSlide.blank(
     builder: (context) {
       return FlutterDeckBulletList(
+        useSteps: true,
         items: const [
-          'TODO',
+          "State = data that describes an application's current behavior",
+          'Most discussed in relation to UI applications (especially GUI)',
+          '"UI is a function of state"',
+          'Model (data), View (UI), Controller (bridge) [Grove and Ozkan]',
+          'Controller often bloats, MVVM born [Kouraklis]',
+          'Dependency Injection (Guice), Observer Pattern (ReactiveX)',
+          'Flutter (StatefulWidget, InheritedWidget)',
         ],
       );
     },
@@ -422,8 +432,13 @@ FlutterDeckSlide componentBasedSoftwareEngineering(BuildContext context) {
   return FlutterDeckSlide.blank(
     builder: (context) {
       return FlutterDeckBulletList(
+        useSteps: true,
         items: const [
-          'TODO',
+          'Components = individual, self-contained, building blocks',
+          'Assembled to form a complete application',
+          'Effective at increasing software quality [Heineman and Councill]',
+          'Works well for purely functional components (i.e. spell checker)',
+          'Exogenous Connectors: atomic and composite components [Lau]',
         ],
       );
     },
@@ -434,8 +449,12 @@ FlutterDeckSlide incrementalComputation(BuildContext context) {
   return FlutterDeckSlide.blank(
     builder: (context) {
       return FlutterDeckBulletList(
+        useSteps: true,
         items: const [
-          'TODO',
+          'Caching/optimization technique',
+          "If data doesn't change, no need to recompute dependent values",
+          'Traditionally, only specific types of applications are applicable',
+          'Adapton: demand-driven incremental computation [Hammer et al.]',
         ],
       );
     },
@@ -1325,6 +1344,7 @@ FlutterDeckSlide conclusion(BuildContext context) {
           'Containers orchestrate the lifecycle of capsules and side effect(s)',
           'Paradigms are used to build more complex applications',
           'There are two library implementations: Dart/Flutter and Rust',
+          'Want to learn more? https://rearch.gsconrad.com',
         ],
       );
     },

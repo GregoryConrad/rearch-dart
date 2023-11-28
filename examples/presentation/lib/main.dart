@@ -292,6 +292,12 @@ class PresentationApp extends StatelessWidget {
             ),
           ),
           FunctionalSlide(
+            builder: totalLoc,
+            configuration: FlutterDeckSlideConfiguration(
+              route: '/conclusion/total-loc',
+            ),
+          ),
+          FunctionalSlide(
             builder: builtWithRearch,
             configuration: FlutterDeckSlideConfiguration(
               route: '/conclusion/built-with-rearch',
@@ -683,7 +689,7 @@ FlutterDeckSlide selfReads(BuildContext context) {
         items: const [
           'Capsules are not always a DAG; they can have self-dependencies!',
           'Self-dependencies are achieved via a capsule reading itself',
-          'Self-reads are equivalent to side effects, if given a rebuild api',
+          'Self-reads are equivalent to side effects, if given a rebuild API',
         ],
       );
     },
@@ -1351,8 +1357,18 @@ FlutterDeckSlide conclusion(BuildContext context) {
   );
 }
 
+FlutterDeckSlide totalLoc(BuildContext context) {
+  return FlutterDeckSlide.bigFact(
+    title: '4,601 + 1,862 = 6,463',
+    subtitle: 'Total lines of code (libraries and examples)',
+  );
+}
+
 FlutterDeckSlide builtWithRearch(BuildContext context) {
-  return FlutterDeckSlide.quote(quote: 'Built with ReArch');
+  return FlutterDeckSlide.quote(
+    quote: 'Built with ReArch',
+    attribution: 'https://tinyurl.com/pres-source',
+  );
 }
 
 FlutterDeckSlide qAndA(BuildContext context) {

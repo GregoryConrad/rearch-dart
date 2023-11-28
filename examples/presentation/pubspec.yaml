@@ -9,7 +9,10 @@ dependencies:
   device_frame: ^1.1.0
   flutter:
     sdk: flutter
-  flutter_deck: ^0.8.0
+  flutter_deck: # ^0.8.0
+    git:
+      url: https://github.com/GregoryConrad/flutter_deck
+      ref: fullscreen-button
   flutter_rearch: ^1.0.2
   graphview: ^1.2.0
   rearch: ^1.0.2

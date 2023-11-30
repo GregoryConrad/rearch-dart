@@ -35,11 +35,12 @@ abstract class DataflowGraphNode implements Disposable {
     if (!selfChanged) return;
 
     // Build or garbage collect (dispose) all remaining nodes
-    // (We use skip(1) to avoid building this node twice)
-    final buildOrder = _createBuildOrder().skip(1).toList();
-    final disposableNodes = _getDisposableNodesFromBuildOrder(buildOrder);
+    // (We use removeLast() to avoid building this node twice)
+    final buildOrderStack = _createBuildOrderStack()..removeLast();
+    final disposableNodes =
+        _getDisposableNodesFromBuildOrderStack(buildOrderStack);
     final changedNodes = {this};
-    for (final node in buildOrder) {
+    for (final node in buildOrderStack.reversed) {
       final haveDepsChanged = node._dependencies.any(changedNodes.contains);
       if (!haveDepsChanged) continue;
 
@@ -58,7 +59,7 @@ abstract class DataflowGraphNode implements Disposable {
     }
   }
 
-  List<DataflowGraphNode> _createBuildOrder() {
+  List<DataflowGraphNode> _createBuildOrderStack() {
     // We need some more information alongside of each node
     // in order to do the topological sort:
     // - False is for the first visit, which adds all deps to be visited,
@@ -84,15 +85,15 @@ abstract class DataflowGraphNode implements Disposable {
       }
     }
 
-    return buildOrderStack.reversed.toList();
+    return buildOrderStack;
   }
 
-  static Set<DataflowGraphNode> _getDisposableNodesFromBuildOrder(
-    List<DataflowGraphNode> buildOrder,
+  static Set<DataflowGraphNode> _getDisposableNodesFromBuildOrderStack(
+    List<DataflowGraphNode> buildOrderStack,
   ) {
     final disposable = <DataflowGraphNode>{};
 
-    buildOrder.reversed.where((node) {
+    buildOrderStack.where((node) {
       final dependentsAllDisposable =
           node._dependents.every(disposable.contains);
       return node.isIdempotent && dependentsAllDisposable;

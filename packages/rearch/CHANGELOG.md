@@ -1,3 +1,7 @@
+## 1.0.3
+
+ - **PERF**: remove several rebuild-related list creations.
+
 ## 1.0.2
 
  - **FIX**: prevent capsule init after disposal in onNextUpdate.

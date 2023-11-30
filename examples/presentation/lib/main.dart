@@ -529,7 +529,7 @@ FlutterDeckSlide containers(BuildContext context) {
         items: const [
           'Provide a way to read, rebuild, (and often) listen to capsules',
           'Interally a mapping of capsules to their states (i.e., hash map)',
-          'Operate lazily and maintains strong consistency across capsules',
+          'Operate lazily and maintains consistency across capsules',
           'Store/cache capsule output and side effect states',
           'What about concurrency?',
         ],

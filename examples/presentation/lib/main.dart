@@ -581,6 +581,7 @@ FlutterDeckSlide sideEffects(BuildContext context) {
           'Mutating the private data triggers capsule rebuilds',
           'State is stored directly in the container alongside capsule data',
           'Compose together into a tree',
+          'Idempotent vs. non-idempotent',
         ],
       );
     },

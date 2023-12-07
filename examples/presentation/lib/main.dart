@@ -1334,7 +1334,7 @@ FlutterDeckSlide futureWorks(BuildContext context) {
         items: const [
           'A language with capsules/side effects as first class citizens',
           'Transactional side effect mutations (across capsules)',
-          'Dynamically named capsules (at runtime)',
+          'UI library centered around ReArch',
         ],
       );
     },

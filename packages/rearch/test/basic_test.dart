@@ -370,4 +370,34 @@ void main() {
     expect(builds[g], equals(2));
     expect(builds[h], equals(1));
   });
+
+  test('fibonacci numbers', () {
+    Capsule<BigInt> Function(int) getFibonacciCapsuleAction(CapsuleHandle use) {
+      final fibCapsules = use.value(<int, Capsule<BigInt>>{});
+      return (n) {
+        return fibCapsules.putIfAbsent(n, () {
+          return (CapsuleHandle use) {
+            final getFibCapsule = use(getFibonacciCapsuleAction);
+            return switch (n) {
+              _ when n < 0 => throw ArgumentError.value(n),
+              0 => BigInt.zero,
+              1 => BigInt.one,
+              _ => use(getFibCapsule(n - 1)) + use(getFibCapsule(n - 2)),
+            };
+          };
+        });
+      };
+    }
+
+    final container = useContainer();
+    final getFibCapsule = container.read(getFibonacciCapsuleAction);
+    expect(
+      container.read(getFibCapsule(1000)).toString(),
+      equals(
+        '4346655768693745643568852767504062580256466051737178040248172908953655'
+        '5417949051890403879840079255169295922593080322634775209689623239873322'
+        '471161642996440906533187938298969649928516003704476137795166849228875',
+      ),
+    );
+  });
 }

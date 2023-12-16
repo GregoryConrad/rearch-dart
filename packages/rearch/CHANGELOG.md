@@ -1,3 +1,7 @@
+## 1.1.0
+
+ - **FEAT**: add invalidatableFuture side effect ([#19](https://github.com/GregoryConrad/rearch-dart/issues/19)).
+
 ## 1.0.3
 
  - **PERF**: remove several rebuild-related list creations.

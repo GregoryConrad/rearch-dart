@@ -293,6 +293,8 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// You supply a [futureFactory], which is a function that must
   /// return a new instance of a future to be watched.
   ///
+  /// See also [invalidatableFuture], which enables lazy future invalidation.
+  ///
   /// Internally creates the future to watch on the first build
   /// and then again whenever the returned callback is invoked.
   (AsyncValue<T>, void Function()) refreshableFuture<T>(
@@ -301,6 +303,56 @@ extension BuiltinSideEffects on SideEffectRegistrar {
     final (currFuture, setFuture) = use.lazyState(futureFactory);
     final futureState = use.future(currFuture);
     return (futureState, () => setFuture(futureFactory()));
+  }
+
+  /// A side effect that allows you to watch a future lazily
+  /// (by invoking the first callback)
+  /// that can be invalidated lazily (by invoking the second callback).
+  ///
+  /// You supply a [futureFactory], which is a function that must
+  /// return a new instance of a future to be watched.
+  ///
+  /// See also [refreshableFuture], which eagerly refreshes futures.
+  ///
+  /// Note: this returns an `AsyncValue<T> Function()` because returning a
+  /// function enables this side effect to determine whether or not there is any
+  /// demand for the future itself, enabling it to be evaluated lazily.
+  (AsyncValue<T> Function(), void Function()) invalidatableFuture<T>(
+    Future<T> Function() futureFactory,
+  ) {
+    final rebuild = use.rebuilder();
+    final (getAsyncState, setAsyncState) =
+        use.rawValueWrapper<AsyncValue<T>>(() => AsyncLoading<T>(None<T>()));
+    final (getFutureCancel, setFutureCancel) =
+        use.rawValueWrapper<void Function()?>(() => null);
+    use.register((api) => api.registerDispose(() => getFutureCancel()?.call()));
+
+    return (
+      () {
+        if (getFutureCancel() == null) {
+          setAsyncState(AsyncLoading<T>(getAsyncState().data));
+          final subscription = futureFactory().asStream().listen(
+            (data) {
+              setAsyncState(AsyncData(data));
+              rebuild();
+            },
+            onError: (Object error, StackTrace trace) {
+              setAsyncState(AsyncError(error, trace, getAsyncState().data));
+              rebuild();
+            },
+          );
+          setFutureCancel(subscription.cancel);
+        }
+
+        return getAsyncState();
+      },
+      () {
+        getFutureCancel()?.call();
+        setFutureCancel(null);
+
+        rebuild();
+      },
+    );
   }
 }
 

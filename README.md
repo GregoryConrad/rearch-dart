@@ -321,10 +321,7 @@ incorporating many ideas from these 3 pacakges along the way.
 As much as I have done with rearch, it always seems like there is more to do.
 One person can only do so much!
 
-If you would like to sponsor me to continue my work, thank you!
-Sponsorship information should be up soon.
-
-Or, if you would like to contribute, here are some areas where I would really appreciate help!
+If you would like to contribute, here are some areas where I would really appreciate help!
 - Documentation (especially inline!)
   - If you could add code samples/improve clarity, that would be greatly appreciated.
 - Adding extension methods to `AsyncValue` and `Option` are easy "first issues"
@@ -333,5 +330,13 @@ Or, if you would like to contribute, here are some areas where I would really ap
   - I've made many as I've needed them, but it'd be great to have more.
   - If you find yourself using a custom side effect over and over, consider making a PR!
 Chances are other developers can use it too.
+
+
+## Sponsors
+You can become a sponsor of my work [here!](https://github.com/sponsors/GregoryConrad)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/GregoryConrad/GregoryConrad/main/sponsorkit/sponsors.svg"/>
+</p>
+
 
 [documentation]: https://rearch.gsconrad.com

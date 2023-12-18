@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-12-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.1.0`](#flutter_rearch---v110)
+ - [`rearch` - `v1.2.0`](#rearch---v120)
+
+---
+
+#### `flutter_rearch` - `v1.1.0`
+
+ - **FEAT**: add transactional side effect mutations ([#20](https://github.com/GregoryConrad/rearch-dart/issues/20)).
+
+#### `rearch` - `v1.2.0`
+
+ - **FEAT**: add transactional side effect mutations ([#20](https://github.com/GregoryConrad/rearch-dart/issues/20)).
+
+
 ## 2023-12-17
 
 ### Changes

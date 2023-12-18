@@ -1,3 +1,7 @@
+## 1.1.0
+
+ - **FEAT**: add transactional side effect mutations ([#20](https://github.com/GregoryConrad/rearch-dart/issues/20)).
+
 ## 1.0.4
 
  - Update a dependency to the latest release.

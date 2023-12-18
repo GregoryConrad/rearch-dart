@@ -1,3 +1,7 @@
+## 1.2.0
+
+ - **FEAT**: add transactional side effect mutations ([#20](https://github.com/GregoryConrad/rearch-dart/issues/20)).
+
 ## 1.1.0
 
  - **FEAT**: add invalidatableFuture side effect ([#19](https://github.com/GregoryConrad/rearch-dart/issues/19)).

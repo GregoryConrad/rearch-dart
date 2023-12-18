@@ -121,6 +121,12 @@ class _WidgetSideEffectApiProxyImpl implements WidgetSideEffectApi {
   void unregisterDispose(SideEffectApiCallback callback) =>
       manager.disposeListeners.remove(callback);
 
+  /// [rebuild] just marks the corresponding widget as dirty,
+  /// so all affected widgets will be built together on the next frame for free.
+  /// Thus, all we need to do is update all the capsules in a single txn
+  /// before the widgets are built again.
+  /// This works out somewhat nicely, as we can easily intermingle
+  /// widget and capsule side effects within a single transaction.
   @override
   void runTransaction(void Function() sideEffectTransaction) =>
       CapsuleContainerProvider.containerOf(manager)

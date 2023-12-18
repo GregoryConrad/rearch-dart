@@ -29,20 +29,16 @@ abstract class DataflowGraphNode implements Disposable {
 
   bool get hasNoDependents => _dependents.isEmpty;
 
-  void buildSelfAndDependents() {
-    // We must build self, so we preemptively build it before other checks
-    final selfChanged = buildSelf();
-    if (!selfChanged) return;
-
-    // Build or garbage collect (dispose) all remaining nodes
-    // (We use removeLast() to avoid building this node twice)
-    final buildOrderStack = _createBuildOrderStack()..removeLast();
+  static void buildNodesAndDependents(Set<DataflowGraphNode> nodes) {
+    final buildOrderStack = _createBuildOrderStack(nodes);
     final disposableNodes =
         _getDisposableNodesFromBuildOrderStack(buildOrderStack);
-    final changedNodes = {this};
+    final changedNodes = <DataflowGraphNode>{};
+
     for (final node in buildOrderStack.reversed) {
+      final buildIsRequired = nodes.contains(node);
       final haveDepsChanged = node._dependencies.any(changedNodes.contains);
-      if (!haveDepsChanged) continue;
+      if (!buildIsRequired && !haveDepsChanged) continue;
 
       if (disposableNodes.contains(node)) {
         // Note: dependency/dependent relationships will be ok after this,
@@ -59,13 +55,15 @@ abstract class DataflowGraphNode implements Disposable {
     }
   }
 
-  List<DataflowGraphNode> _createBuildOrderStack() {
+  static List<DataflowGraphNode> _createBuildOrderStack(
+    Set<DataflowGraphNode> start,
+  ) {
     // We need some more information alongside of each node
     // in order to do the topological sort:
     // - False is for the first visit, which adds all deps to be visited,
     //   and then node again
     // - True is for the second visit, which pushes the node to the build order
-    final toVisitStack = [(false, this)];
+    final toVisitStack = [for (final node in start) (false, node)];
     final visited = <DataflowGraphNode>{};
     final buildOrderStack = <DataflowGraphNode>[];
 

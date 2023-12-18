@@ -62,7 +62,7 @@ class _CapsuleManager<T> extends DataflowGraphNode
   }
 
   @override
-  void rebuild() => buildSelfAndDependents();
+  void rebuild() => container._markNeedsBuild(this);
 
   @override
   void registerDispose(SideEffectApiCallback callback) =>
@@ -71,6 +71,10 @@ class _CapsuleManager<T> extends DataflowGraphNode
   @override
   void unregisterDispose(SideEffectApiCallback callback) =>
       toDispose.remove(callback);
+
+  @override
+  void runTransaction(void Function() sideEffectTransaction) =>
+      container.runTransaction(sideEffectTransaction);
 }
 
 class _CapsuleHandleImpl implements CapsuleHandle {

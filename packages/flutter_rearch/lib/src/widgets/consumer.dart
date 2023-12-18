@@ -120,6 +120,11 @@ class _WidgetSideEffectApiProxyImpl implements WidgetSideEffectApi {
   @override
   void unregisterDispose(SideEffectApiCallback callback) =>
       manager.disposeListeners.remove(callback);
+
+  @override
+  void runTransaction(void Function() sideEffectTransaction) =>
+      CapsuleContainerProvider.containerOf(manager)
+          .runTransaction(sideEffectTransaction);
 }
 
 class _WidgetHandleImpl implements WidgetHandle {

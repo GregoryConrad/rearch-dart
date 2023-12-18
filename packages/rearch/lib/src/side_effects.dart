@@ -18,6 +18,11 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// Convenience side effect that gives a copy of [SideEffectApi.rebuild].
   void Function() rebuilder() => use.api().rebuild;
 
+  /// Convenience side effect that gives a copy of
+  /// [SideEffectApi.runTransaction].
+  void Function(void Function()) transactionRunner() =>
+      use.api().runTransaction;
+
   /// Side effect that calls the supplied [callback] once, on the first build.
   T callonce<T>(T Function() callback) => use.register((_) => callback());
 

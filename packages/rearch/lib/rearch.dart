@@ -62,12 +62,49 @@ abstract interface class SideEffectApi {
   /// Unregisters the given [SideEffectApiCallback]
   /// from being called on capsule disposal.
   void unregisterDispose(SideEffectApiCallback callback);
+
+  /// Executes the supplied [sideEffectTransaction],
+  /// which simply updates the state of some side effects
+  /// within a singular rebuild call,
+  /// rebuilding all appropriate capsules at the conclusion of the transaction.
+  void runTransaction(void Function() sideEffectTransaction);
 }
 
 /// Contains the data of [Capsule]s.
 /// See the documentation for more.
 class CapsuleContainer implements Disposable {
   final _capsules = <_UntypedCapsule, _UntypedCapsuleManager>{};
+
+  /// Non-null indicates we are currently in a transaction,
+  /// with the changed nodes in the set.
+  /// When null, we are not in a transaction,
+  /// and we can rebuild capsules on the spot normally.
+  Set<_UntypedCapsuleManager>? _managersToRebuildFromTxn;
+
+  void _markNeedsBuild(_UntypedCapsuleManager manager) {
+    runTransaction(() => _managersToRebuildFromTxn!.add(manager));
+  }
+
+  /// Runs the supplied [sideEffectTransaction] that combines all side effect
+  /// state updates into a single container rebuild.
+  /// These state updates can originate from the same or different capsules,
+  /// enabling you to make transactional side effect changes across capsules.
+  void runTransaction(void Function() sideEffectTransaction) {
+    // We can have nested transactions, so check whether we are the "root" txn.
+    // If we are, then we need to handle the actual capsule builds and cleanup.
+    final isRootTxn = _managersToRebuildFromTxn == null;
+
+    if (isRootTxn) {
+      _managersToRebuildFromTxn = {};
+    }
+
+    sideEffectTransaction();
+
+    if (isRootTxn) {
+      DataflowGraphNode.buildNodesAndDependents(_managersToRebuildFromTxn!);
+      _managersToRebuildFromTxn = null;
+    }
+  }
 
   _CapsuleManager<T> _managerOf<T>(Capsule<T> capsule) {
     return _capsules.putIfAbsent(

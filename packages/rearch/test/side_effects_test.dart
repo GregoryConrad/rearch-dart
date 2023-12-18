@@ -145,5 +145,37 @@ void main() {
         expect(state3, equals(1234));
       }
     });
+
+    test('nested transactions', () {
+      final container = useContainer();
+
+      {
+        expect(container.read(buildCounterCapsule), equals(1));
+
+        final ((state1, setState1), (state2, _)) =
+            container.read(twoSideEffectsCapsule);
+        final (state3, setState3) = container.read(anotherCapsule);
+        expect(state1, equals(0));
+        expect(state2, equals(1));
+        expect(state3, equals(2));
+
+        container.runTransaction(() {
+          setState1(321);
+          container.read(batchUpdateAllAction)(1234);
+          setState3(321);
+        });
+      }
+
+      {
+        expect(container.read(buildCounterCapsule), equals(2));
+
+        final ((state1, _), (state2, _)) =
+            container.read(twoSideEffectsCapsule);
+        final (state3, _) = container.read(anotherCapsule);
+        expect(state1, equals(1234));
+        expect(state2, equals(1234));
+        expect(state3, equals(321));
+      }
+    });
   });
 }

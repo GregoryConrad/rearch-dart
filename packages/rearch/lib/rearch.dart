@@ -82,11 +82,7 @@ class CapsuleContainer implements Disposable {
   Set<_UntypedCapsuleManager>? _managersToRebuildFromTxn;
 
   void _markNeedsBuild(_UntypedCapsuleManager manager) {
-    if (_managersToRebuildFromTxn != null) {
-      _managersToRebuildFromTxn!.add(manager);
-    } else {
-      DataflowGraphNode.buildNodesAndDependents({manager});
-    }
+    runTransaction(() => _managersToRebuildFromTxn!.add(manager));
   }
 
   /// Runs the supplied [sideEffectTransaction] that combines all side effect
@@ -94,10 +90,20 @@ class CapsuleContainer implements Disposable {
   /// These state updates can originate from the same or different capsules,
   /// enabling you to make transactional side effect changes across capsules.
   void runTransaction(void Function() sideEffectTransaction) {
-    _managersToRebuildFromTxn = {};
+    // We can have nested transactions, so check whether we are the "root" txn.
+    // If we are, then we need to handle the actual capsule builds and cleanup.
+    final isRootTxn = _managersToRebuildFromTxn == null;
+
+    if (isRootTxn) {
+      _managersToRebuildFromTxn = {};
+    }
+
     sideEffectTransaction();
-    DataflowGraphNode.buildNodesAndDependents(_managersToRebuildFromTxn!);
-    _managersToRebuildFromTxn = null;
+
+    if (isRootTxn) {
+      DataflowGraphNode.buildNodesAndDependents(_managersToRebuildFromTxn!);
+      _managersToRebuildFromTxn = null;
+    }
   }
 
   _CapsuleManager<T> _managerOf<T>(Capsule<T> capsule) {

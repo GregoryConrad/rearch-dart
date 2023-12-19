@@ -396,4 +396,42 @@ void main() {
       ),
     );
   });
+
+  test('use() called after async gap throws', () {
+    void noopCapsule(CapsuleHandle _) {}
+
+    void useInBuildCapsule(CapsuleHandle use) => use(noopCapsule);
+
+    void Function() useInCallbackCapsule(CapsuleHandle use) {
+      return () => use(noopCapsule);
+    }
+
+    Future<void> useAfterAwaitCapsule(CapsuleHandle use) async {
+      await null;
+      use(noopCapsule);
+    }
+
+    final container = useContainer();
+    final _ = container.read(useInBuildCapsule); // should not throw
+    expect(container.read(useInCallbackCapsule), throwsA(anything));
+    expect(container.read(useAfterAwaitCapsule), throwsA(anything));
+  });
+
+  test('use.fooBar() called after async gap throws', () {
+    void useInBuildCapsule(CapsuleHandle use) => use.asListener();
+
+    void Function() useInCallbackCapsule(CapsuleHandle use) {
+      return () => use.asListener();
+    }
+
+    Future<void> useAfterAwaitCapsule(CapsuleHandle use) async {
+      await null;
+      use.asListener();
+    }
+
+    final container = useContainer();
+    final _ = container.read(useInBuildCapsule); // should not throw
+    expect(container.read(useInCallbackCapsule), throwsA(anything));
+    expect(container.read(useAfterAwaitCapsule), throwsA(anything));
+  });
 }

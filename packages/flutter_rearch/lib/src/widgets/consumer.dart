@@ -149,6 +149,13 @@ class _WidgetHandleImpl implements WidgetHandle {
 
   @override
   T register<T>(WidgetSideEffect<T> sideEffect) {
+    assert(
+      api.manager.debugDoingBuild,
+      "You may only register side effects during a RearchConsumers's build! "
+      'You are likely getting this error because you are calling '
+      '"use.fooBar()" in a function callback.',
+    );
+
     if (sideEffectDataIndex == api.manager.sideEffectData.length) {
       api.manager.sideEffectData.add(sideEffect(api));
     }

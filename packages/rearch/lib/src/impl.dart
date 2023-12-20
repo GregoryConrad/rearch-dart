@@ -14,6 +14,7 @@ class _CapsuleManager<T> extends DataflowGraphNode
 
   late T data;
   bool hasBuilt = false;
+  bool debugIsBuilding = false;
   final sideEffectData = <Object?>[];
   final toDispose = <SideEffectApiCallback>{};
 
@@ -38,15 +39,28 @@ class _CapsuleManager<T> extends DataflowGraphNode
 
   @override
   bool buildSelf() {
-    // Clear dependency relationships as they will be repopulated via `read`
-    clearDependencies();
+    // ignore: prefer_asserts_with_message
+    assert(() {
+      debugIsBuilding = true;
+      return true;
+    }());
+    try {
+      // Clear dependency relationships as they will be repopulated via `read`
+      clearDependencies();
 
-    // Build the capsule's new data
-    final newData = capsule(_CapsuleHandleImpl(this));
-    final didChange = !hasBuilt || newData != data;
-    data = newData;
-    hasBuilt = true;
-    return didChange;
+      // Build the capsule's new data
+      final newData = capsule(_CapsuleHandleImpl(this));
+      final didChange = !hasBuilt || newData != data;
+      data = newData;
+      hasBuilt = true;
+      return didChange;
+    } finally {
+      // ignore: prefer_asserts_with_message
+      assert(() {
+        debugIsBuilding = false;
+        return true;
+      }());
+    }
   }
 
   @override
@@ -85,10 +99,28 @@ class _CapsuleHandleImpl implements CapsuleHandle {
   int sideEffectDataIndex = 0;
 
   @override
-  T call<T>(Capsule<T> capsule) => manager.read(capsule);
+  T call<T>(Capsule<T> capsule) {
+    assert(
+      manager.debugIsBuilding,
+      'You may only "use(someCapsule)" during a capsule\'s build!\n'
+      'You are getting this error because:\n'
+      '1. Your capsule returns a function that calls "use(someCapsule)" in it\n'
+      '2. Your capsule calls "use(someCapsule)" after an "await"',
+    );
+
+    return manager.read(capsule);
+  }
 
   @override
   T register<T>(SideEffect<T> sideEffect) {
+    assert(
+      manager.debugIsBuilding,
+      "You may only register side effects during a capsule's build!\n"
+      'You are getting this error because:\n'
+      '1. Your capsule returns a function that calls "use.fooBar()" in it\n'
+      '2. Your capsule calls "use.fooBar()" after an "await"',
+    );
+
     if (sideEffectDataIndex == manager.sideEffectData.length) {
       manager.sideEffectData.add(sideEffect(manager));
     }

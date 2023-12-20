@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-12-20
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.2.0`](#flutter_rearch---v120)
+ - [`rearch` - `v1.3.0`](#rearch---v130)
+
+---
+
+#### `flutter_rearch` - `v1.2.0`
+
+ - **FEAT**: handle not used across async gap assertions ([#22](https://github.com/GregoryConrad/rearch-dart/issues/22)).
+
+#### `rearch` - `v1.3.0`
+
+ - **FEAT**: handle not used across async gap assertions ([#22](https://github.com/GregoryConrad/rearch-dart/issues/22)).
+
+
 ## 2023-12-19
 
 ### Changes

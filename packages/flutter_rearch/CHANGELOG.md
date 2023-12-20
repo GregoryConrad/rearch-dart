@@ -1,3 +1,7 @@
+## 1.2.0
+
+ - **FEAT**: handle not used across async gap assertions ([#22](https://github.com/GregoryConrad/rearch-dart/issues/22)).
+
 ## 1.1.0
 
  - **FEAT**: add transactional side effect mutations ([#20](https://github.com/GregoryConrad/rearch-dart/issues/20)).

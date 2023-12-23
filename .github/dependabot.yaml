@@ -37,3 +37,7 @@ updates:
     directory: "/examples/infinite_scroll"
     schedule:
       interval: weekly
+  - package-ecosystem: pub
+    directory: "/examples/presentation"
+    schedule:
+      interval: weekly

@@ -312,7 +312,7 @@ Aside from the fact that bloc is just a heavy weight wrapper around the reducer 
 bloc is designed in a manner that thwarts any form of useful composition
 and then [proceeds to blame that limitation on proper application design!](https://bloclibrary.dev/#/architecture?id=bloc-to-bloc-communication)
 
-What is suggested there (as of December 2023) is just blatantly incorrect;
+What is suggested there (as of December 2023) is arguably incorrect;
 proper application design should _encourage_ the use of composition,
 and this is nothing new.
 Composition is a design pattern that has been known about for
@@ -321,7 +321,7 @@ and can be achieved via dependency inversion (which the docs explicitly say _not
 If you disagree with this assertion, let me counter with a question:
 why should you [jump to _UI code_ to connect pieces of _app layer state_](https://bloclibrary.dev/#/architecture?id=connecting-blocs-through-presentation)
 that naturally need to interact with each other?
-Such a suggestion is nonsense as you are then putting app layer logic in your UI code,
+Such a suggestion is clearly a workaround as you are then putting app layer logic in your UI code,
 and consequently results in unmaintainability as your app states independently evolve over time.
 
 The underlying issue with bloc and a lot of other state management approaches

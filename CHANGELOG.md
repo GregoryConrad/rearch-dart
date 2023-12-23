@@ -15,6 +15,34 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`rearch` - `v1.3.1+0`](#rearch---v1310)
+ - [`flutter_rearch` - `v1.2.2`](#flutter_rearch---v122)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutter_rearch` - `v1.2.2`
+
+---
+
+#### `rearch` - `v1.3.1+0`
+
+ - Bump "rearch" to `1.3.1+0`.
+
+
+## 2023-12-23
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`rearch` - `v1.3.1`](#rearch---v131)
  - [`flutter_rearch` - `v1.2.1`](#flutter_rearch---v121)
 

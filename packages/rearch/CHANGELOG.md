@@ -1,3 +1,7 @@
+## 1.3.1+0
+
+ - Bump "rearch" to `1.3.1+0`.
+
 ## 1.3.1
 
  - **DOCS**: update README and code docs with new info ([#27](https://github.com/GregoryConrad/rearch-dart/issues/27)).

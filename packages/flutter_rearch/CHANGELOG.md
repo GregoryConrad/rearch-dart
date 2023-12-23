@@ -1,3 +1,7 @@
+## 1.2.1
+
+ - Update a dependency to the latest release.
+
 ## 1.2.0
 
  - **FEAT**: handle not used across async gap assertions ([#22](https://github.com/GregoryConrad/rearch-dart/issues/22)).

@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-12-23
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`rearch` - `v1.3.1`](#rearch---v131)
+ - [`flutter_rearch` - `v1.2.1`](#flutter_rearch---v121)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutter_rearch` - `v1.2.1`
+
+---
+
+#### `rearch` - `v1.3.1`
+
+ - **DOCS**: update README and code docs with new info ([#27](https://github.com/GregoryConrad/rearch-dart/issues/27)).
+
+
 ## 2023-12-20
 
 ### Changes

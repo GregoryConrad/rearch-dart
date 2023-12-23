@@ -1,3 +1,7 @@
+## 1.3.1
+
+ - **DOCS**: update README and code docs with new info ([#27](https://github.com/GregoryConrad/rearch-dart/issues/27)).
+
 ## 1.3.0
 
  - **FEAT**: handle not used across async gap assertions ([#22](https://github.com/GregoryConrad/rearch-dart/issues/22)).

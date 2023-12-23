@@ -9,14 +9,14 @@
 </p>
 
 <p align="center">
-rearch = re-imagined approach to application design and architecture
+ReArch = re-imagined approach to application design and architecture
 </p>
 
 ---
 
 
 ## Features
-Specifically, rearch is a:
+Specifically, ReArch is a:
 - ⚡️ Reactive
 - 🔍 Testable
 - 🧱 Composable
@@ -28,7 +28,7 @@ Specifically, rearch is a:
 
 Framework.
 
-That's a mouthful! But in short, rearch is an entirely new approach to building applications.
+That's a mouthful! But in short, ReArch is an entirely new approach to building applications.
 
 
 ## In a Nutshell
@@ -59,7 +59,7 @@ Widget counterAppBody(BuildContext context, WidgetHandle use) {
   final (count, incrementCount) = use(countManager);
   final countPlusOne = use(countPlusOneCapsule);
   return Scaffold(
-    appBar: AppBar(title: Text('Rearch Demo')),
+    appBar: AppBar(title: Text('ReArch Demo')),
     floatingActionButton: FloatingActionButton(
       onPressed: incrementCount,
       tooltip: 'Increment',
@@ -83,7 +83,7 @@ class CounterAppBody extends RearchConsumer {
     final (count, incrementCount) = use(countManager);
     final countPlusOne = use(countPlusOneCapsule);
     return Scaffold(
-      appBar: AppBar(title: Text('Rearch Demo')),
+      appBar: AppBar(title: Text('ReArch Demo')),
       floatingActionButton: FloatingActionButton(
         onPressed: incrementCount,
         tooltip: 'Increment',
@@ -136,47 +136,64 @@ void main() {
 Now go take a look at the [documentation]!
 
 
-## Why Rearch?
-Rearch is different than other approaches to build applications because it acts upon
-two key observations:
+## Why ReArch?
+ReArch is different than other approaches to build applications
+because it enables [feature composition](https://blog.gsconrad.com/2023/12/22/the-problem-with-state-management.html)
+and also acts upon two key observations:
 1. UI is a function of state and side effect(s).
 2. State is a function of other state and side effect(s).
 
-Accordingly, rearch allows you to *simply* define functions of state + side effects
+Accordingly, ReArch allows you to *simply* define functions of state + side effects
 for creating both state and UI,
 and in doing so allows you to create applications of great scale.
-Also because of this insight, I'd argue that rearch is
+Also because of this insight, I'd argue that ReArch is
 *the most testable approach to building applications today*.
-With rearch, all of your capsule/widget code will be pure functions
+With ReArch, all of your capsule/widget code will be pure functions
 (despite having arbitrary side effects!),
 and you will *never need complicated mocks*.
 
-While rearch can be used for state management, it is also much more;
+While ReArch can be used for state management, it is also much more;
 it provides a solution to build *any* application by borrowing from the fields of
 component-based software engineering and incremental computation.
 
-> Rearch is the subject of my master's thesis;
+> ReArch is the subject of my master's thesis;
 check back here later for a link to the final write up
-if you want to learn more about the theory behind rearch.
+if you want to learn more about the theory behind ReArch.
 
-Further, rearch has an *extremely powerful* side effects system, and that is not an understatement.
+Further, ReArch has an *extremely powerful* side effects system, and that is not an understatement.
 You will *never* have to wait on a new feature; you can just create a side effect!
 Side effects enable you to have extremely high code reuse between your state and widget logic,
 and allow you to think in the same manner for both.
 
-Worth mentioning here, rearch's persistence side effect also provides the (arguably) best
+Worth mentioning here, ReArch's persistence side effect also provides the (arguably) best
 mechanism to cache/persist state *out of any Flutter state management framework*.
 Don't believe me? Take a peak at the examples in the [documentation].
 
-But back on track here: if the reasons listed above are not enough for you,
+### Why not use my current solution?
+If the reasons listed above are not enough for you,
 then here are some more reasons, based on some other popular solutions.
 
-### Why not Provider?
+<details>
+<summary>
+
+#### Why not Provider?
+
+</summary>
+
 It's maintenance-only and has fundamental problems; Riverpod is its successor.
 
-### Why not Riverpod?
-I actually created rearch after being mostly _happy_ with Riverpod.
-The core principles behind Riverpod are incredbily smart, and I never would have thought of rearch without them.
+</details>
+
+
+<details>
+<summary>
+
+#### Why not Riverpod?
+
+</summary>
+
+I actually created ReArch after being mostly _happy_ with Riverpod.
+The core principles behind Riverpod are incredbily smart, and I never would have thought of ReArch without them.
 
 However, it can be argued that Riverpod has some design problems, in addition to some other grievances:
 - All the different provider types are not easy for beginners to grasp.
@@ -198,17 +215,18 @@ In addition, most will have to use them at some point when developing an app wit
 You shouldn't need to specify dependencies for scoped providers
 when you already do a `ref.watch` in the provider; that is just redundant and error-prone.
 
-You will notice a lot of carry over from Riverpod when using rearch
+You will notice a lot of carry over from Riverpod when using ReArch
 (because I cherry-picked many of the ideas I liked),
 but there are a notable few things missing (on purpose):
 Family and AutoDispose providers.
-While working on the initial version of rearch for quite some time, and going through many design revisions,
+While working on the initial version of ReArch for quite some time,
+and going through many design revisions,
 I realized how these two core parts of Riverpod are actually *flawed*, to an extent.
 While they work at the surface level for some users,
 the ideas backing Family/AutoDispose promote bad practices (keep reading!).
 
-#### What's wrong with `family`?
-> TL;DR: rearch embraces the factory pattern, which solves all the issues with `family`.
+##### What's wrong with `family`?
+> TL;DR: ReArch embraces the factory pattern, which solves all the issues with `family`.
 
 Families have two problems:
 1. Families are globally-scoped, which does not make sense from a design perspective for the cases they are intended to solve.
@@ -233,11 +251,11 @@ For some quick context, factories are a way to create an object on demand based 
 such as those provided by a user or some external mechanism.
 Factories allow you to create an object for however long you need it, and gracefully handle its state and disposal.
 
-For that reason, rearch exposes a way to make working with the factory pattern easier;
+For that reason, ReArch exposes a way to make working with the factory pattern easier;
 see the [documentation] for more.
 
-#### What's wrong with `autoDispose`?
-> TL;DR: rearch is smart enough to know which capsules it can dispose automatically. (Cool, right?)
+##### What's wrong with `autoDispose`?
+> TL;DR: ReArch is smart enough to know which capsules it can dispose automatically. (Cool, right?)
 
 AutoDispose, in my opinion, is a broken concept.
 When you have to rely on hacks like a timer to keep something from being disposed (`disposeDelay`)
@@ -252,46 +270,101 @@ to accomodate one-off situations, all in addition to a barrage of types to suppo
 (i.e., `AutoDisposeAsyncNotifierProviderElement`, `AutoDisposeAsyncNotifierProviderFamily`,
 `AutoDispose...`, [etc.](https://pub.dev/documentation/riverpod/latest/riverpod/riverpod-library.html)).
 
-Instead of AutoDispose, rearch:
+Instead of AutoDispose, ReArch:
 - Introduces the novel concept of _idempotent_ capsules when dealing with global state.
-  - You don't need to know anything about idempotent capsules when using rearch;
+  - You don't need to know anything about idempotent capsules when using ReArch;
 they are identified internally and are automatically cleaned up for you!
 - Embraces the use of factories and side effects for ephemeral state.
 
-### Why not Hooks?
+</details>
+
+
+<details>
+<summary>
+
+#### Why not Hooks?
+
+</summary>
+
 I actually love `flutter_hooks`! Just a few grievances:
 - Hooks only work from within *widgets*
 - Hooks are only effective at handling *ephemeral* state
-- Not as testable as rearch, since rearch uses DI (yes, mocks are possible, but rearch is still easier to test)
+- Not as testable as ReArch, since ReArch uses dependency inversion
+(while mocks are possible, ReArch is still easier to test)
 
-Hooks are akin to rearch's side effects; in fact, some work very similar to or exactly the same across the libraries.
+Hooks are akin to ReArch's side effects;
+in fact, some work very similar to or exactly the same across the libraries.
 
-### Why not Bloc?
+</details>
+
+
+<details>
+<summary>
+
+#### Why not Bloc?
+
+</summary>
 
 > BLoC = Boilerplate + Lots of Code.
 
-Bloc was my first state management solution, and I quickly outgrew it in favor of using `get_it` and Rx.
-In my opinion, Bloc is far too much boilerplate for too little gain.
-In fact, the crux of the Bloc architecture is simply replicable in the `useReducer` hook
-from `flutter_hooks` with way less development overhead!
+Aside from the fact that bloc is just a heavy weight wrapper around the reducer pattern
+(which can be more elegantly done with `useReducer` from `flutter_hooks` or `use.reducer` in ReArch),
+bloc is designed in a manner that thwarts any form of useful composition
+and then [proceeds to blame that limitation on proper application design!](https://bloclibrary.dev/#/architecture?id=bloc-to-bloc-communication)
 
-The Bloc pattern is also easy to replicate in rearch with `use.reducer`,
-and rearch results in _far more_ declarative and concise code.
+What is suggested there (as of December 2023) is just blatantly incorrect;
+proper application design should _encourage_ the use of composition,
+and this is nothing new.
+Composition is a design pattern that has been known about for
+[many, many years](https://en.wikipedia.org/wiki/Design_Patterns)
+and can be achieved via dependency inversion (which the docs explicitly say _not_ to do).
+If you disagree with this assertion, let me counter with a question:
+why should you [jump to _UI code_ to connect pieces of _app layer state_](https://bloclibrary.dev/#/architecture?id=connecting-blocs-through-presentation)
+that naturally need to interact with each other?
+Such a suggestion is nonsense as you are then putting app layer logic in your UI code,
+and consequently results in unmaintainability as your app states independently evolve over time.
 
-An aside: the earlier days of Bloc exposed Stream transformers with `async *` functions.
-I did think the use of `Stream`s was an interesting way to represent state over time,
-but the implementation itself was still far too verbose.
+The underlying issue with bloc and a lot of other state management approaches
+is that they do one thing really well (in bloc's case, this is the reducer pattern),
+but then force the rest of your application to try to use this methodology even when it doesn't fit.
+You can read more about this phenomenon found across state management libraries
+[here](https://blog.gsconrad.com/2023/12/22/the-problem-with-state-management.html).
 
-### Why not `get_it`?
-There is a bit of overhead in having to set up dependency injection with pre-Dart 3 packages like `get_it`
+Tirade aside, individual blocs and cubits do work just fine.
+Bloc was in fact my first state management solution some years ago,
+and I often coupled it with `get_it` and Rx.
+The earlier days of Bloc also exposed Stream transformers with `async *` functions,
+which I did think was a clever use of language features to provide state decoupling.
+
+</details>
+
+
+<details>
+<summary>
+
+#### Why not `get_it`?
+
+</summary>
+
+There is a bit of overhead in having to set up dependency injection
+with pre-Dart 3 packages like `get_it`
 (which is actually, technically speaking, a "service locater").
-Coming from `get_it`, you should welcome rearch,
-since all dependency injection is done for you automatically with zero boilerplate!
-Further, rearch is a _reactive_ dependency injection framework; `get_it` lacks reactivity.
+Coming from `get_it`, you should welcome ReArch,
+since all dependency inversion is done for you automatically with zero boilerplate!
+Further, ReArch is a _reactive_ dependency injection framework; `get_it` lacks reactivity.
 But, if you don't want the reactivity; no problem!
 You don't have to use it, but it is there in case you do.
 
-### Why not Rx and Streams?
+</details>
+
+
+<details>
+<summary>
+
+#### Why not Rx and Streams?
+
+</summary>
+
 I was a decent fan of using Rx and streams for state management and used to do so myself.
 
 However, there are a few main issues with Rx and streams:
@@ -304,21 +377,32 @@ This has multiple reasons, but a big one is because streams cannot *correctly* s
 4. Streams require a bit of syntactic and thought overhead,
 in addition to requiring a DI/service locator tool to access them.
 
-### Why not GetX?
+</details>
+
+
+<details>
+<summary>
+
+#### Why not GetX?
+
+</summary>
+
 Your code will look like 🍝.
+
+</details>
 
 
 ## Credit
 Giving credit where credit is due:
-I got the original idea for rearch (although, it was much different back then!)
+I got the original idea for ReArch (although, it was much different back then!)
 after using `riverpod`, `flutter_hooks`, and `functional_widget`.
-Rearch would not have been possible if not for these stellar, role-model projects.
-Rearch took *dozens* (not an exaggeration) of design overhauls to arrive at where it is today,
+ReArch would not have been possible if not for these stellar, role-model projects.
+ReArch took *dozens* (not an exaggeration) of design overhauls to arrive at where it is today,
 incorporating many ideas from these 3 pacakges along the way.
 
 
 ## Help Wanted!
-As much as I have done with rearch, it always seems like there is more to do.
+As much as I have done with ReArch, it always seems like there is more to do.
 One person can only do so much!
 
 If you would like to contribute, here are some areas where I would really appreciate help!

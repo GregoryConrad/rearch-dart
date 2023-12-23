@@ -33,7 +33,27 @@ abstract interface class CapsuleReader {
 /// Provides a mechanism ([register]) to register side effects.
 // ignore: one_member_abstracts
 abstract interface class SideEffectRegistrar {
-  /// Registers the given side effect.
+  /// Registers the given side effect
+  /// and serves as the underlying base of all side effects.
+  ///
+  /// "Registering a side effect" involves invoking [sideEffect]
+  /// _only_ on the first build,
+  /// followed by returning the return value of [sideEffect]
+  /// on the first and all subsequent builds.
+  ///
+  /// Thus, if you write:
+  /// ```dart
+  /// final (getCount, incrementCount) = use.register((api) {
+  ///   int count = 0;
+  ///   return (
+  ///     getCount: () => count,
+  ///     incrementCount: () => count++;
+  ///   );
+  /// })
+  /// ```
+  /// You will get the same copy of `(getCount, incrementCount)` on every build,
+  /// which is why we have to return `getCount` instead of `count` directly
+  /// (otherwise, it would never get updates).
   T register<T>(SideEffect<T> sideEffect);
 }
 

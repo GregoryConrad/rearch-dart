@@ -15,6 +15,25 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`flutter_rearch` - `v1.2.1+0`](#flutter_rearch---v1210)
+
+---
+
+#### `flutter_rearch` - `v1.2.1+0`
+
+
+## 2023-12-23
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`rearch` - `v1.3.1+0`](#rearch---v1310)
  - [`flutter_rearch` - `v1.2.2`](#flutter_rearch---v122)
 

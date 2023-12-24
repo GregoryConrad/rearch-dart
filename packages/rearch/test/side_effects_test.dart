@@ -4,6 +4,17 @@ import 'package:test/test.dart';
 import 'util.dart';
 
 void main() {
+  test('stateGetterSetter dependents should rebuild when state updated', () {
+    (int Function(), void Function(int)) stateCapsule(CapsuleHandle use) =>
+        use.stateGetterSetter(0);
+    int currStateCapsule(CapsuleHandle use) => use(stateCapsule).$1();
+
+    final container = useContainer();
+    expect(container.read(currStateCapsule), equals(0));
+    container.read(stateCapsule).$2(1);
+    expect(container.read(currStateCapsule), equals(1));
+  });
+
   test('invalidatableFuture', () async {
     var shouldError = false;
 

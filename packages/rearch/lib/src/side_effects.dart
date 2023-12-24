@@ -48,7 +48,8 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// see https://react.dev/reference/react/useState
   (T Function(), void Function(T)) lazyStateGetterSetter<T>(T Function() init) {
     // We use register directly to keep the same setter function across rebuilds
-    return use.register((api) {
+    // (but we need to return a new getter on each build, see below for more)
+    final (getter, setter) = use.register((api) {
       var state = init();
 
       T getter() => state;
@@ -60,6 +61,12 @@ extension BuiltinSideEffects on SideEffectRegistrar {
 
       return (getter, setter);
     });
+
+    // We *MUST* return a new getter function here,
+    // which we do simply by making a new closure. See here for why:
+    // https://github.com/GregoryConrad/rearch-dart/issues/32#issuecomment-1868399873
+    // ignore: unnecessary_lambdas
+    return (() => getter(), setter);
   }
 
   /// Side effect that provides a way for capsules to contain some state.

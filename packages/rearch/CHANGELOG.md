@@ -1,3 +1,7 @@
+## 1.3.2
+
+ - **FIX**: force lazyStateGetterSettter dependents to rebuild on state change ([#34](https://github.com/GregoryConrad/rearch-dart/issues/34)).
+
 ## 1.3.1+0
 
  - Bump "rearch" to `1.3.1+0`.

@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-12-24
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`rearch` - `v1.3.2`](#rearch---v132)
+ - [`flutter_rearch` - `v1.2.2`](#flutter_rearch---v122)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutter_rearch` - `v1.2.2`
+
+---
+
+#### `rearch` - `v1.3.2`
+
+ - **FIX**: force lazyStateGetterSettter dependents to rebuild on state change ([#34](https://github.com/GregoryConrad/rearch-dart/issues/34)).
+
+
 ## 2023-12-23
 
 ### Changes

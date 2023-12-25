@@ -1,18 +1,17 @@
 part of '../rearch.dart';
 
 typedef _UntypedCapsule = Capsule<Object?>;
-typedef _UntypedCapsuleManager = _CapsuleManager<Object?>;
 
-class _CapsuleManager<T> extends DataflowGraphNode
+class _CapsuleManager extends DataflowGraphNode
     implements SideEffectApi, Disposable {
   _CapsuleManager(this.container, this.capsule) {
     buildSelf();
   }
 
   final CapsuleContainer container;
-  final Capsule<T> capsule;
+  final _UntypedCapsule capsule;
 
-  late T data;
+  late Object? data;
   bool hasBuilt = false;
   bool debugIsBuilding = false;
   final sideEffectData = <Object?>[];
@@ -34,7 +33,7 @@ class _CapsuleManager<T> extends DataflowGraphNode
 
     final otherManager = container._managerOf(otherCapsule);
     addDependency(otherManager);
-    return otherManager.data;
+    return otherManager.data as R;
   }
 
   @override
@@ -94,7 +93,7 @@ class _CapsuleManager<T> extends DataflowGraphNode
 class _CapsuleHandleImpl implements CapsuleHandle {
   _CapsuleHandleImpl(this.manager);
 
-  final _UntypedCapsuleManager manager;
+  final _CapsuleManager manager;
 
   int sideEffectDataIndex = 0;
 

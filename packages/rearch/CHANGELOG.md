@@ -1,3 +1,7 @@
+## 1.3.3
+
+ - **FIX**: remove the generic on _CapsuleManager to allow capsule upcasts ([#39](https://github.com/GregoryConrad/rearch-dart/issues/39)).
+
 ## 1.3.2
 
  - **FIX**: force lazyStateGetterSettter dependents to rebuild on state change ([#34](https://github.com/GregoryConrad/rearch-dart/issues/34)).

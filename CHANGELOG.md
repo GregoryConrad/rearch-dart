@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-12-25
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`rearch` - `v1.3.3`](#rearch---v133)
+ - [`flutter_rearch` - `v1.2.3`](#flutter_rearch---v123)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutter_rearch` - `v1.2.3`
+
+---
+
+#### `rearch` - `v1.3.3`
+
+ - **FIX**: remove the generic on _CapsuleManager to allow capsule upcasts ([#39](https://github.com/GregoryConrad/rearch-dart/issues/39)).
+
+
 ## 2023-12-24
 
 ### Changes

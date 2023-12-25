@@ -434,4 +434,28 @@ void main() {
     expect(container.read(useInCallbackCapsule), throwsA(anything));
     expect(container.read(useAfterAwaitCapsule), throwsA(anything));
   });
+
+  test('containers store capsules completely untyped (issue #36)', () {
+    // Re-reading the capsule under a different type should not throw.
+    () capsule(CapsuleHandle use) => ();
+    useContainer()
+      // ignore: unnecessary_cast
+      ..read(capsule as Capsule<Object>)
+      ..read(capsule);
+  });
+
+  test('use() in lists works correctly (spun off of issue #36)', () {
+    int intCapsule(CapsuleHandle use) => 0;
+    double doubleCapsule(CapsuleHandle use) => 0;
+    List<num> upcastedListCapsule1(CapsuleHandle use) =>
+        [use(intCapsule), use(doubleCapsule)];
+    List<num> upcastedListCapsule2(CapsuleHandle use) =>
+        [intCapsule, doubleCapsule].map(use.call).toList();
+
+    final container = useContainer();
+    expect(container.read(upcastedListCapsule1), equals([0, 0.0]));
+    expect(container.read(upcastedListCapsule2), equals([0, 0.0]));
+    expect(container.read(intCapsule), equals(0));
+    expect(container.read(doubleCapsule), equals(0.0));
+  });
 }

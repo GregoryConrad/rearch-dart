@@ -93,15 +93,15 @@ abstract interface class SideEffectApi {
 /// Contains the data of [Capsule]s.
 /// See the documentation for more.
 class CapsuleContainer implements Disposable {
-  final _capsules = <_UntypedCapsule, _UntypedCapsuleManager>{};
+  final _capsules = <_UntypedCapsule, _CapsuleManager>{};
 
   /// Non-null indicates we are currently in a transaction,
   /// with the changed nodes in the set.
   /// When null, we are not in a transaction,
   /// and we can rebuild capsules on the spot normally.
-  Set<_UntypedCapsuleManager>? _managersToRebuildFromTxn;
+  Set<_CapsuleManager>? _managersToRebuildFromTxn;
 
-  void _markNeedsBuild(_UntypedCapsuleManager manager) {
+  void _markNeedsBuild(_CapsuleManager manager) {
     runTransaction(() => _managersToRebuildFromTxn!.add(manager));
   }
 
@@ -126,16 +126,16 @@ class CapsuleContainer implements Disposable {
     }
   }
 
-  _CapsuleManager<T> _managerOf<T>(Capsule<T> capsule) {
+  _CapsuleManager _managerOf(_UntypedCapsule capsule) {
     return _capsules.putIfAbsent(
       capsule,
-      () => _CapsuleManager<T>(this, capsule),
-    ) as _CapsuleManager<T>;
+      () => _CapsuleManager(this, capsule),
+    );
   }
 
   /// Reads the current data of the supplied [Capsule],
   /// initializing it if needed.
-  T read<T>(Capsule<T> capsule) => _managerOf(capsule).data;
+  T read<T>(Capsule<T> capsule) => _managerOf(capsule).data as T;
 
   /// *Temporarily* listens to changes in a given set of [Capsule]s.
   ///

@@ -71,6 +71,10 @@ typedef SideEffect<T> = T Function(SideEffectApi);
 typedef SideEffectApiCallback = void Function();
 
 /// The api given to [SideEffect]s to create their state.
+///
+/// New methods may be added to this interface on any new _minor_ release
+/// (minor in terms of semver).
+@experimental
 abstract interface class SideEffectApi {
   /// Triggers a rebuild in the supplied capsule.
   void rebuild();

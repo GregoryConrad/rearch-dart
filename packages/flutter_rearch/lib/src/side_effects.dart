@@ -1,6 +1,7 @@
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
+import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 
 part 'side_effects/animation.dart';

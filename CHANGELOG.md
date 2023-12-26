@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-12-26
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.2.4`](#flutter_rearch---v124)
+ - [`rearch` - `v1.3.4`](#rearch---v134)
+
+---
+
+#### `flutter_rearch` - `v1.2.4`
+
+ - **FIX**: clarify API elements that are not stabilized ([#46](https://github.com/GregoryConrad/rearch-dart/issues/46)).
+
+#### `rearch` - `v1.3.4`
+
+ - **FIX**: clarify API elements that are not stabilized ([#46](https://github.com/GregoryConrad/rearch-dart/issues/46)).
+
+
 ## 2023-12-25
 
 ### Changes

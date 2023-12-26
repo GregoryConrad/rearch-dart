@@ -1,3 +1,7 @@
+## 1.2.4
+
+ - **FIX**: clarify API elements that are not stabilized ([#46](https://github.com/GregoryConrad/rearch-dart/issues/46)).
+
 ## 1.2.3
 
  - Update a dependency to the latest release.

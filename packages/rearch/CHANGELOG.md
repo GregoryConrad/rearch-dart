@@ -1,3 +1,7 @@
+## 1.3.4
+
+ - **FIX**: clarify API elements that are not stabilized ([#46](https://github.com/GregoryConrad/rearch-dart/issues/46)).
+
 ## 1.3.3
 
  - **FIX**: remove the generic on _CapsuleManager to allow capsule upcasts ([#39](https://github.com/GregoryConrad/rearch-dart/issues/39)).

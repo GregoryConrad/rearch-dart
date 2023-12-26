@@ -1,11 +1,16 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rearch/src/widgets.dart';
+import 'package:meta/meta.dart';
 import 'package:rearch/rearch.dart';
 
 export 'src/side_effects.dart';
 export 'src/widgets.dart';
 
 /// The API exposed to [RearchConsumer]s to extend their functionality.
+///
+/// New methods may be added to this interface on any new _minor_ release
+/// (minor in terms of semver).
+@experimental
 abstract interface class WidgetSideEffectApi implements SideEffectApi {
   /// The [BuildContext] of the associated [RearchConsumer].
   BuildContext get context;

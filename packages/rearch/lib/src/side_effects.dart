@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
+import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 
 extension _UseConvenience on SideEffectRegistrar {
@@ -25,20 +25,6 @@ extension BuiltinSideEffects on SideEffectRegistrar {
 
   /// Side effect that calls the supplied [callback] once, on the first build.
   T callonce<T>(T Function() callback) => use.register((_) => callback());
-
-  /// Returns a raw value wrapper; i.e., a getter and setter for some value.
-  /// *The setter will not trigger rebuilds*.
-  /// The initial state will be set to the result of running [init],
-  /// if it was provided. Otherwise, you must manually set it
-  /// via the setter before ever calling the getter.
-  @experimental
-  (T Function(), void Function(T)) rawValueWrapper<T>([T Function()? init]) {
-    return use.callonce(() {
-      late T state;
-      if (init != null) state = init();
-      return (() => state, (T newState) => state = newState);
-    });
-  }
 
   /// Side effect that provides a way for capsules to contain some state,
   /// where the initial state is computationally expensive.
@@ -222,10 +208,10 @@ extension BuiltinSideEffects on SideEffectRegistrar {
     return getValue();
   }
 
-  /// A mechanism to persist changes made in state.
+  /// A mechanism to persist changes made in state that manages its own state.
   /// See the docs for usage information.
   ///
-  /// Defines the way to interact with a storage provider of your choice
+  /// Defines a way to interact with a storage provider of your choice
   /// through the [read] and [write] parameters.
   ///
   /// [read] is only called once; it is assumed that if [write] is successful,

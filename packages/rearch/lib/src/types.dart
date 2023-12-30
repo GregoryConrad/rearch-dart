@@ -164,12 +164,16 @@ final class AsyncData<T> extends AsyncValue<T> {
 @immutable
 final class AsyncLoading<T> extends AsyncValue<T> {
   /// Creates an [AsyncLoading] with the supplied [previousData].
-  const AsyncLoading(this.previousData);
+  const AsyncLoading(this.previousData, [this.loadingInfo]);
 
   /// The previous data (from a predecessor [AsyncData]), if it exists.
   /// This can happen if a new [Future]/[Stream] is watched and the
   /// [Future]/[Stream] it is replacing was in the [AsyncData] state.
   final Option<T> previousData;
+
+  /// Optional object info, typically a String that describes the current
+  /// loading state.
+  final Object? loadingInfo;
 
   @override
   int get hashCode => previousData.hashCode;
@@ -179,7 +183,8 @@ final class AsyncLoading<T> extends AsyncValue<T> {
       other is AsyncLoading<T> && other.previousData == previousData;
 
   @override
-  String toString() => 'AsyncLoading(previousData: $previousData)';
+  String toString() => 'AsyncLoading(previousData: $previousData'
+      '${loadingInfo == null ? '' : ', loadingInfo: ${loadingInfo!}'})';
 }
 
 /// The error variant for an [AsyncValue].

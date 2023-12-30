@@ -175,6 +175,9 @@ final class AsyncLoading<T> extends AsyncValue<T> {
   /// loading state.
   final Object? loadingInfo;
 
+  /// Returns [loadingInfo] object casted to [Q].
+  Q getLoadingInfo<Q extends Object?>() => loadingInfo as Q;
+
   @override
   int get hashCode => previousData.hashCode;
 

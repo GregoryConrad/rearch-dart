@@ -8,7 +8,7 @@ extension CapsuleWarmUp<T> on List<AsyncValue<T>> {
   ///
   /// - [child] is returned when all of the current states are [AsyncData].
   /// - [loadingBuilder] is called to build the returned [Widget] when any
-  /// of the current states are [AsyncLoading] and there is not ant state of
+  /// of the current states are [AsyncLoading] and there is not any state of
   /// type [AsyncError].
   /// - [errorBuilder] is called to build the returned [Widget] when any
   /// of the current states are [AsyncError].

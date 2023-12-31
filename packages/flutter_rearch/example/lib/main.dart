@@ -158,7 +158,7 @@ final class GlobalWarmUps extends RearchConsumer {
       use(indexWarmUpCapsule),
     ].toWarmUpWidget(
       child: child,
-      loadingBuilder: (info) =>
+      loadingBuilder: (loadings) =>
           const Center(child: CircularProgressIndicator.adaptive()),
       errorBuilder: (errors) => Column(
         children: [

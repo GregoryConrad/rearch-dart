@@ -80,7 +80,7 @@ class GlobalWarmUps extends RearchConsumer {
       // other warm ups here...
     ].toWarmUpWidget(
       child: child,
-      loadingBuilder: (info) =>
+      loadingBuilder: (loadings) =>
           const Center(child: CircularProgressIndicator.adaptive()),
       errorBuilder: (errors) => Column(
         children: [

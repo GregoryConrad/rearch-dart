@@ -161,12 +161,9 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// unless you use something like [memo] to limit changes.
   /// Or, if possible, it is even better to wrap the future in an entirely
   /// new capsule (although this is not always possible).
-  AsyncValue<T> future<T>(Future<T> future) {
-    final asStream = use.memo(future.asStream, [future]);
-    return use.stream(asStream);
-  }
+  AsyncValue<T> future<T>(Future<T> future) => use.nullableFuture(future)!;
 
-  /// Consumes a [Stream] and watches the given stream.
+  /// Consumes a [Stream] and watches the given [stream].
   ///
   /// If the given stream changes between build calls, then the current
   /// [StreamSubscription] will be disposed and recreated for the new stream.
@@ -175,7 +172,49 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// unless you use something like [memo] to limit changes.
   /// Or, if possible, it is even better to wrap the stream in an entirely
   /// new capsule (although this is not always possible).
-  AsyncValue<T> stream<T>(Stream<T> stream) {
+  AsyncValue<T> stream<T>(Stream<T> stream) => use.nullableStream(stream)!;
+
+  /// Consumes a nullable [Future] and watches the given [future].
+  ///
+  /// Implemented by calling [Future.asStream] and forwarding calls
+  /// onto [nullableStream].
+  ///
+  /// If the given future changes, then the current [StreamSubscription]
+  /// will be disposed and recreated for the new future.
+  /// Thus, it is important that the future instance only changes when needed.
+  /// It is incorrect to create a future in the same build as the [future],
+  /// unless you use something like [memo] to limit changes.
+  /// Or, if possible, it is even better to wrap the future in an entirely
+  /// new capsule (although this is not always possible).
+  ///
+  /// This side effect also caches the data from the latest non-null [future],
+  /// passing it into [AsyncLoading.previousData] when the future switches and
+  /// [AsyncError.previousData] when a new future throws an exception.
+  /// To remove this cached data from the returned [AsyncValue],
+  /// you may call [AsyncValueConvenience.withoutPreviousData].
+  AsyncValue<T>? nullableFuture<T>(Future<T>? future) {
+    // NOTE: we convert to a stream here because we can cancel
+    // a stream subscription; there is no builtin way to cancel a future.
+    final asNullableStream = use.memo(() => future?.asStream(), [future]);
+    return use.nullableStream(asNullableStream);
+  }
+
+  /// Consumes a nullable [Stream] and watches the given [stream].
+  ///
+  /// If the given stream changes between build calls, then the current
+  /// [StreamSubscription] will be disposed and recreated for the new stream.
+  /// Thus, it is important that the stream instance only changes when needed.
+  /// It is incorrect to create a stream in the same build as the [stream],
+  /// unless you use something like [memo] to limit changes.
+  /// Or, if possible, it is even better to wrap the stream in an entirely
+  /// new capsule (although this is not always possible).
+  ///
+  /// This side effect also caches the data from the latest non-null [stream],
+  /// passing it into [AsyncLoading.previousData] when the stream switches and
+  /// [AsyncError.previousData] when a new stream emits an exception.
+  /// To remove this cached data from the returned [AsyncValue],
+  /// you may call [AsyncValueConvenience.withoutPreviousData].
+  AsyncValue<T>? nullableStream<T>(Stream<T>? stream) {
     final rebuild = use.rebuilder();
     final (getValue, setValue) = use.rawValueWrapper<AsyncValue<T>>(
       () => AsyncLoading<T>(None<T>()),
@@ -191,7 +230,7 @@ extension BuiltinSideEffects on SideEffectRegistrar {
     if (needToInitializeState) {
       setValue(AsyncLoading(getValue().data));
       setSubscription(
-        stream.listen(
+        stream?.listen(
           (data) {
             setValue(AsyncData(data));
             rebuild();
@@ -205,7 +244,7 @@ extension BuiltinSideEffects on SideEffectRegistrar {
       );
     }
 
-    return getValue();
+    return stream == null ? null : getValue();
   }
 
   /// A mechanism to persist changes made in state that manages its own state.
@@ -217,6 +256,10 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// [read] is only called once; it is assumed that if [write] is successful,
   /// then calling [read] again would reflect the new state that we already
   /// have access to. Thus, calling [read] again is skipped as an optimization.
+  ///
+  /// See also: [hydrate], which will compose more nicely with side effects
+  /// that manage their own state by simply persisting their state.
+  /// [persist] acts like a [state] assembled with [hydrate].
   (AsyncValue<T>, void Function(T)) persist<T>({
     required Future<T> Function() read,
     required Future<void> Function(T) write,
@@ -249,8 +292,8 @@ extension BuiltinSideEffects on SideEffectRegistrar {
     final (getValue, setValue) =
         use.rawValueWrapper<AsyncValue<T>?>(() => null);
 
-    // We convert to a stream here because we can cancel a stream subscription;
-    // there is no builtin way to cancel a future.
+    // NOTE: we convert to a stream here because we can cancel
+    // a stream subscription; there is no builtin way to cancel a future.
     final (future, setFuture) = use.state<Future<T>?>(null);
     final asStream = use.memo(() => future?.asStream(), [future]);
 

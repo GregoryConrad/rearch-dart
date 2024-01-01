@@ -30,8 +30,11 @@ class PresentationApp extends StatelessWidget {
         configuration: FlutterDeckConfiguration(
           // Override controls so that TextFields can receive "m" and "."
           controls: const FlutterDeckControlsConfiguration(
-            openDrawerKey: LogicalKeyboardKey.arrowUp,
-            toggleMarkerKey: LogicalKeyboardKey.arrowDown,
+            shortcuts: FlutterDeckShortcutsConfiguration(
+              toggleNavigationDrawer:
+                  SingleActivator(LogicalKeyboardKey.arrowUp),
+              toggleMarker: SingleActivator(LogicalKeyboardKey.arrowDown),
+            ),
           ),
           transition: const FlutterDeckTransition.fade(),
           footer: FlutterDeckFooterConfiguration(

@@ -307,6 +307,19 @@ extension AsyncValueConvenience<T> on AsyncValue<T> {
     };
   }
 
+  /// Fills in the [AsyncLoading.previousData] or [AsyncError.previousData] with
+  /// [None] so that there is no previous data whatsoever in the [AsyncValue].
+  /// This also means that [data] will only be [Some] when this is [AsyncData],
+  /// which can be useful when you want to erase any non-relevant previous data.
+  AsyncValue<T> withoutPreviousData() {
+    return switch (this) {
+      AsyncData() => this,
+      AsyncLoading() => AsyncLoading(None<T>()),
+      AsyncError(:final error, :final stackTrace) =>
+        AsyncError(error, stackTrace, None<T>()),
+    };
+  }
+
   /// Maps an AsyncValue<T> into an AsyncValue<R> by applying
   /// the given [mapper].
   AsyncValue<R> map<R>(R Function(T) mapper) {

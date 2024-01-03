@@ -1,3 +1,4 @@
+import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 import 'package:test/test.dart';
 
@@ -40,6 +41,110 @@ void main() {
     expect(getState(), equals(const AsyncLoading(Some(0))));
     await Future.delayed(Duration.zero, () => null);
     expect((getState() as AsyncError<int>).previousData, equals(const Some(0)));
+  });
+
+  test('hydrate', () async {
+    var writtenData = -1;
+    var shouldWriteError = false;
+    var writeCount = 0;
+
+    Future<int> read() async => writtenData;
+
+    Future<void> write(int newData) async {
+      await null;
+      writeCount++;
+      if (shouldWriteError) throw Exception();
+      writtenData = newData;
+    }
+
+    (AsyncValue<int>, void Function(int?)) testCapsule(
+      CapsuleHandle use,
+    ) {
+      final (state, setState) = use.state<int?>(null);
+      final hydrateState = use.hydrate(
+        state != null ? Some(state) : const None<int>(),
+        read: read,
+        write: write,
+      );
+      return (hydrateState, setState);
+    }
+
+    final container = useContainer();
+    final setState = container.read(testCapsule).$2;
+
+    Future<void> setAndExpect({
+      required int? setStateTo,
+      required AsyncValue<int> expectInitialHydratedStateToEqual,
+      required int? expectNewHydratedStateToEqual, // null for AsyncError
+    }) async {
+      final initialWriteCount = writeCount;
+      final finalWriteCount = setStateTo != null && setStateTo != writtenData
+          ? initialWriteCount + 1
+          : initialWriteCount;
+
+      setState(setStateTo);
+
+      expect(
+        container.read(testCapsule).$1,
+        equals(expectInitialHydratedStateToEqual),
+      );
+      expect(writeCount, equals(initialWriteCount));
+
+      await null;
+
+      if (expectNewHydratedStateToEqual == null) {
+        container.read(testCapsule).$1 as AsyncError; // should not throw
+      } else {
+        expect(
+          container.read(testCapsule).$1,
+          equals(AsyncData(expectNewHydratedStateToEqual)),
+        );
+      }
+      expect(writeCount, equals(finalWriteCount));
+    }
+
+    await setAndExpect(
+      setStateTo: null,
+      expectInitialHydratedStateToEqual: const AsyncLoading(None<int>()),
+      expectNewHydratedStateToEqual: -1,
+    );
+    await setAndExpect(
+      setStateTo: 0,
+      expectInitialHydratedStateToEqual: const AsyncLoading(Some(-1)),
+      expectNewHydratedStateToEqual: 0,
+    );
+    await setAndExpect(
+      setStateTo: null,
+      expectInitialHydratedStateToEqual: const AsyncData(0),
+      expectNewHydratedStateToEqual: 0,
+    );
+    await setAndExpect(
+      setStateTo: 1,
+      expectInitialHydratedStateToEqual: const AsyncLoading(Some(0)),
+      expectNewHydratedStateToEqual: 1,
+    );
+    await setAndExpect(
+      setStateTo: 1,
+      expectInitialHydratedStateToEqual: const AsyncData(1),
+      expectNewHydratedStateToEqual: 1,
+    );
+    await setAndExpect(
+      setStateTo: 2,
+      expectInitialHydratedStateToEqual: const AsyncLoading(Some(1)),
+      expectNewHydratedStateToEqual: 2,
+    );
+    shouldWriteError = true;
+    await setAndExpect(
+      setStateTo: 3,
+      expectInitialHydratedStateToEqual: const AsyncLoading(Some(2)),
+      expectNewHydratedStateToEqual: null,
+    );
+    shouldWriteError = false;
+    await setAndExpect(
+      setStateTo: 4,
+      expectInitialHydratedStateToEqual: const AsyncLoading(Some(2)),
+      expectNewHydratedStateToEqual: 4,
+    );
   });
 
   group('side effect transactions', () {

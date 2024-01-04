@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-01-04
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.3.0`](#flutter_rearch---v130)
+ - [`rearch` - `v1.4.0`](#rearch---v140)
+
+---
+
+#### `flutter_rearch` - `v1.3.0`
+
+ - **FEAT**: add side effect mutations to rebuilds ([#64](https://github.com/GregoryConrad/rearch-dart/issues/64)).
+
+#### `rearch` - `v1.4.0`
+
+ - **FEAT**: add side effect mutations to rebuilds ([#64](https://github.com/GregoryConrad/rearch-dart/issues/64)).
+ - **FEAT**: add experimental hydrate side effect ([#62](https://github.com/GregoryConrad/rearch-dart/issues/62)).
+
+
 ## 2023-12-26
 
 ### Changes

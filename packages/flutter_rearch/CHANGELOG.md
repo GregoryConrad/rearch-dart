@@ -1,3 +1,7 @@
+## 1.3.0
+
+ - **FEAT**: add side effect mutations to rebuilds ([#64](https://github.com/GregoryConrad/rearch-dart/issues/64)).
+
 ## 1.2.4
 
  - **FIX**: clarify API elements that are not stabilized ([#46](https://github.com/GregoryConrad/rearch-dart/issues/46)).

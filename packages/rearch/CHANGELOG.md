@@ -1,3 +1,8 @@
+## 1.4.0
+
+ - **FEAT**: add side effect mutations to rebuilds ([#64](https://github.com/GregoryConrad/rearch-dart/issues/64)).
+ - **FEAT**: add experimental hydrate side effect ([#62](https://github.com/GregoryConrad/rearch-dart/issues/62)).
+
 ## 1.3.4
 
  - **FIX**: clarify API elements that are not stabilized ([#46](https://github.com/GregoryConrad/rearch-dart/issues/46)).

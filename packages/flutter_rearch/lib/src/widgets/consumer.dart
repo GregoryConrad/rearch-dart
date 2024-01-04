@@ -100,7 +100,17 @@ class _WidgetSideEffectApiProxyImpl implements WidgetSideEffectApi {
   final _RearchElement manager;
 
   @override
-  void rebuild() => manager.markNeedsBuild();
+  void rebuild([
+    void Function(void Function() cancelRebuild)? sideEffectMutation,
+  ]) {
+    if (sideEffectMutation != null) {
+      var isCanceled = false;
+      sideEffectMutation(() => isCanceled = true);
+      if (isCanceled) return;
+    }
+
+    manager.markNeedsBuild();
+  }
 
   @override
   BuildContext get context => manager;

@@ -293,5 +293,23 @@ void main() {
         expect(state3, equals(321));
       }
     });
+
+    test('side effect mutations are batched at end of txn', () {
+      var builds = 0;
+      (int Function(), void Function(int)) lazyStateCapsule(CapsuleHandle use) {
+        builds++;
+        return use.stateGetterSetter(0);
+      }
+
+      final container = useContainer();
+      container.runTransaction(() {
+        container.read(lazyStateCapsule).$2(1);
+        container.read(lazyStateCapsule).$2(2);
+        expect(container.read(lazyStateCapsule).$1(), equals(0));
+        expect(builds, equals(1));
+      });
+      expect(container.read(lazyStateCapsule).$1(), equals(2));
+      expect(builds, equals(2));
+    });
   });
 }

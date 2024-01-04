@@ -77,7 +77,13 @@ typedef SideEffectApiCallback = void Function();
 @experimental
 abstract interface class SideEffectApi {
   /// Triggers a rebuild in the supplied capsule.
-  void rebuild();
+  ///
+  /// The supplied [sideEffectMutation] will be called with a `void Function()`
+  /// argument that can be invoked from within the [sideEffectMutation] to
+  /// cancel the rebuild (say, if the side effect state doesn't need to change).
+  void rebuild([
+    void Function(void Function() cancelRebuild)? sideEffectMutation,
+  ]);
 
   /// Registers the given [SideEffectApiCallback]
   /// to be called on capsule disposal.
@@ -100,33 +106,31 @@ class CapsuleContainer implements Disposable {
   final _capsules = <_UntypedCapsule, _CapsuleManager>{};
 
   /// Non-null indicates we are currently in a transaction,
-  /// with the changed nodes in the set.
-  /// When null, we are not in a transaction,
-  /// and we can rebuild capsules on the spot normally.
-  Set<_CapsuleManager>? _managersToRebuildFromTxn;
-
-  void _markNeedsBuild(_CapsuleManager manager) {
-    runTransaction(() => _managersToRebuildFromTxn!.add(manager));
-  }
+  /// with the side effect mutations to call in the [List].
+  /// When null, we are not in a transaction and we must make one for rebuilds.
+  /// Side effect mutations return their _CapsuleManager when it should
+  /// be rebuilt, and null when the side effect state wasn't updated.
+  List<_CapsuleManager? Function()>? _sideEffectMutationsToCallInTxn;
 
   /// Runs the supplied [sideEffectTransaction] that combines all side effect
-  /// state updates into a single container rebuild.
+  /// state updates into a single container rebuild sweep.
   /// These state updates can originate from the same or different capsules,
   /// enabling you to make transactional side effect changes across capsules.
   void runTransaction(void Function() sideEffectTransaction) {
     // We can have nested transactions, so check whether we are the "root" txn.
     // If we are, then we need to handle the actual capsule builds and cleanup.
-    final isRootTxn = _managersToRebuildFromTxn == null;
-
-    if (isRootTxn) {
-      _managersToRebuildFromTxn = {};
-    }
+    final isRootTxn = _sideEffectMutationsToCallInTxn == null;
+    if (isRootTxn) _sideEffectMutationsToCallInTxn = [];
 
     sideEffectTransaction();
 
     if (isRootTxn) {
-      DataflowGraphNode.buildNodesAndDependents(_managersToRebuildFromTxn!);
-      _managersToRebuildFromTxn = null;
+      final managersToRebuild = _sideEffectMutationsToCallInTxn!
+          .map((mutation) => mutation())
+          .whereType<_CapsuleManager>()
+          .toSet();
+      DataflowGraphNode.buildNodesAndDependents(managersToRebuild);
+      _sideEffectMutationsToCallInTxn = null;
     }
   }
 

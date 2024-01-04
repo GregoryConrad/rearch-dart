@@ -75,7 +75,17 @@ class _CapsuleManager extends DataflowGraphNode
   }
 
   @override
-  void rebuild() => container._markNeedsBuild(this);
+  void rebuild([
+    void Function(void Function() cancelRebuild)? sideEffectMutation,
+  ]) {
+    container.runTransaction(() {
+      container._sideEffectMutationsToCallInTxn!.add(() {
+        var isCanceled = false;
+        sideEffectMutation?.call(() => isCanceled = true);
+        return isCanceled ? null : this;
+      });
+    });
+  }
 
   @override
   void registerDispose(SideEffectApiCallback callback) =>

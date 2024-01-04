@@ -16,7 +16,9 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   SideEffectApi api() => use.register((api) => api);
 
   /// Convenience side effect that gives a copy of [SideEffectApi.rebuild].
-  void Function() rebuilder() => use.api().rebuild;
+  void Function([
+    void Function(void Function() cancelRebuild)? sideEffectMutation,
+  ]) rebuilder() => use.api().rebuild;
 
   /// Convenience side effect that gives a copy of
   /// [SideEffectApi.runTransaction].
@@ -40,9 +42,14 @@ extension BuiltinSideEffects on SideEffectRegistrar {
 
       T getter() => state;
       void setter(T newState) {
-        if (newState == state) return;
-        state = newState;
-        api.rebuild();
+        api.rebuild((cancelRebuild) {
+          if (newState == state) {
+            cancelRebuild();
+            return;
+          }
+
+          state = newState;
+        });
       }
 
       return (getter, setter);
@@ -231,14 +238,12 @@ extension BuiltinSideEffects on SideEffectRegistrar {
       setValue(AsyncLoading(getValue().data));
       setSubscription(
         stream?.listen(
-          (data) {
-            setValue(AsyncData(data));
-            rebuild();
-          },
-          onError: (Object error, StackTrace trace) {
-            setValue(AsyncError(error, trace, getValue().data));
-            rebuild();
-          },
+          (data) => rebuild(
+            (_) => setValue(AsyncData(data)),
+          ),
+          onError: (Object error, StackTrace trace) => rebuild(
+            (_) => setValue(AsyncError(error, trace, getValue().data)),
+          ),
           cancelOnError: false,
         ),
       );
@@ -304,16 +309,14 @@ extension BuiltinSideEffects on SideEffectRegistrar {
         );
 
         final subscription = asStream?.listen(
-          (data) {
-            setValue(AsyncData(data));
-            rebuild();
-          },
-          onError: (Object error, StackTrace trace) {
-            setValue(
+          (data) => rebuild(
+            (_) => setValue(AsyncData(data)),
+          ),
+          onError: (Object error, StackTrace trace) => rebuild(
+            (_) => setValue(
               AsyncError(error, trace, getValue()?.data ?? None<T>()),
-            );
-            rebuild();
-          },
+            ),
+          ),
         );
 
         return () => subscription?.cancel();
@@ -373,25 +376,25 @@ extension BuiltinSideEffects on SideEffectRegistrar {
         if (getFutureCancel() == null) {
           setAsyncState(AsyncLoading<T>(getAsyncState().data));
           final subscription = futureFactory().asStream().listen(
-            (data) {
-              setAsyncState(AsyncData(data));
-              rebuild();
-            },
-            onError: (Object error, StackTrace trace) {
-              setAsyncState(AsyncError(error, trace, getAsyncState().data));
-              rebuild();
-            },
-          );
+                (data) => rebuild(
+                  (_) => setAsyncState(AsyncData(data)),
+                ),
+                onError: (Object error, StackTrace trace) => rebuild(
+                  (_) => setAsyncState(
+                    AsyncError(error, trace, getAsyncState().data),
+                  ),
+                ),
+              );
           setFutureCancel(subscription.cancel);
         }
 
         return getAsyncState();
       },
       () {
-        getFutureCancel()?.call();
-        setFutureCancel(null);
-
-        rebuild();
+        rebuild((_) {
+          getFutureCancel()?.call();
+          setFutureCancel(null);
+        });
       },
     );
   }

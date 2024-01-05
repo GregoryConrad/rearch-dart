@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_mimir/flutter_mimir.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
+import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 
 void main() => runApp(const TodoApp());
@@ -516,34 +517,18 @@ class DynamicBackground extends RearchConsumer {
     final numCirclesToFillScreen = 1 / (pi * pow(avgCircleRadius, 2));
     final goalCircleCount = numCirclesToFillScreen / 2;
 
-    // We need to use this more advanced side effect since we need to be able
-    // to grab the most up-to-date copy of the circles when we check to see
-    // if we actually need to add a new circle (if we used the regular state
-    // effect, the closure would capture an outdated copy of the state).
+    // We need to use these more advanced side effects since we need to be able
+    // to add the circles from within *and* outside of the build method.
+    // setCircles() will not trigger rebuilds, so we must manually trigger them
+    // with rebuild() when calling setCircles() outside of the build method.
     final (getCircles, setCircles) =
-        use.stateGetterSetter(<SplashCircleProperties>{});
+        use.rawValueWrapper(() => <SplashCircleProperties>{});
+    final rebuild = use.rebuilder();
 
-    final addCircle = use.memo(
-      () => (SplashCircleProperties circle) {
-        if (getCircles().length >= goalCircleCount) return;
-        setCircles({...getCircles(), circle});
-      },
-      [getCircles, goalCircleCount, setCircles],
-    );
-
-    final removeCircle = use.memo(
-      () => (int id) {
-        setCircles({
-          ...getCircles().where((circle) => circle.id != id),
-        });
-      },
-      [getCircles, setCircles],
-    );
-
-    use.effect(
+    final circlesStream = use.memo(
       () {
         final random = Random();
-        final circleStream = Stream.periodic(
+        return Stream.periodic(
           const Duration(milliseconds: 50),
           (i) {
             return (
@@ -560,15 +545,16 @@ class DynamicBackground extends RearchConsumer {
               disappear: Duration(
                 seconds: 2 + (random.nextDouble() * 3).round(),
               ),
-              remove: () => removeCircle(i),
             );
           },
         );
-        final subscription = circleStream.listen(addCircle);
-        return subscription.cancel;
       },
-      [addCircle, removeCircle, color1, color2, avgCircleRadius],
+      [color1, color2, avgCircleRadius],
     );
+    final currCircle = use.stream(circlesStream).data.asNullable();
+    if (getCircles().length < goalCircleCount && currCircle != null) {
+      setCircles({...getCircles(), currCircle});
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -584,7 +570,13 @@ class DynamicBackground extends RearchConsumer {
                   radius: circle.radius * constraints.maxHeight,
                   appear: circle.appear,
                   disappear: circle.disappear,
-                  remove: circle.remove,
+                  remove: () {
+                    rebuild((_) {
+                      setCircles({
+                        ...getCircles().where((c) => c.id != circle.id),
+                      });
+                    });
+                  },
                 ),
               ),
             BackdropFilter(
@@ -608,7 +600,6 @@ typedef SplashCircleProperties = ({
   double radius,
   Duration appear,
   Duration disappear,
-  void Function() remove,
 });
 
 /// {@template AnimatedSplashCircle}

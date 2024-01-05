@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-01-05
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.3.1`](#flutter_rearch---v131)
+
+---
+
+#### `flutter_rearch` - `v1.3.1`
+
+ - **FIX**: ensure ticker disposal after all other disposes.
+ - **FIX**: rework todos application circle animations.
+
+
 ## 2024-01-04
 
 ### Changes

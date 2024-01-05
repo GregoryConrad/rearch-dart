@@ -1,3 +1,8 @@
+## 1.3.1
+
+ - **FIX**: ensure ticker disposal after all other disposes.
+ - **FIX**: rework todos application circle animations.
+
 ## 1.3.0
 
  - **FEAT**: add side effect mutations to rebuilds ([#64](https://github.com/GregoryConrad/rearch-dart/issues/64)).

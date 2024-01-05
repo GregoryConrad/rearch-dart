@@ -7,13 +7,26 @@ TickerProvider _singleTickerProvider(
   final provider = use.memo(() => _SingleTickerProvider(context));
   use.effect(
     () {
-      // During dispose, ensure Ticker was disposed.
+      // *After* dispose, ensure Ticker was disposed.
+      // The animation controller itself may be disposed after the ticker,
+      // so we must insert a gap into the event loop to check if the ticker
+      // was actually disposed a little bit later.
       return () {
+        // ignore: prefer_asserts_with_message
         assert(
-          provider._ticker == null || !provider._ticker!.isActive,
-          'A Ticker created with use.singleTickerProvider() was not disposed, '
-          'causing the Ticker to leak. You need to call dispose() on the '
-          'AnimationController that consumes the Ticker to prevent this leak.',
+          () {
+            () async {
+              await null;
+              assert(
+                provider._ticker == null || !provider._ticker!.isActive,
+                'A Ticker created with use.singleTickerProvider() was not '
+                'disposed, causing the Ticker to leak. '
+                'You need to call dispose() on the AnimationController that '
+                'consumes the Ticker to prevent this leak.',
+              );
+            }();
+            return true;
+          }(),
         );
       };
     },

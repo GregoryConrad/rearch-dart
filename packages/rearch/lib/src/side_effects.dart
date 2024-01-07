@@ -156,6 +156,44 @@ extension BuiltinSideEffects on SideEffectRegistrar {
     );
   }
 
+  /// Provides a way to keep track of some state while also providing
+  /// "undo" and "redo" operations. This side effect is analogous to the
+  /// replay bloc library, if you have heard of it.
+  ///
+  /// The returned state defaults to null and is accompanied by a function
+  /// that sets the current state.
+  /// The returned `undo` and `redo` [Function]s will both be null if
+  /// there are no states available to undo and redo, respectively.
+  (
+    T?,
+    void Function(T), {
+    void Function()? undo,
+    void Function()? redo,
+  }) replay<T>() {
+    final undoStack = use.value(<T>[]);
+    final redoStack = use.value(<T>[]);
+    final rebuild = use.rebuilder();
+
+    return (
+      undoStack.lastOrNull,
+      (newState) => rebuild((cancelRebuild) {
+            if (undoStack.isNotEmpty && newState == undoStack.last) {
+              cancelRebuild();
+              return;
+            }
+
+            redoStack.clear();
+            undoStack.add(newState);
+          }),
+      undo: undoStack.isEmpty
+          ? null
+          : () => rebuild((_) => redoStack.add(undoStack.removeLast())),
+      redo: redoStack.isEmpty
+          ? null
+          : () => rebuild((_) => undoStack.add(redoStack.removeLast())),
+    );
+  }
+
   /// Consumes a [Future] and watches the given [future].
   ///
   /// Implemented by calling [Future.asStream] and forwarding calls

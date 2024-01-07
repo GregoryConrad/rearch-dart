@@ -1,3 +1,8 @@
+## 1.5.0
+
+ - **FEAT**: stabilize hydrate side effect with nullable parameter ([#66](https://github.com/GregoryConrad/rearch-dart/issues/66)).
+ - **FEAT**: add replay state side effect ([#67](https://github.com/GregoryConrad/rearch-dart/issues/67)).
+
 ## 1.4.0
 
  - **FEAT**: add side effect mutations to rebuilds ([#64](https://github.com/GregoryConrad/rearch-dart/issues/64)).

@@ -147,6 +147,71 @@ void main() {
     );
   });
 
+  test('replay', () {
+    (int?, void Function(int), {void Function()? undo, void Function()? redo})
+        replayCapsule(CapsuleHandle use) => use.replay();
+
+    final container = useContainer();
+    expect(container.read(replayCapsule).$1, equals(null));
+    expect(container.read(replayCapsule).undo, equals(null));
+    expect(container.read(replayCapsule).redo, equals(null));
+
+    container.read(replayCapsule).$2(1);
+    expect(container.read(replayCapsule).$1, equals(1));
+    expect(container.read(replayCapsule).undo, isA<void Function()>());
+    expect(container.read(replayCapsule).redo, equals(null));
+
+    container.read(replayCapsule).$2(1);
+    expect(container.read(replayCapsule).$1, equals(1));
+    expect(container.read(replayCapsule).undo, isA<void Function()>());
+    expect(container.read(replayCapsule).redo, equals(null));
+
+    container.read(replayCapsule).$2(2);
+    expect(container.read(replayCapsule).$1, equals(2));
+    expect(container.read(replayCapsule).undo, isA<void Function()>());
+    expect(container.read(replayCapsule).redo, equals(null));
+
+    container.read(replayCapsule).undo!();
+    expect(container.read(replayCapsule).$1, equals(1));
+    expect(container.read(replayCapsule).undo, isA<void Function()>());
+    expect(container.read(replayCapsule).redo, isA<void Function()>());
+
+    container.read(replayCapsule).undo!();
+    expect(container.read(replayCapsule).$1, equals(null));
+    expect(container.read(replayCapsule).undo, equals(null));
+    expect(container.read(replayCapsule).redo, isA<void Function()>());
+
+    container.read(replayCapsule).redo!();
+    expect(container.read(replayCapsule).$1, equals(1));
+    expect(container.read(replayCapsule).undo, isA<void Function()>());
+    expect(container.read(replayCapsule).redo, isA<void Function()>());
+
+    container.read(replayCapsule).undo!();
+    expect(container.read(replayCapsule).$1, equals(null));
+    expect(container.read(replayCapsule).undo, equals(null));
+    expect(container.read(replayCapsule).redo, isA<void Function()>());
+
+    container.read(replayCapsule).redo!();
+    expect(container.read(replayCapsule).$1, equals(1));
+    expect(container.read(replayCapsule).undo, isA<void Function()>());
+    expect(container.read(replayCapsule).redo, isA<void Function()>());
+
+    container.read(replayCapsule).redo!();
+    expect(container.read(replayCapsule).$1, equals(2));
+    expect(container.read(replayCapsule).undo, isA<void Function()>());
+    expect(container.read(replayCapsule).redo, equals(null));
+
+    container.read(replayCapsule).undo!();
+    expect(container.read(replayCapsule).$1, equals(1));
+    expect(container.read(replayCapsule).undo, isA<void Function()>());
+    expect(container.read(replayCapsule).redo, isA<void Function()>());
+
+    container.read(replayCapsule).$2(1234);
+    expect(container.read(replayCapsule).$1, equals(1234));
+    expect(container.read(replayCapsule).undo, isA<void Function()>());
+    expect(container.read(replayCapsule).redo, equals(null));
+  });
+
   group('side effect transactions', () {
     (
       (int, void Function(int)),

@@ -1,4 +1,3 @@
-import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 import 'package:test/test.dart';
 
@@ -61,11 +60,7 @@ void main() {
       CapsuleHandle use,
     ) {
       final (state, setState) = use.state<int?>(null);
-      final hydrateState = use.hydrate(
-        state != null ? Some(state) : const None<int>(),
-        read: read,
-        write: write,
-      );
+      final hydrateState = use.hydrate(state, read: read, write: write);
       return (hydrateState, setState);
     }
 

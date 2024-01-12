@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-01-12
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.4.0`](#flutter_rearch---v140)
+
+---
+
+#### `flutter_rearch` - `v1.4.0`
+
+ - **FEAT**: add FocusNode related widget side effects ([#80](https://github.com/GregoryConrad/rearch-dart/issues/80)).
+
+
 ## 2024-01-07
 
 ### Changes

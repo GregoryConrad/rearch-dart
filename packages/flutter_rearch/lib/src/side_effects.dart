@@ -8,6 +8,10 @@ part 'side_effects/animation.dart';
 part 'side_effects/keep_alive.dart';
 part 'side_effects/text_editing_controller.dart';
 
+extension _UseConvenience on SideEffectRegistrar {
+  SideEffectRegistrar get use => this;
+}
+
 /// A collection of the builtin [WidgetSideEffect]s.
 extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
   /// The [WidgetSideEffectApi] backing this [WidgetSideEffectRegistrar].
@@ -67,4 +71,43 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
   /// otherwise, the widget might still be disposed.
   void automaticKeepAlive({bool keepAlive = true}) =>
       _automaticKeepAlive(this, keepAlive: keepAlive);
+
+  /// Provides a way to easily get a copy of a [FocusNode].
+  FocusNode focusNode({
+    String? debugLabel,
+    FocusOnKeyCallback? onKey,
+    FocusOnKeyEventCallback? onKeyEvent,
+    bool skipTraversal = false,
+    bool canRequestFocus = true,
+    bool descendantsAreFocusable = true,
+    bool descendantsAreTraversable = true,
+  }) {
+    return use.callonce(FocusNode.new)
+      ..debugLabel = debugLabel
+      ..onKey = onKey
+      ..onKeyEvent = onKeyEvent
+      ..skipTraversal = skipTraversal
+      ..canRequestFocus = canRequestFocus
+      ..descendantsAreFocusable = descendantsAreFocusable
+      ..descendantsAreTraversable = descendantsAreTraversable;
+  }
+
+  /// Provides a way to easily get a copy of a [FocusScopeNode].
+  FocusScopeNode focusScopeNode({
+    String? debugLabel,
+    FocusOnKeyCallback? onKey,
+    FocusOnKeyEventCallback? onKeyEvent,
+    bool skipTraversal = false,
+    bool canRequestFocus = true,
+    TraversalEdgeBehavior traversalEdgeBehavior =
+        TraversalEdgeBehavior.closedLoop,
+  }) {
+    return use.callonce(FocusScopeNode.new)
+      ..debugLabel = debugLabel
+      ..onKey = onKey
+      ..onKeyEvent = onKeyEvent
+      ..skipTraversal = skipTraversal
+      ..canRequestFocus = canRequestFocus
+      ..traversalEdgeBehavior = traversalEdgeBehavior;
+  }
 }

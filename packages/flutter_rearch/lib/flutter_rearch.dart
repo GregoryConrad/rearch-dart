@@ -3,6 +3,7 @@ import 'package:flutter_rearch/src/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:rearch/rearch.dart';
 
+export 'src/macros.dart';
 export 'src/side_effects.dart';
 export 'src/widgets.dart';
 

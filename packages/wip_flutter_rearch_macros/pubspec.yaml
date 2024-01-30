@@ -1,0 +1,16 @@
+name: wip_flutter_rearch_macros
+publish_to: none
+
+environment:
+  sdk: 3.4.0-99.0.dev
+
+dependencies:
+  rearch: ^1.5.0
+  _fe_analyzer_shared: any
+
+dependency_overrides:
+  _fe_analyzer_shared:
+    git:
+      url: https://github.com/dart-lang/sdk.git
+      path: pkg/_fe_analyzer_shared
+      ref: 3.4.0-99.0.dev

@@ -6,7 +6,6 @@ import 'package:_fe_analyzer_shared/src/macros/api.dart';
 // const rearchWidget = _RearchWidget();
 
 // TODO(GregoryConrad): make inheritedRearchWidget macro
-// TODO(GregoryConrad): widget generics via function.typeParameters
 // TODO(GregoryConrad): transfer doc comments
 // TODO(GregoryConrad): add better type checking/assertions, see:
 //   https://github.com/dart-lang/language/issues/3606
@@ -46,6 +45,7 @@ macro class RearchWidget implements FunctionDeclarationsMacro {
         functionName.substring(0, upperCaseCutOff).toUpperCase() +
             functionName.substring(upperCaseCutOff);
 
+    final typeParams = function.typeParameters.map((t) => t.code).toList();
     final positParams = function.positionalParameters.toList();
     final namedParams = function.namedParameters.toList();
 
@@ -103,6 +103,11 @@ macro class RearchWidget implements FunctionDeclarationsMacro {
       ...[
         'class ',
         widgetName,
+        if (typeParams.isNotEmpty) ...[
+          '<',
+          ...(typeParams as Iterable<Object>).intersperse(','),
+          '>',
+        ],
         ' extends ',
         if (canBeStatelessWidget) 'StatelessWidget' else 'RearchConsumer',
         ' {',
@@ -117,7 +122,17 @@ macro class RearchWidget implements FunctionDeclarationsMacro {
           if (!canBeStatelessWidget) ...['WidgetHandle', ' ', useName],
         ],
         ') => ',
-        ...[functionName, '(', functionArgs, ');'],
+        ...[
+          functionName,
+          if (typeParams.isNotEmpty) ...[
+            '<',
+            ...typeParams.map((tp) => tp.name).intersperse(','),
+            '>',
+          ],
+          '(',
+          functionArgs,
+          ');',
+        ],
       ],
       '}',
     ];
@@ -151,5 +166,18 @@ extension _EzReport on Builder {
         correctionMessage: correctionMessage,
       ),
     );
+  }
+}
+
+extension _Interspersed<T> on Iterable<T> {
+  Iterable<T> intersperse(T toIntersperse) sync* {
+    final i = iterator;
+    if (i.moveNext()) {
+      yield i.current;
+    }
+    while (i.moveNext()) {
+      yield toIntersperse;
+      yield i.current;
+    }
   }
 }

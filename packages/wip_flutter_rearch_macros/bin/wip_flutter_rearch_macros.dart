@@ -41,7 +41,12 @@ Widget statefulThing(
 }) =>
     throw UnimplementedError();
 
+// Generic type parameters are currently unimplemented
+// @RearchWidget()
+// Widget generics<A, B extends num>(A a, B b) => throw UnimplementedError();
+
 void main(List<String> arguments) {
   const StatelessThing([]);
   const StatefulThing([]);
+  // const Generics(true, 123);
 }

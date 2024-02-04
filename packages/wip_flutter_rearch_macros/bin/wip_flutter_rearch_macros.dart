@@ -9,21 +9,39 @@ class BuildContext {}
 
 class WidgetHandle {}
 
+abstract class StatelessWidget extends Widget {
+  const StatelessWidget({super.key});
+  Widget build(BuildContext context);
+}
+
 abstract class RearchConsumer extends Widget {
   const RearchConsumer({super.key});
   Widget build(BuildContext context, WidgetHandle use);
 }
 
 @RearchWidget()
-Widget thing(
+Widget statelessThing(
+  List<List<int>> i, {
+  // int opt1 = 0, // parameter defaultValue not implemented in macros yet
+  int? opt2,
+  int? opt3 = 123,
+}) =>
+    throw UnimplementedError();
+
+@RearchWidget()
+Widget statefulThing(
   List<List<int>> i,
   WidgetHandle use,
   BuildContext context, {
   required WidgetHandle use2,
   required BuildContext context2,
+  // int opt1 = 0, // parameter defaultValue not implemented in macros yet
+  int? opt2,
+  int? opt3 = 123,
 }) =>
     throw UnimplementedError();
 
 void main(List<String> arguments) {
-  const Thing([]);
+  const StatelessThing([]);
+  const StatefulThing([]);
 }

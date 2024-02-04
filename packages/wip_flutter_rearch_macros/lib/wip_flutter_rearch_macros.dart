@@ -6,21 +6,10 @@ import 'package:_fe_analyzer_shared/src/macros/api.dart';
 // const rearchWidget = _RearchWidget();
 
 // TODO(GregoryConrad): make inheritedRearchWidget macro
-// TODO(GregoryConrad): add better type checking/assertions with something like:
-// final returnType = await builder.resolve(function.returnType.code);
-// (function.returnType as NamedTypeAnnotation).identifier;
-// builder.typeDeclarationOf();
-// returnType.isExactly(StaticType)
-// final widget = await builder.typeDeclarationOf(
-//   await builder.resolveIdentifier(
-//     Uri.parse('package:flutter/widgets.dart'),
-//     'Widget',
-//   ),
-// );
-// await builder.resolve(widget);
 // TODO(GregoryConrad): widget generics via function.typeParameters
-// TODO(GregoryConrad): stless widget optimization
 // TODO(GregoryConrad): transfer doc comments
+// TODO(GregoryConrad): add better type checking/assertions, see:
+//   https://github.com/dart-lang/language/issues/3606
 macro class RearchWidget implements FunctionDeclarationsMacro {
   const RearchWidget();
 
@@ -30,17 +19,16 @@ macro class RearchWidget implements FunctionDeclarationsMacro {
     DeclarationBuilder builder,
   ) async {
     if (!function.returnType.isA('Widget')) {
-      builder.reportError(
+      return builder.reportError(
         message: 'Only applicable to functions returning `Widget`',
         target: function.returnType.asDiagnosticTarget,
       );
-      return;
     }
 
     final firstOptPosParam =
         function.positionalParameters.where((p) => !p.isRequired).firstOrNull;
     if (firstOptPosParam != null) {
-      builder.reportError(
+      return builder.reportError(
         message: 'Optional positional parameters are not allowed.\n'
             'This is because optional positional parameters are incompatible '
             'with widgets, which all have a super.key named parameter. '
@@ -50,7 +38,6 @@ macro class RearchWidget implements FunctionDeclarationsMacro {
         correctionMessage: 'Make the optional positional parameter an '
             'optional named parameter.',
       );
-      return;
     }
 
     final functionName = function.identifier.name;
@@ -69,25 +56,30 @@ macro class RearchWidget implements FunctionDeclarationsMacro {
     bool isExternalParam(ParameterDeclaration param) =>
         !isParamWidgetHandle(param) && !isParamBuildContext(param);
 
+    final canBeStatelessWidget =
+        !positParams.followedBy(namedParams).any(isParamWidgetHandle);
     final externalPositParams = positParams.where(isExternalParam).toList();
     final externalNamedParams = namedParams.where(isExternalParam).toList();
 
     final classFields = externalPositParams
         .followedBy(externalNamedParams)
-        .map((param) => 'final ${param.type.typeName} ${param.code.name};')
-        .join('\n');
+        .expand((p) => ['final ', p.code.type!, ' ', p.code.name!, ';'])
+        .toList();
 
     final constructorParams = [
-      for (final param in externalPositParams) 'this.${param.code.name},',
+      for (final param in externalPositParams) 'this.${param.code.name!},',
       '{',
       for (final param in externalNamedParams)
         if (param.isRequired)
-          'required this.${param.code.name},'
-        else
-          'this.${param.code.name} = ${param.code.defaultValue},',
+          'required this.${param.code.name!},'
+        else ...[
+          'this.${param.code.name!} = ',
+          param.code.defaultValue ?? 'null',
+          ',',
+        ],
       'super.key,',
       '}',
-    ].join('\n');
+    ];
 
     const useName = '__use';
     const contextName = '__context';
@@ -97,26 +89,39 @@ macro class RearchWidget implements FunctionDeclarationsMacro {
       } else if (isParamBuildContext(param)) {
         return contextName;
       } else {
-        return param.code.name.toString();
+        return param.code.name!;
       }
     }
 
     final functionPositArgs = positParams.map(paramToArg);
     final functionNamedArgs =
-        namedParams.map((param) => '${param.code.name}: ${paramToArg(param)}');
+        namedParams.map((param) => '${param.code.name!}: ${paramToArg(param)}');
     final functionArgs =
         functionPositArgs.followedBy(functionNamedArgs).join(', ');
 
-    final widgetCode = '''
-class $widgetName extends RearchConsumer {
-  const $widgetName($constructorParams);
-  $classFields
-  @override
-  Widget build(BuildContext $contextName, WidgetHandle $useName) {
-    return $functionName($functionArgs);
-  }
-}''';
-    builder.declareInLibrary(DeclarationCode.fromString(widgetCode));
+    final widgetCode = [
+      ...[
+        'class ',
+        widgetName,
+        ' extends ',
+        if (canBeStatelessWidget) 'StatelessWidget' else 'RearchConsumer',
+        ' {',
+      ],
+      ...['  const ', widgetName, '(', ...constructorParams, ');'],
+      ...classFields,
+      ...[
+        'Widget',
+        ' build(',
+        ...[
+          ...['BuildContext', ' ', contextName, ', '],
+          if (!canBeStatelessWidget) ...['WidgetHandle', ' ', useName],
+        ],
+        ') => ',
+        ...[functionName, '(', functionArgs, ');'],
+      ],
+      '}',
+    ];
+    builder.declareInLibrary(DeclarationCode.fromParts(widgetCode));
   }
 }
 

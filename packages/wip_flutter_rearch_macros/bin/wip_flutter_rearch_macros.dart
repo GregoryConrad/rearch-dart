@@ -1,3 +1,4 @@
+import 'package:rearch/rearch.dart';
 import 'package:wip_flutter_rearch_macros/wip_flutter_rearch_macros.dart';
 
 class Widget {
@@ -5,9 +6,18 @@ class Widget {
   final Object? key;
 }
 
-class BuildContext {}
+abstract class InheritedWidget extends Widget {
+  const InheritedWidget({required this.child, super.key});
+  final Widget child;
+  bool updateShouldNotify(covariant InheritedWidget oldWidget);
+}
 
-class WidgetHandle {}
+// ignore: one_member_abstracts
+abstract interface class BuildContext {
+  T? dependOnInheritedWidgetOfExactType<T extends InheritedWidget>();
+}
+
+abstract interface class WidgetHandle implements SideEffectRegistrar {}
 
 abstract class StatelessWidget extends Widget {
   const StatelessWidget({super.key});
@@ -45,8 +55,23 @@ Widget statefulThing(
 // @RearchWidget()
 // Widget generics<A, B extends num>(A a, B b) => throw UnimplementedError();
 
+@RearchInheritedWidget()
+(int, void Function()) scopedCount(WidgetHandle use) {
+  final (count, setCount) = use.state(0);
+  return (count, () => setCount(count + 1));
+}
+
+@RearchInheritedWidget()
+(int, void Function()) scopedCount2(
+  WidgetHandle use, {
+  required int startingCount,
+}) {
+  final (count, setCount) = use.state(startingCount);
+  return (count, () => setCount(count + 1));
+}
+
 void main(List<String> arguments) {
-  const StatelessThing([]);
-  const StatefulThing([]);
+  const ScopedCount(child: StatelessThing([]));
+  const ScopedCount2(startingCount: 123, child: StatefulThing([]));
   // const Generics(true, 123);
 }

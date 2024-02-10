@@ -1,3 +1,7 @@
+## 1.6.0
+
+ - **FEAT**: add assertion to ensure rebuild isn't called during a build ([#100](https://github.com/GregoryConrad/rearch-dart/issues/100)).
+
 ## 1.5.0
 
  - **FEAT**: stabilize hydrate side effect with nullable parameter ([#66](https://github.com/GregoryConrad/rearch-dart/issues/66)).

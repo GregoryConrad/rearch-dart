@@ -1,3 +1,7 @@
+## 1.4.1
+
+ - Update a dependency to the latest release.
+
 ## 1.4.0
 
  - **FEAT**: add FocusNode related widget side effects ([#80](https://github.com/GregoryConrad/rearch-dart/issues/80)).

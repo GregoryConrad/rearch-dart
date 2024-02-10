@@ -111,6 +111,26 @@ void main() {
     expect(states, equals([1, 2, 3, 5, 6, 7]));
   });
 
+  test('listeners cannot trigger rebuilds', () {
+    (int, void Function(int)) statefulCapsule(CapsuleHandle use) =>
+        use.state(0);
+
+    final container = useContainer();
+    expect(
+      () => container.listen((use) => use(statefulCapsule).$2(4321)),
+      throwsA(isA<AssertionError>()),
+    );
+  });
+
+  test('capsules cannot trigger rebuild in an ongoing build', () {
+    (int, void Function(int)) statefulCapsule(CapsuleHandle use) =>
+        use.state(0);
+    void shouldThrow(CapsuleHandle use) => use(statefulCapsule).$2(1234);
+
+    final container = useContainer();
+    expect(() => container.read(shouldThrow), throwsA(isA<AssertionError>()));
+  });
+
   test('generic capsules', () {
     var builds = 0;
     late num value;
@@ -413,8 +433,14 @@ void main() {
 
     final container = useContainer();
     final _ = container.read(useInBuildCapsule); // should not throw
-    expect(container.read(useInCallbackCapsule), throwsA(anything));
-    expect(container.read(useAfterAwaitCapsule), throwsA(anything));
+    expect(
+      container.read(useInCallbackCapsule),
+      throwsA(isA<AssertionError>()),
+    );
+    expect(
+      container.read(useAfterAwaitCapsule),
+      throwsA(isA<AssertionError>()),
+    );
   });
 
   test('use.fooBar() called after async gap throws', () {
@@ -431,8 +457,14 @@ void main() {
 
     final container = useContainer();
     final _ = container.read(useInBuildCapsule); // should not throw
-    expect(container.read(useInCallbackCapsule), throwsA(anything));
-    expect(container.read(useAfterAwaitCapsule), throwsA(anything));
+    expect(
+      container.read(useInCallbackCapsule),
+      throwsA(isA<AssertionError>()),
+    );
+    expect(
+      container.read(useAfterAwaitCapsule),
+      throwsA(isA<AssertionError>()),
+    );
   });
 
   test('containers store capsules completely untyped (issue #36)', () {

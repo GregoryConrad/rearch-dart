@@ -38,12 +38,21 @@ class _CapsuleManager extends DataflowGraphNode
 
   @override
   bool buildSelf() {
-    // ignore: prefer_asserts_with_message
-    assert(() {
-      debugIsBuilding = true;
+    // If we can currently run a txn, that means that we will be the one
+    // to prevent any future txns during the build.
+    final canSetDebugCanCallRunTxn = container._debugCanCallRunTxn;
+
+    // Only should be called in debug builds.
+    bool setBuildingDebugAsserts({required bool isBuilding}) {
+      if (canSetDebugCanCallRunTxn) container._debugCanCallRunTxn = !isBuilding;
+      debugIsBuilding = isBuilding;
       return true;
-    }());
+    }
+
     try {
+      // ignore: prefer_asserts_with_message
+      assert(setBuildingDebugAsserts(isBuilding: true));
+
       // Clear dependency relationships as they will be repopulated via `read`
       clearDependencies();
 
@@ -55,10 +64,7 @@ class _CapsuleManager extends DataflowGraphNode
       return didChange;
     } finally {
       // ignore: prefer_asserts_with_message
-      assert(() {
-        debugIsBuilding = false;
-        return true;
-      }());
+      assert(setBuildingDebugAsserts(isBuilding: false));
     }
   }
 

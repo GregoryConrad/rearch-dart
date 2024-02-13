@@ -283,11 +283,11 @@ class _RearchWidgetFunctionMacroData {
   late final firstOptPositParam =
       positParams.where((p) => !p.isRequired).firstOrNull;
 
-  bool isParamWidgetHandle(ParameterDeclaration param) =>
+  bool isParamWidgetHandle(FormalParameterDeclaration param) =>
       param.type.isA('WidgetHandle');
-  bool isParamBuildContext(ParameterDeclaration param) =>
+  bool isParamBuildContext(FormalParameterDeclaration param) =>
       param.type.isA('BuildContext');
-  bool isExternalParam(ParameterDeclaration param) =>
+  bool isExternalParam(FormalParameterDeclaration param) =>
       !isParamWidgetHandle(param) && !isParamBuildContext(param);
 
   late final externalPositParams = positParams.where(isExternalParam);
@@ -297,7 +297,7 @@ class _RearchWidgetFunctionMacroData {
       .followedBy(externalNamedParams)
       .expand((p) => ['final ', p.code.type!, ' ', p.code.name!, ';']);
 
-  String paramToArg(ParameterDeclaration param) {
+  String paramToArg(FormalParameterDeclaration param) {
     if (isParamWidgetHandle(param)) {
       return useName;
     } else if (isParamBuildContext(param)) {

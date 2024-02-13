@@ -1,0 +1,3 @@
+[language-server.dart]
+command = "dart"
+args = ["language-server", "--client-id=helix", "--enable-experiment=macros"] 

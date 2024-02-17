@@ -1,3 +1,7 @@
+## 1.4.2
+
+ - **FIX**: update min Flutter/Dart sdk and deprecate old parameters ([#104](https://github.com/GregoryConrad/rearch-dart/issues/104)).
+
 ## 1.4.1
 
  - Update a dependency to the latest release.

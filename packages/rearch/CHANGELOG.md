@@ -1,3 +1,7 @@
+## 1.6.1
+
+ - **FIX**: update min Flutter/Dart sdk and deprecate old parameters ([#104](https://github.com/GregoryConrad/rearch-dart/issues/104)).
+
 ## 1.6.0
 
  - **FEAT**: add assertion to ensure rebuild isn't called during a build ([#100](https://github.com/GregoryConrad/rearch-dart/issues/100)).

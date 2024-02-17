@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-02-17
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.4.2`](#flutter_rearch---v142)
+ - [`rearch` - `v1.6.1`](#rearch---v161)
+
+---
+
+#### `flutter_rearch` - `v1.4.2`
+
+ - **FIX**: update min Flutter/Dart sdk and deprecate old parameters ([#104](https://github.com/GregoryConrad/rearch-dart/issues/104)).
+
+#### `rearch` - `v1.6.1`
+
+ - **FIX**: update min Flutter/Dart sdk and deprecate old parameters ([#104](https://github.com/GregoryConrad/rearch-dart/issues/104)).
+
+
 ## 2024-02-10
 
 ### Changes

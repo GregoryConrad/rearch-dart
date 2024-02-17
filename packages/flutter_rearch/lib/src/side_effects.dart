@@ -72,10 +72,15 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
   void automaticKeepAlive({bool keepAlive = true}) =>
       _automaticKeepAlive(this, keepAlive: keepAlive);
 
+  static const _focusOnKeyDeprecationMsg =
+      'Use onKeyEvent instead per latest Flutter guidelines. '
+      'This will be removed in a non-breaking (minor) future release '
+      'that has the Flutter sdk constraint bumped.';
+
   /// Provides a way to easily get a copy of a [FocusNode].
   FocusNode focusNode({
     String? debugLabel,
-    FocusOnKeyCallback? onKey,
+    @Deprecated(_focusOnKeyDeprecationMsg) FocusOnKeyCallback? onKey,
     FocusOnKeyEventCallback? onKeyEvent,
     bool skipTraversal = false,
     bool canRequestFocus = true,
@@ -84,6 +89,7 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
   }) {
     return use.callonce(FocusNode.new)
       ..debugLabel = debugLabel
+      // ignore: deprecated_member_use
       ..onKey = onKey
       ..onKeyEvent = onKeyEvent
       ..skipTraversal = skipTraversal
@@ -95,7 +101,7 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
   /// Provides a way to easily get a copy of a [FocusScopeNode].
   FocusScopeNode focusScopeNode({
     String? debugLabel,
-    FocusOnKeyCallback? onKey,
+    @Deprecated(_focusOnKeyDeprecationMsg) FocusOnKeyCallback? onKey,
     FocusOnKeyEventCallback? onKeyEvent,
     bool skipTraversal = false,
     bool canRequestFocus = true,
@@ -104,6 +110,7 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
   }) {
     return use.callonce(FocusScopeNode.new)
       ..debugLabel = debugLabel
+      // ignore: deprecated_member_use
       ..onKey = onKey
       ..onKeyEvent = onKeyEvent
       ..skipTraversal = skipTraversal

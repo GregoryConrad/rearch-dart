@@ -1,5 +1,4 @@
-// ignore_for_file: public_member_api_docs, implementation_imports
-import 'package:_fe_analyzer_shared/src/macros/api.dart';
+import 'package:macros/macros.dart';
 
 // /// Creates a new [RearchConsumer] that delegates its [RearchConsumer.build]
 // /// to the annotated function.
@@ -8,6 +7,8 @@ import 'package:_fe_analyzer_shared/src/macros/api.dart';
 // TODO(GregoryConrad): transfer doc comments
 // TODO(GregoryConrad): add better type checking/assertions, see:
 //   https://github.com/dart-lang/language/issues/3606
+
+// ignore_for_file: public_member_api_docs
 
 macro class RearchWidget implements FunctionDeclarationsMacro {
   const RearchWidget();

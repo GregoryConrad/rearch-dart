@@ -51,9 +51,8 @@ Widget statefulThing(
 }) =>
     throw UnimplementedError();
 
-// Generic type parameters are currently unimplemented
-// @RearchWidget()
-// Widget generics<A, B extends num>(A a, B b) => throw UnimplementedError();
+@RearchWidget()
+Widget generics<A, B extends num>(A a, B b) => throw UnimplementedError();
 
 @RearchInheritedWidget()
 (int, void Function()) scopedCount(WidgetHandle use) {
@@ -73,5 +72,5 @@ Widget statefulThing(
 void main(List<String> arguments) {
   const ScopedCount(child: StatelessThing([]));
   const ScopedCount2(startingCount: 123, child: StatefulThing([]));
-  // const Generics(true, 123);
+  const Generics(true, 123);
 }

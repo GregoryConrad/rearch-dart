@@ -6,6 +6,7 @@ import 'package:rearch/rearch.dart';
 
 part 'side_effects/animation.dart';
 part 'side_effects/keep_alive.dart';
+part 'side_effects/page_controller.dart';
 part 'side_effects/text_editing_controller.dart';
 
 extension _UseConvenience on SideEffectRegistrar {
@@ -13,7 +14,7 @@ extension _UseConvenience on SideEffectRegistrar {
 }
 
 /// A collection of the builtin [WidgetSideEffect]s.
-extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
+extension WidgetSideEffectRegistrarX on WidgetSideEffectRegistrar {
   /// The [WidgetSideEffectApi] backing this [WidgetSideEffectRegistrar].
   WidgetSideEffectApi api() => register((api) => api);
 
@@ -117,4 +118,21 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
       ..canRequestFocus = canRequestFocus
       ..traversalEdgeBehavior = traversalEdgeBehavior;
   }
+
+  /// Provides a way to easily get a copy of a [PageController].
+  PageController pageController({
+    int initialPage = 0,
+    bool keepPage = true,
+    double viewportFraction = 1.0,
+    void Function(ScrollPosition)? onAttach,
+    void Function(ScrollPosition)? onDetach,
+  }) =>
+      _pageController(
+        this,
+        initialPage: initialPage,
+        keepPage: keepPage,
+        viewportFraction: viewportFraction,
+        onAttach: onAttach,
+        onDetach: onDetach,
+      );
 }

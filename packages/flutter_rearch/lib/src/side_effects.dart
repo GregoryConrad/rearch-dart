@@ -14,7 +14,7 @@ extension _UseConvenience on SideEffectRegistrar {
 }
 
 /// A collection of the builtin [WidgetSideEffect]s.
-extension WidgetSideEffectRegistrarX on WidgetSideEffectRegistrar {
+extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
   /// The [WidgetSideEffectApi] backing this [WidgetSideEffectRegistrar].
   WidgetSideEffectApi api() => register((api) => api);
 

@@ -6,7 +6,6 @@ import 'package:rearch/rearch.dart';
 
 part 'side_effects/animation.dart';
 part 'side_effects/keep_alive.dart';
-part 'side_effects/page_controller.dart';
 part 'side_effects/text_editing_controller.dart';
 
 extension _UseConvenience on SideEffectRegistrar {
@@ -126,13 +125,19 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
     double viewportFraction = 1.0,
     void Function(ScrollPosition)? onAttach,
     void Function(ScrollPosition)? onDetach,
-  }) =>
-      _pageController(
-        this,
+  }) {
+    final controller = use.memo(
+      () => PageController(
         initialPage: initialPage,
         keepPage: keepPage,
         viewportFraction: viewportFraction,
         onAttach: onAttach,
         onDetach: onDetach,
-      );
+      ),
+      [initialPage, keepPage, viewportFraction, onAttach, onDetach],
+    );
+    use.effect(() => controller.dispose, [controller]);
+
+    return controller;
+  }
 }

@@ -117,4 +117,27 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
       ..canRequestFocus = canRequestFocus
       ..traversalEdgeBehavior = traversalEdgeBehavior;
   }
+
+  /// Provides a way to easily get a copy of a [PageController].
+  PageController pageController({
+    int initialPage = 0,
+    bool keepPage = true,
+    double viewportFraction = 1.0,
+    void Function(ScrollPosition)? onAttach,
+    void Function(ScrollPosition)? onDetach,
+  }) {
+    final controller = use.memo(
+      () => PageController(
+        initialPage: initialPage,
+        keepPage: keepPage,
+        viewportFraction: viewportFraction,
+        onAttach: onAttach,
+        onDetach: onDetach,
+      ),
+      [initialPage, keepPage, viewportFraction, onAttach, onDetach],
+    );
+    use.effect(() => controller.dispose, [controller]);
+
+    return controller;
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -71,5 +72,192 @@ void main() {
     expect(find.text('1: 123'), findsOneWidget);
     expect(find.text('2: 123'), findsOneWidget);
     expect(find.text('3: 123'), findsOneWidget);
+  });
+
+  testWidgets('PageView control test (default args)', (tester) async {
+    final container = useContainer();
+
+    const pages = <String>[
+      'Page 1',
+      'Page 2',
+      'Page 3',
+    ];
+
+    final log = <String>[];
+
+    await tester.pumpWidget(
+      CapsuleContainerProvider(
+        container: container,
+        child: RearchBuilder(
+          builder: (context, use) {
+            final controller = use.pageController();
+
+            return MaterialApp(
+              home: Directionality(
+                textDirection: TextDirection.ltr,
+                child: PageView(
+                  controller: controller,
+                  dragStartBehavior: DragStartBehavior.down,
+                  children: pages.map<Widget>((String page) {
+                    return GestureDetector(
+                      dragStartBehavior: DragStartBehavior.down,
+                      onTap: () {
+                        log.add(page);
+                      },
+                      child: Container(
+                        height: 200,
+                        color: const Color(0xFF0000FF),
+                        child: Text(page),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Page 1'));
+    expect(log, equals(<String>['Page 1']));
+    log.clear();
+
+    expect(find.text('Page 2'), findsNothing);
+
+    await tester.drag(find.byType(PageView), const Offset(-20, 0));
+    await tester.pump();
+
+    expect(find.text('Page 1'), findsOneWidget);
+    expect(find.text('Page 2'), findsOneWidget);
+    expect(find.text('Page 3'), findsNothing);
+
+    await tester.pumpAndSettle();
+
+    expect(find.text('Page 1'), findsOneWidget);
+    expect(find.text('Page 2'), findsNothing);
+
+    await tester.drag(find.byType(PageView), const Offset(-401, 0));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Page 1'), findsNothing);
+    expect(find.text('Page 2'), findsOneWidget);
+    expect(find.text('Page 3'), findsNothing);
+
+    await tester.tap(find.text('Page 2'));
+    expect(log, equals(<String>['Page 2']));
+    log.clear();
+
+    await tester.fling(find.byType(PageView), const Offset(-200, 0), 1000);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Page 1'), findsNothing);
+    expect(find.text('Page 2'), findsNothing);
+    expect(find.text('Page 3'), findsOneWidget);
+
+    await tester.fling(find.byType(PageView), const Offset(200, 0), 1000);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Page 1'), findsNothing);
+    expect(find.text('Page 2'), findsOneWidget);
+    expect(find.text('Page 3'), findsNothing);
+  });
+
+  testWidgets('PageView control test (custom args)', (tester) async {
+    final container = useContainer();
+
+    const pages = <String>[
+      'Page 1',
+      'Page 2',
+      'Page 3',
+    ];
+
+    final log = <String>[];
+    var onAttachFired = false;
+
+    await tester.pumpWidget(
+      CapsuleContainerProvider(
+        container: container,
+        child: RearchBuilder(
+          builder: (context, use) {
+            final controller = use.pageController(
+              initialPage: 1,
+              viewportFraction: 0.5,
+              onAttach: (_) => onAttachFired = true,
+            );
+
+            return MaterialApp(
+              home: Directionality(
+                textDirection: TextDirection.ltr,
+                child: PageView(
+                  controller: controller,
+                  dragStartBehavior: DragStartBehavior.down,
+                  children: pages.map<Widget>((String page) {
+                    return GestureDetector(
+                      dragStartBehavior: DragStartBehavior.down,
+                      onTap: () {
+                        log.add(page);
+                      },
+                      child: Container(
+                        height: 200,
+                        color: const Color(0xFF0000FF),
+                        child: Text(page),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+
+    expect(onAttachFired, isTrue);
+
+    await tester.tap(find.text('Page 1'));
+    expect(log, equals(<String>['Page 1']));
+    log.clear();
+
+    expect(find.text('Page 2'), findsOneWidget);
+
+    await tester.drag(find.byType(PageView), const Offset(-20, 0));
+    await tester.pump();
+
+    expect(find.text('Page 1'), findsOneWidget);
+    expect(find.text('Page 2'), findsOneWidget);
+    expect(find.text('Page 3'), findsOneWidget);
+
+    await tester.pumpAndSettle();
+
+    expect(find.text('Page 1'), findsOneWidget);
+    expect(find.text('Page 2'), findsOneWidget);
+
+    await tester.drag(find.byType(PageView), const Offset(-401, 0));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Page 1'), findsNothing);
+    expect(find.text('Page 2'), findsOneWidget);
+    expect(find.text('Page 3'), findsOneWidget);
+
+    await tester.tap(find.text('Page 2'));
+    expect(log, equals(<String>['Page 2']));
+    log.clear();
+
+    await tester.fling(find.byType(PageView), const Offset(-200, 0), 1000);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Page 1'), findsNothing);
+    expect(find.text('Page 2'), findsOneWidget);
+    expect(find.text('Page 3'), findsOneWidget);
+
+    await tester.fling(find.byType(PageView), const Offset(601, 0), 1000);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Page 1'), findsOneWidget);
+    expect(find.text('Page 2'), findsOneWidget);
+    expect(find.text('Page 3'), findsNothing);
+
+    await tester.pumpAndSettle();
   });
 }

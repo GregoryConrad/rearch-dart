@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-03-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.5.0`](#flutter_rearch---v150)
+
+---
+
+#### `flutter_rearch` - `v1.5.0`
+
+ - **FEAT**: add PageController side effect ([#111](https://github.com/GregoryConrad/rearch-dart/issues/111)).
+
+
 ## 2024-02-17
 
 ### Changes

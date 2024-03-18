@@ -11,18 +11,6 @@ ignore:
   - examples/todo_list_app
 
 scripts:
-  analyze:
-    exec: flutter analyze .
-    description: Analyze a specific package in this project.
-
-  check-format:
-    exec: dart format --set-exit-if-changed .
-    description: Check the format of a specific package in this project.
-
-  format:
-    exec: dart format .
-    description: Format a specific package in this project.
-
   test:
     run: melos run test:dart --no-select && melos run test:flutter --no-select
     description: Run all Dart & Flutter tests in this project.

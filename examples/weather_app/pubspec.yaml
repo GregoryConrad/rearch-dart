@@ -1,0 +1,22 @@
+name: weather_app
+description: "A weather application written in ReArch"
+publish_to: none
+
+environment:
+  sdk: '>=3.3.2 <4.0.0'
+
+dependencies:
+  equatable: ^2.0.5
+  flutter:
+    sdk: flutter
+  flutter_rearch: ^1.5.0
+  http: ^1.2.1
+  rearch: ^1.6.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.3
+
+flutter:
+  uses-material-design: true

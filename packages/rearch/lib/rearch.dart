@@ -151,7 +151,7 @@ class CapsuleContainer implements Disposable {
   _CapsuleManager _managerOf(_UntypedCapsule capsule) {
     return _capsules.putIfAbsent(
       capsule,
-      () => _CapsuleManager(this, capsule),
+      () => _CapsuleManager(this, capsule)..buildSelf(),
     );
   }
 
@@ -234,6 +234,25 @@ class CapsuleContainer implements Disposable {
       manager.dispose();
     }
   }
+}
+
+/// A [CapsuleContainer] that additionally allows you to [mock] capsules out
+/// as a convenience when testing.
+///
+/// # WARNING
+/// Only use a [MockableContainer] within your tests!
+@experimental
+class MockableContainer extends CapsuleContainer {
+  /// Mocks the specified [capsule] dependency with the supplied [data].
+  /// # WARNING
+  /// When [mock] is called, [capsule] will be permanently mocked
+  /// for the rest of the [MockableContainer]'s life.
+  // NOTE: we explicitly initialize to avoid the buildSelf call
+  @experimental
+  void mock<T>(Capsule<T> capsule, T data) =>
+      _capsules.putIfAbsent(capsule, () => _CapsuleManager(this, capsule))
+        ..clearDependencies()
+        ..data = data;
 }
 
 /// Provides the [map] convenience method on [Capsule]s.

@@ -3,39 +3,17 @@ import 'package:flutter_rearch/flutter_rearch.dart';
 import 'package:rearch/rearch.dart';
 import 'package:weather_app/api.dart';
 
-// ignore_for_file: public_member_api_docs
+// NOTE: the directory/file structure of this example is simply what made sense
+// to me when I was writing the example based on its size (several hundred LoC).
+// Feel free to bring your own file/directory layout preferences to the table.
 
 void main() {
   runApp(const WeatherApp());
 }
 
-(String, void Function(String)) locationQueryManager(CapsuleHandle use) =>
-    use.state('');
-
-Future<Location> locationAsyncCapsule(CapsuleHandle use) {
-  final searchLocation = use(searchLocationAction);
-  final (locationQuery, _) = use(locationQueryManager);
-  return searchLocation(locationQuery);
-}
-
-AsyncValue<Location> locationCapsule(CapsuleHandle use) =>
-    use.future(use(locationAsyncCapsule));
-
-Future<Weather> weatherAsyncCapsule(CapsuleHandle use) async {
-  final fetchWeather = use(fetchWeatherAction);
-  final locationFuture = use(locationAsyncCapsule);
-
-  final location = await locationFuture;
-  return fetchWeather(
-    latitude: location.latitude,
-    longitude: location.longitude,
-  );
-}
-
-AsyncValue<Weather> weatherCapsule(CapsuleHandle use) =>
-    use.future(use(weatherAsyncCapsule));
-
+/// Root/application widget for the weather application.
 class WeatherApp extends StatelessWidget {
+  /// Constructs a [WeatherApp].
   const WeatherApp({super.key});
 
   @override
@@ -48,7 +26,9 @@ class WeatherApp extends StatelessWidget {
   }
 }
 
+/// Home page widget for the weather application.
 class WeatherHome extends RearchConsumer {
+  /// Constructs a [WeatherHome].
   const WeatherHome({super.key});
 
   @override
@@ -106,6 +86,37 @@ class WeatherHome extends RearchConsumer {
     );
   }
 }
+
+/// Manages the current location query.
+(String, void Function(String)) locationQueryManager(CapsuleHandle use) =>
+    use.state('');
+
+/// Gets a [Location] based on the current query in the [locationQueryManager].
+Future<Location> locationAsyncCapsule(CapsuleHandle use) {
+  final searchLocation = use(searchLocationAction);
+  final (locationQuery, _) = use(locationQueryManager);
+  return searchLocation(locationQuery);
+}
+
+/// Eagerly caches the state of the current [locationAsyncCapsule].
+AsyncValue<Location> locationCapsule(CapsuleHandle use) =>
+    use.future(use(locationAsyncCapsule));
+
+/// Fetches the [Weather] based on the [Location] from [locationAsyncCapsule].
+Future<Weather> weatherAsyncCapsule(CapsuleHandle use) async {
+  final fetchWeather = use(fetchWeatherAction);
+  final locationFuture = use(locationAsyncCapsule);
+
+  final location = await locationFuture;
+  return fetchWeather(
+    latitude: location.latitude,
+    longitude: location.longitude,
+  );
+}
+
+/// Eagerly caches the state of the current [weatherAsyncCapsule].
+AsyncValue<Weather> weatherCapsule(CapsuleHandle use) =>
+    use.future(use(weatherAsyncCapsule));
 
 extension on WeatherCondition {
   String get emoji {

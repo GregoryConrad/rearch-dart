@@ -1,3 +1,7 @@
+## 1.5.1
+
+ - Update a dependency to the latest release.
+
 ## 1.5.0
 
  - **FEAT**: add PageController side effect ([#111](https://github.com/GregoryConrad/rearch-dart/issues/111)).

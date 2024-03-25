@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-03-25
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`rearch` - `v1.7.0`](#rearch---v170)
+ - [`flutter_rearch` - `v1.5.1`](#flutter_rearch---v151)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutter_rearch` - `v1.5.1`
+
+---
+
+#### `rearch` - `v1.7.0`
+
+ - **FEAT**: add experimental MockableContainer.
+
+
 ## 2024-03-15
 
 ### Changes

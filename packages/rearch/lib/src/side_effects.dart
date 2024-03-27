@@ -38,17 +38,26 @@ extension BuiltinSideEffects on SideEffectRegistrar {
     // We use register directly to keep the same setter function across rebuilds
     // (but we need to return a new getter on each build, see below for more)
     final (getter, setter) = use.register((api) {
-      var state = init();
+      var hasBeenInit = false;
+      late T state;
 
-      T getter() => state;
+      T getter() {
+        if (!hasBeenInit) {
+          state = init();
+          hasBeenInit = true;
+        }
+        return state;
+      }
+
       void setter(T newState) {
         api.rebuild((cancelRebuild) {
-          if (newState == state) {
+          if (hasBeenInit && newState == state) {
             cancelRebuild();
             return;
           }
 
           state = newState;
+          hasBeenInit = true;
         });
       }
 

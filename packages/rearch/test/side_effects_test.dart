@@ -372,4 +372,20 @@ void main() {
       expect(builds, equals(2));
     });
   });
+
+  test("lazyStateGetterSetter doesn't call init fn unless necessary", () {
+    var initCalls = 0;
+    void init() => initCalls++;
+    (void Function(), void Function(void)) testCapsule(CapsuleHandle use) =>
+        use.lazyStateGetterSetter(init);
+
+    final container1 = useContainer();
+    container1.read(testCapsule).$1();
+    expect(initCalls, equals(1));
+
+    final container2 = useContainer();
+    container2.read(testCapsule).$2(null);
+    container2.read(testCapsule).$1();
+    expect(initCalls, equals(1));
+  });
 }

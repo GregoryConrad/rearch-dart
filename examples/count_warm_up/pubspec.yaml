@@ -8,8 +8,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_rearch: ^1.5.1
-  rearch: ^1.7.0
+  flutter_rearch: ^1.5.2
+  rearch: ^1.7.1
   shared_preferences: ^2.2.0
 
 dev_dependencies:

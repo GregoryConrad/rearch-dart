@@ -1,3 +1,7 @@
+## 1.7.1
+
+ - **FIX**: make lazyStateGetterSetter actually lazy.
+
 ## 1.7.0
 
  - **FEAT**: add experimental MockableContainer.

@@ -12,7 +12,6 @@ class _CapsuleManager extends DataflowGraphNode
 
   late Object? data;
   bool hasBuilt = false;
-  bool debugIsBuilding = false;
   final sideEffectData = <Object?>[];
   final toDispose = <SideEffectApiCallback>{};
 
@@ -37,21 +36,9 @@ class _CapsuleManager extends DataflowGraphNode
 
   @override
   bool buildSelf() {
-    // If we can currently run a txn, that means that we will be the one
-    // to prevent any future txns during the build.
-    final canSetDebugCanCallRunTxn = container._debugCanCallRunTxn;
-
-    // Only should be called in debug builds.
-    bool setBuildingDebugAsserts({required bool isBuilding}) {
-      if (canSetDebugCanCallRunTxn) container._debugCanCallRunTxn = !isBuilding;
-      debugIsBuilding = isBuilding;
-      return true;
-    }
-
+    final parentBuildingManager = container._currBuildingManager;
+    container._currBuildingManager = this;
     try {
-      // ignore: prefer_asserts_with_message
-      assert(setBuildingDebugAsserts(isBuilding: true));
-
       // Clear dependency relationships as they will be repopulated via `read`
       clearDependencies();
 
@@ -62,8 +49,7 @@ class _CapsuleManager extends DataflowGraphNode
       hasBuilt = true;
       return didChange;
     } finally {
-      // ignore: prefer_asserts_with_message
-      assert(setBuildingDebugAsserts(isBuilding: false));
+      container._currBuildingManager = parentBuildingManager;
     }
   }
 
@@ -83,6 +69,23 @@ class _CapsuleManager extends DataflowGraphNode
   void rebuild([
     void Function(void Function() cancelRebuild)? sideEffectMutation,
   ]) {
+    if (container._currBuildingManager != null) {
+      assert(
+        container._currBuildingManager == this,
+        'You are not allowed to run side effect transactions/trigger rebuilds '
+        'within an ongoing build of a different capsule! '
+        'This likely happened because you made a call to setState() or similar '
+        'while a different capsule was building, or in a container listener. '
+        'See here for more: '
+        'https://rearch.gsconrad.com/core/effects#transactions',
+      );
+
+      // Call the mutation with a no-op cancelRebuild
+      // (since we are already in the midst of building ourselves).
+      sideEffectMutation?.call(() {});
+      return;
+    }
+
     container.runTransaction(() {
       container._sideEffectMutationsToCallInTxn!.add(() {
         var isCanceled = false;
@@ -115,7 +118,7 @@ class _CapsuleHandleImpl implements CapsuleHandle {
   @override
   T call<T>(Capsule<T> capsule) {
     assert(
-      manager.debugIsBuilding,
+      manager.container._currBuildingManager == manager,
       'You may only "use(someCapsule)" during a capsule\'s build!\n'
       'You are getting this error because:\n'
       '1. Your capsule returns a function that calls "use(someCapsule)" in it\n'
@@ -128,7 +131,7 @@ class _CapsuleHandleImpl implements CapsuleHandle {
   @override
   T register<T>(SideEffect<T> sideEffect) {
     assert(
-      manager.debugIsBuilding,
+      manager.container._currBuildingManager == manager,
       "You may only register side effects during a capsule's build!\n"
       'You are getting this error because:\n'
       '1. Your capsule returns a function that calls "use.fooBar()" in it\n'

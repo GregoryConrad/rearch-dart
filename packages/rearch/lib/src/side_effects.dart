@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 
 extension _UseConvenience on SideEffectRegistrar {
@@ -28,12 +27,31 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// Side effect that calls the supplied [callback] once, on the first build.
   T callonce<T>(T Function() callback) => use.register((_) => callback());
 
+  /// Keeps track of some data that can be stateful.
+  /// You may set the value of returned [ValueWrapper] both:
+  /// 1. Outside of the build, like a normal call to `setState`
+  /// 2. Inside of the build, to use its value inside build
+  /// This serves as an easier [stateGetterSetter] replacement
+  /// and can also be used instead of [state].
+  ValueWrapper<T> data<T>(T initial) => use.lazyData(() => initial);
+
+  /// Keeps track of some data that can be stateful.
+  /// You may set the value of returned [ValueWrapper] both:
+  /// 1. Outside of the build, like a normal call to `setState`
+  /// 2. Inside of the build, to use its value inside build
+  /// This serves as an easier [lazyStateGetterSetter] replacement
+  /// and can also be used instead of [lazyState].
+  ValueWrapper<T> lazyData<T>(T Function() init) =>
+      use.lazyStateGetterSetter(init);
+
   /// Side effect that provides a way for capsules to contain some state,
   /// where the initial state is computationally expensive.
   /// Further, instead of returning the state directly, this instead returns
   /// a getter that is safe to capture in closures.
   /// Similar to the `useState` hook from React;
   /// see https://react.dev/reference/react/useState
+  /// # NOTE
+  /// New applications are recommended to use [lazyData] instead.
   (T Function(), void Function(T)) lazyStateGetterSetter<T>(T Function() init) {
     // We use register directly to keep the same setter function across rebuilds
     // (but we need to return a new getter on each build, see below for more)
@@ -76,6 +94,8 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// a getter that is safe to capture in closures.
   /// Similar to the `useState` hook from React;
   /// see https://react.dev/reference/react/useState
+  /// # NOTE
+  /// New applications are recommended to use [data] instead.
   (T Function(), void Function(T)) stateGetterSetter<T>(T initial) =>
       use.lazyStateGetterSetter(() => initial);
 
@@ -83,6 +103,9 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// where the initial state is computationally expensive.
   /// Similar to the `useState` hook from React;
   /// see https://react.dev/reference/react/useState
+  /// # NOTE
+  /// While [lazyState] will continue to work just fine,
+  /// it is recommended that newer applications also take a look at [lazyData].
   (T, void Function(T)) lazyState<T>(T Function() init) {
     final (getter, setter) = use.lazyStateGetterSetter(init);
     return (getter(), setter);
@@ -91,6 +114,9 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// Side effect that provides a way for capsules to contain some state.
   /// Similar to the `useState` hook from React;
   /// see https://react.dev/reference/react/useState
+  /// # NOTE
+  /// While [state] will continue to work just fine,
+  /// it is recommended that newer applications also take a look at [data].
   (T, void Function(T)) state<T>(T initial) => use.lazyState(() => initial);
 
   /// Side effect that provides a way for capsules to hold onto some value
@@ -108,7 +134,7 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// Returns the previous value passed into [previous],
   /// or `null` on first build.
   T? previous<T>(T current) {
-    final (getter, setter) = use.rawValueWrapper<T?>(() => null);
+    final (getter, setter) = use.data<T?>(null);
     final prev = getter();
     setter(current);
     return prev;
@@ -125,7 +151,9 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// See https://react.dev/reference/react/useMemo
   T memo<T>(T Function() memo, [List<Object?> dependencies = const []]) {
     final oldDependencies = use.previous(dependencies);
-    final (getData, setData) = use.rawValueWrapper<T>();
+    final (getData, setData) = use.lazyData<T>(
+      () => throw StateError('Should be manually set before get'),
+    );
     if (_didDepsListChange(dependencies, oldDependencies)) {
       setData(memo());
     }
@@ -139,8 +167,7 @@ extension BuiltinSideEffects on SideEffectRegistrar {
     List<Object?>? dependencies,
   ]) {
     final oldDependencies = use.previous(dependencies);
-    final (getDispose, setDispose) =
-        use.rawValueWrapper<void Function()?>(() => null);
+    final (getDispose, setDispose) = use.data<void Function()?>(null);
     use.register((api) => api.registerDispose(() => getDispose()?.call()));
 
     if (dependencies == null ||
@@ -269,13 +296,12 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// To remove this cached data from the returned [AsyncValue],
   /// you may call [AsyncValueConvenience.withoutPreviousData].
   AsyncValue<T>? nullableStream<T>(Stream<T>? stream) {
-    final rebuild = use.rebuilder();
-    final (getValue, setValue) = use.rawValueWrapper<AsyncValue<T>>(
-      () => AsyncLoading<T>(None<T>()),
+    final (getValue, setValue) = use.data<AsyncValue<T>>(
+      AsyncLoading<T>(None<T>()),
     );
 
     final (getSubscription, setSubscription) =
-        use.rawValueWrapper<StreamSubscription<T>?>(() => null);
+        use.data<StreamSubscription<T>?>(null);
     use.effect(() => getSubscription()?.cancel, [getSubscription()]);
 
     final oldStream = use.previous(stream);
@@ -285,12 +311,9 @@ extension BuiltinSideEffects on SideEffectRegistrar {
       setValue(AsyncLoading(getValue().data));
       setSubscription(
         stream?.listen(
-          (data) => rebuild(
-            (_) => setValue(AsyncData(data)),
-          ),
-          onError: (Object error, StackTrace trace) => rebuild(
-            (_) => setValue(AsyncError(error, trace, getValue().data)),
-          ),
+          (data) => setValue(AsyncData(data)),
+          onError: (Object error, StackTrace trace) =>
+              setValue(AsyncError(error, trace, getValue().data)),
           cancelOnError: false,
         ),
       );
@@ -353,9 +376,8 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   }) {
     final readFuture = use.callonce(read);
     final readState = use.future(readFuture);
-    final (getPrevData, setPrevData) = use.rawValueWrapper<T?>(() => null);
-    final (getWriteFuture, setWriteFuture) =
-        use.rawValueWrapper<Future<T>?>(() => null);
+    final (getPrevData, setPrevData) = use.data<T?>(null);
+    final (getWriteFuture, setWriteFuture) = use.data<Future<T>?>(null);
 
     if (newData != null && newData != getPrevData()) {
       setPrevData(newData);
@@ -377,9 +399,7 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// Note: `mutate()` and `clear()` *should not* be called directly from
   /// within build, but rather from within some callback.
   Mutation<T> mutation<T>() {
-    final rebuild = use.rebuilder();
-    final (getValue, setValue) =
-        use.rawValueWrapper<AsyncValue<T>?>(() => null);
+    final (getValue, setValue) = use.data<AsyncValue<T>?>(null);
 
     // NOTE: we convert to a stream here because we can cancel
     // a stream subscription; there is no builtin way to cancel a future.
@@ -393,13 +413,9 @@ extension BuiltinSideEffects on SideEffectRegistrar {
         );
 
         final subscription = asStream?.listen(
-          (data) => rebuild(
-            (_) => setValue(AsyncData(data)),
-          ),
-          onError: (Object error, StackTrace trace) => rebuild(
-            (_) => setValue(
-              AsyncError(error, trace, getValue()?.data ?? None<T>()),
-            ),
+          (data) => setValue(AsyncData(data)),
+          onError: (Object error, StackTrace trace) => setValue(
+            AsyncError(error, trace, getValue()?.data ?? None<T>()),
           ),
         );
 
@@ -448,11 +464,10 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   (AsyncValue<T> Function(), void Function()) invalidatableFuture<T>(
     Future<T> Function() futureFactory,
   ) {
-    final rebuild = use.rebuilder();
+    final runTxn = use.transactionRunner();
     final (getAsyncState, setAsyncState) =
-        use.rawValueWrapper<AsyncValue<T>>(() => AsyncLoading<T>(None<T>()));
-    final (getFutureCancel, setFutureCancel) =
-        use.rawValueWrapper<void Function()?>(() => null);
+        use.data<AsyncValue<T>>(AsyncLoading<T>(None<T>()));
+    final (getFutureCancel, setFutureCancel) = use.data<void Function()?>(null);
     use.register((api) => api.registerDispose(() => getFutureCancel()?.call()));
 
     return (
@@ -460,13 +475,9 @@ extension BuiltinSideEffects on SideEffectRegistrar {
         if (getFutureCancel() == null) {
           setAsyncState(AsyncLoading<T>(getAsyncState().data));
           final subscription = futureFactory().asStream().listen(
-                (data) => rebuild(
-                  (_) => setAsyncState(AsyncData(data)),
-                ),
-                onError: (Object error, StackTrace trace) => rebuild(
-                  (_) => setAsyncState(
-                    AsyncError(error, trace, getAsyncState().data),
-                  ),
+                (data) => setAsyncState(AsyncData(data)),
+                onError: (Object error, StackTrace trace) => setAsyncState(
+                  AsyncError(error, trace, getAsyncState().data),
                 ),
               );
           setFutureCancel(subscription.cancel);
@@ -475,7 +486,7 @@ extension BuiltinSideEffects on SideEffectRegistrar {
         return getAsyncState();
       },
       () {
-        rebuild((_) {
+        runTxn(() {
           getFutureCancel()?.call();
           setFutureCancel(null);
         });
@@ -507,3 +518,15 @@ typedef Mutation<T> = ({
   void Function(Future<T> mutater) mutate,
   void Function() clear,
 });
+
+/// A wrapper around some value that is accessed via a getter + setter.
+typedef ValueWrapper<T> = (T Function(), void Function(T));
+
+/// Adds a [value] getter + setter on a [ValueWrapper].
+extension ValueWrapperProperty<T> on ValueWrapper<T> {
+  /// Gets the underlying value using the [ValueWrapper]'s getter.
+  T get value => $1();
+
+  /// Sets the underlying value to [newValue] using the [ValueWrapper]'s setter.
+  set value(T newValue) => $2(newValue);
+}

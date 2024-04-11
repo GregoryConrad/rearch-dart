@@ -490,4 +490,27 @@ void main() {
     expect(container.read(intCapsule), equals(0));
     expect(container.read(doubleCapsule), equals(0.0));
   });
+
+  group('valid/invalid locations to trigger rebuilds', () {
+    void Function() rebuildableCapsule(CapsuleHandle use) => use.rebuilder();
+    void callsOtherCapsulesRebuildCapsule(CapsuleHandle use) =>
+        use(rebuildableCapsule)();
+    ValueWrapper<int> rebuildsSelfCapsule(CapsuleHandle use) =>
+        use.data(0)..value += 1;
+
+    test("rebuilds may not be triggered in a different capsule's build", () {
+      final container = useContainer();
+      expect(
+        () => container.read(callsOtherCapsulesRebuildCapsule),
+        throwsA(isA<AssertionError>()),
+      );
+    });
+
+    test("rebuilds may be triggered in the same capsule's build", () {
+      final container = useContainer();
+      expect(container.read(rebuildsSelfCapsule).value, equals(1));
+      container.read(rebuildsSelfCapsule).value = 2;
+      expect(container.read(rebuildsSelfCapsule).value, equals(3));
+    });
+  });
 }

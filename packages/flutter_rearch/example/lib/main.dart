@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_mimir/flutter_mimir.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
-import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 
 void main() => runApp(const TodoApp());
@@ -517,13 +516,7 @@ class DynamicBackground extends RearchConsumer {
     final numCirclesToFillScreen = 1 / (pi * pow(avgCircleRadius, 2));
     final goalCircleCount = numCirclesToFillScreen / 2;
 
-    // We need to use these more advanced side effects since we need to be able
-    // to add the circles from within *and* outside of the build method.
-    // setCircles() will not trigger rebuilds, so we must manually trigger them
-    // with rebuild() when calling setCircles() outside of the build method.
-    final (getCircles, setCircles) =
-        use.rawValueWrapper(() => <SplashCircleProperties>{});
-    final rebuild = use.rebuilder();
+    final circles = use.data(<SplashCircleProperties>{});
 
     final circlesStream = use.memo(
       () {
@@ -552,15 +545,15 @@ class DynamicBackground extends RearchConsumer {
       [color1, color2, avgCircleRadius],
     );
     final currCircle = use.stream(circlesStream).data.asNullable();
-    if (getCircles().length < goalCircleCount && currCircle != null) {
-      setCircles({...getCircles(), currCircle});
+    if (circles.value.length < goalCircleCount && currCircle != null) {
+      circles.value = {...circles.value, currCircle};
     }
 
     return LayoutBuilder(
       builder: (context, constraints) {
         return Stack(
           children: [
-            for (final circle in getCircles())
+            for (final circle in circles.value)
               Positioned(
                 key: ValueKey(circle.id),
                 left: (circle.centerX - circle.radius) * constraints.maxWidth,
@@ -570,13 +563,8 @@ class DynamicBackground extends RearchConsumer {
                   radius: circle.radius * constraints.maxHeight,
                   appear: circle.appear,
                   disappear: circle.disappear,
-                  remove: () {
-                    rebuild((_) {
-                      setCircles({
-                        ...getCircles().where((c) => c.id != circle.id),
-                      });
-                    });
-                  },
+                  remove: () => circles.value =
+                      circles.value.where((c) => c.id != circle.id).toSet(),
                 ),
               ),
             BackdropFilter(

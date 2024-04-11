@@ -112,25 +112,16 @@ class CapsuleContainer implements Disposable {
   /// be rebuilt, and null when the side effect state wasn't updated.
   List<_CapsuleManager? Function()>? _sideEffectMutationsToCallInTxn;
 
-  /// Debug flag that tracks whether it is ok to rebuild/call [runTransaction]
-  /// at a certain point point in time.
-  /// THIS FLAG IS ONLY VALID IN DEBUG BUILDS, SO ONLY USE IN ASSERTS.
-  bool _debugCanCallRunTxn = true;
+  /// The currently building [_CapsuleManager].
+  /// Needed so we can check whether a rebuild called within a build is valid;
+  /// i.e., whether the rebuild was called within its own capsule's build.
+  _CapsuleManager? _currBuildingManager;
 
   /// Runs the supplied [sideEffectTransaction] that combines all side effect
   /// state updates into a single container rebuild sweep.
   /// These state updates can originate from the same or different capsules,
   /// enabling you to make transactional side effect changes across capsules.
   void runTransaction(void Function() sideEffectTransaction) {
-    assert(
-      _debugCanCallRunTxn,
-      'You are not allowed to run side effect transactions/trigger rebuilds '
-      'within an ongoing build! '
-      'This likely happened because you made a call to setState() (or similar) '
-      'while a capsule was building, or in a container listener. '
-      'See here for more: https://rearch.gsconrad.com/core/effects#transactions',
-    );
-
     // We can have nested transactions, so check whether we are the "root" txn.
     // If we are, then we need to handle the actual capsule builds and cleanup.
     final isRootTxn = _sideEffectMutationsToCallInTxn == null;
@@ -141,7 +132,7 @@ class CapsuleContainer implements Disposable {
     if (isRootTxn) {
       final managersToRebuild = _sideEffectMutationsToCallInTxn!
           .map((mutation) => mutation())
-          .whereType<_CapsuleManager>()
+          .nonNulls
           .toSet();
       DataflowGraphNode.buildNodesAndDependents(managersToRebuild);
       _sideEffectMutationsToCallInTxn = null;

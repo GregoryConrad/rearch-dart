@@ -16,7 +16,7 @@ void _automaticKeepAlive(
 
   // Dirty tracks whether or not we will need to request a new keep alive
   // in case keepAlive == true
-  final (getDirty, setDirty) = use.rawValueWrapper(() => true);
+  final (getDirty, setDirty) = use.data(true);
   final requestKeepAlive = use.memo(
     () => () {
       // It is only safe to dispatch a notification when dirty is true

@@ -1,3 +1,7 @@
+## 1.6.0
+
+ - **FEAT**: add use.data and use.lazyData side effects ([#132](https://github.com/GregoryConrad/rearch-dart/issues/132)).
+
 ## 1.5.2
 
  - Update a dependency to the latest release.

@@ -1,3 +1,7 @@
+## 1.8.0
+
+ - **FEAT**: add use.data and use.lazyData side effects ([#132](https://github.com/GregoryConrad/rearch-dart/issues/132)).
+
 ## 1.7.1
 
  - **FIX**: make lazyStateGetterSetter actually lazy.

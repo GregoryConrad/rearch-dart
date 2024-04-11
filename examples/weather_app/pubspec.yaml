@@ -9,9 +9,9 @@ dependencies:
   equatable: ^2.0.5
   flutter:
     sdk: flutter
-  flutter_rearch: ^1.5.2
+  flutter_rearch: ^1.6.0
   http: ^1.2.1
-  rearch: ^1.7.1
+  rearch: ^1.8.0
 
 dev_dependencies:
   flutter_test:

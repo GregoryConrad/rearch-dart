@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-04-11
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.6.0`](#flutter_rearch---v160)
+ - [`rearch` - `v1.8.0`](#rearch---v180)
+
+---
+
+#### `flutter_rearch` - `v1.6.0`
+
+ - **FEAT**: add use.data and use.lazyData side effects ([#132](https://github.com/GregoryConrad/rearch-dart/issues/132)).
+
+#### `rearch` - `v1.8.0`
+
+ - **FEAT**: add use.data and use.lazyData side effects ([#132](https://github.com/GregoryConrad/rearch-dart/issues/132)).
+
+
 ## 2024-03-26
 
 ### Changes

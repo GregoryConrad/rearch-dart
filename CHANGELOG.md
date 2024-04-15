@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-04-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`rearch` - `v1.8.0+0`](#rearch---v1800)
+ - [`flutter_rearch` - `v1.6.0+0`](#flutter_rearch---v1600)
+
+---
+
+#### `rearch` - `v1.8.0+0`
+
+ - docs: update outdated parts of README
+
+#### `flutter_rearch` - `v1.6.0+0`
+
+ - docs: update outdated parts of README
+
+
 ## 2024-04-11
 
 ### Changes

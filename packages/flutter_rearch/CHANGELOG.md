@@ -1,3 +1,7 @@
+## 1.6.0+0
+
+ - docs: update outdated parts of README
+
 ## 1.6.0
 
  - **FEAT**: add use.data and use.lazyData side effects ([#132](https://github.com/GregoryConrad/rearch-dart/issues/132)).

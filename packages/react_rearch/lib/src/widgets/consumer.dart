@@ -1,7 +1,7 @@
 part of '../widgets.dart';
 
 ///.
-abstract class _RearchComponent extends Component2 {
+abstract class RearchComponent extends Component2 {
   ///.
   final didMountListeners = <SideEffectApiCallback>{};
 
@@ -17,7 +17,7 @@ abstract class _RearchComponent extends Component2 {
   /// Represents a [Set] of functions that remove a dependency on a [Capsule].
   final dependencyDisposers = <void Function()>{};
 
-  /// Clears out the [Capsule] dependencies of this [_RearchComponent].
+  /// Clears out the [Capsule] dependencies of this [RearchComponent].
   void clearDependencies() {
     for (final dispose in dependencyDisposers) {
       dispose();
@@ -75,6 +75,7 @@ abstract class _RearchComponent extends Component2 {
     return build(componentHandle);
   }
 
+  ///.
   ReactNode build(ComponentHandle use);
 }
 
@@ -82,7 +83,7 @@ abstract class _RearchComponent extends Component2 {
 /// [Component2.forceUpdate].
 class _ComponentSideEffectApiProxyImpl implements ComponentSideEffectApi {
   const _ComponentSideEffectApiProxyImpl(this.component);
-  final _RearchComponent component;
+  final RearchComponent component;
 
   @override
   void rebuild([

@@ -15,7 +15,7 @@ class _BodyApp extends RearchComponent {
 
     return div(
       {},
-      label({}, 'React ReArch Web Ap Example'),
+      label({}, 'React ReArch Web App Example'),
       button(
         {
           'onClick': (_) => counter.value++,

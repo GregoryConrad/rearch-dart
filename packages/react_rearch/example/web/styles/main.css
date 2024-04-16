@@ -1,0 +1,9 @@
+/* Full height */
+html, body, #react_body_mount_point {
+    height: 100%;
+}
+
+/* Zero margin */
+html, body, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}

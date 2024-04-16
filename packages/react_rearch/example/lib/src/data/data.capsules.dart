@@ -1,6 +1,10 @@
 import 'package:rearch/rearch.dart';
 
 ///.
+ValueWrapper<String> appNameCapsule(CapsuleHandle use) =>
+    use.data('React ReArch Example App');
+
+///.
 ValueWrapper<String> nameCapsule(CapsuleHandle use) => use.data('Pedro');
 
 ///.

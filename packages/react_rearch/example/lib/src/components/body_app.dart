@@ -1,7 +1,7 @@
 import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:react_rearch/react_rearch.dart';
-import 'package:rearch/rearch.dart';
+import 'package:react_rearch_example/lib.dart';
 
 /// Body App component.
 ReactDartComponentFactoryProxy2<Component2> bodyApp =
@@ -10,17 +10,21 @@ ReactDartComponentFactoryProxy2<Component2> bodyApp =
 /// Initiated on loading state.
 class _BodyApp extends RearchComponent {
   @override
+  String get debugName => '_BodyApp';
+
+  @override
   ReactNode? build(ComponentHandle use) {
-    final counter = use.data(0);
+    final personController = use(personControllerCapsule);
+    final person = personController.get();
 
     return div(
       {},
       label({}, 'React ReArch Web App Example'),
       button(
         {
-          'onClick': (_) => counter.value++,
+          'onClick': (_) => personController.generate(),
         },
-        'Count: ${counter.value}',
+        '${person.name} (${person.age})',
       ),
     );
   }

@@ -2,11 +2,7 @@ part of '../widgets.dart';
 
 ///.
 abstract class RearchComponent extends Component2 {
-  ///.
-  final didMountListeners = <SideEffectApiCallback>{};
-
-  ///.
-  final didUpdateListeners = <SideEffectApiCallback>{};
+  bool _needsBuild = false;
 
   ///.
   final willUnmountListeners = <SideEffectApiCallback>{};
@@ -26,28 +22,6 @@ abstract class RearchComponent extends Component2 {
   }
 
   @override
-  void componentDidMount() {
-    for (final listener in didMountListeners) {
-      listener();
-    }
-
-    super.componentDidMount();
-  }
-
-  @override
-  void componentDidUpdate(
-    Map<dynamic, dynamic> prevProps,
-    Map<dynamic, dynamic> prevState, [
-    dynamic snapshot,
-  ]) {
-    for (final listener in didUpdateListeners) {
-      listener();
-    }
-
-    super.componentDidUpdate(prevProps, prevState, snapshot);
-  }
-
-  @override
   void componentWillUnmount() {
     for (final listener in willUnmountListeners) {
       listener();
@@ -56,8 +30,6 @@ abstract class RearchComponent extends Component2 {
     clearDependencies();
 
     // Clean up after any side effects to avoid possible leaks
-    didMountListeners.clear();
-    didUpdateListeners.clear();
     willUnmountListeners.clear();
 
     super.componentWillUnmount();
@@ -65,22 +37,45 @@ abstract class RearchComponent extends Component2 {
 
   @override
   ReactNode render() {
+    // Clear dirty flag.
+    _clearNeedsBuild();
+
     // Clears the old dependencies (which will be repopulated via WidgetHandle)
     clearDependencies();
 
-    final componentHandle = _ComponentHandleImpl(
-      _ComponentSideEffectApiProxyImpl(this),
-      topLevelCapsuleContainer,
+    return build(
+      _ComponentHandleImpl(
+        _ComponentSideEffectApiProxyImpl(this),
+        topLevelCapsuleContainer,
+      ),
     );
-    return build(componentHandle);
   }
 
   ///.
   ReactNode build(ComponentHandle use);
+
+  /// Set dirty flag and schedule update on next event loop.
+  void markNeedsBuild() {
+    if (_needsBuild) {
+      return;
+    }
+
+    _needsBuild = true;
+
+    Future.microtask(forceUpdate);
+  }
+
+  void _clearNeedsBuild() {
+    if (!_needsBuild) {
+      return;
+    }
+
+    _needsBuild = false;
+  }
 }
 
-/// This is needed so that [ComponentSideEffectApi.rebuild] doesn't conflict with
-/// [Component2.forceUpdate].
+/// This is needed so that [ComponentSideEffectApi.rebuild] doesn't conflict
+/// with [Component2.forceUpdate].
 class _ComponentSideEffectApiProxyImpl implements ComponentSideEffectApi {
   const _ComponentSideEffectApiProxyImpl(this.component);
   final RearchComponent component;
@@ -95,7 +90,7 @@ class _ComponentSideEffectApiProxyImpl implements ComponentSideEffectApi {
       if (isCanceled) return;
     }
 
-    component.forceUpdate();
+    component.markNeedsBuild();
   }
 
   @override
@@ -133,6 +128,7 @@ class _ComponentHandleImpl implements ComponentHandle {
 
   @override
   T register<T>(ComponentSideEffect<T> sideEffect) {
+    /// Not available on Dart React.
     // assert(
     //   api.manager.debugDoingBuild,
     //   "You may only register side effects during a RearchConsumers's build! "

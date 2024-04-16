@@ -74,7 +74,6 @@ class _ComponentSideEffectApiProxyImpl implements ComponentSideEffectApi {
       if (isCanceled) return;
     }
 
-    // component.markNeedsBuild();
     component
       ..debug('forceUpdate()')
       ..forceUpdate();

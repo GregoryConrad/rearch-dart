@@ -2,8 +2,6 @@ part of '../widgets.dart';
 
 ///.
 abstract class RearchComponent extends Component2 {
-  // bool _needsBuild = false;
-
   ///.
   String get debugName;
 
@@ -45,9 +43,6 @@ abstract class RearchComponent extends Component2 {
   ReactNode render() {
     debug('render()');
 
-    // Clear dirty flag.
-    // _clearNeedsBuild();
-
     // Clears the old dependencies (which will be repopulated via WidgetHandle)
     clearDependencies();
 
@@ -61,25 +56,6 @@ abstract class RearchComponent extends Component2 {
 
   ///.
   ReactNode build(ComponentHandle use);
-
-  /// Set dirty flag and schedule update on next event loop.
-  // void markNeedsBuild() {
-  //   if (_needsBuild) {
-  //     return;
-  //   }
-
-  //   _needsBuild = true;
-
-  //   Future.microtask(forceUpdate);
-  // }
-
-  // void _clearNeedsBuild() {
-  //   if (!_needsBuild) {
-  //     return;
-  //   }
-
-  //   _needsBuild = false;
-  // }
 }
 
 /// This is needed so that [ComponentSideEffectApi.rebuild] doesn't conflict

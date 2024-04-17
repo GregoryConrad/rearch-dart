@@ -5,8 +5,13 @@ abstract class RearchComponent extends Component2 {
   ///.
   String get debugName;
 
+  bool get debug => false;
+
   ///.
-  void debug(String msg) => print('<$debugName> -- $msg');
+  void _debug(String msg) {
+    if (!debug) return;
+    print('<$debugName> -- $msg');
+  }
 
   ///.
   final willUnmountListeners = <SideEffectApiCallback>{};
@@ -41,7 +46,7 @@ abstract class RearchComponent extends Component2 {
 
   @override
   ReactNode render() {
-    debug('render()');
+    _debug('render()');
 
     // Clears the old dependencies (which will be repopulated via WidgetHandle)
     clearDependencies();
@@ -75,7 +80,7 @@ class _ComponentSideEffectApiProxyImpl implements ComponentSideEffectApi {
     }
 
     component
-      ..debug('forceUpdate()')
+      .._debug('forceUpdate()')
       ..forceUpdate();
   }
 

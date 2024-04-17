@@ -25,12 +25,3 @@ JsonMap syBgColor(String color) => {'backgroundColor': color};
 JsonMap syTextAlign(String align) => {'textAlign': align};
 
 JsonMap get syTextAlignCenter => syTextAlign('center');
-
-// class SyDisplay {
-//   static JsonMap get(String display) => {'display': display};
-//   static JsonMap get block => get('block');
-//   static JsonMap get flex => get('flex');
-//   static JsonMap get inline => get('inline');
-//   static JsonMap get inlineBlock => get('inline-block');
-//   static JsonMap get inlineFlex => get('inline-flex');
-// }

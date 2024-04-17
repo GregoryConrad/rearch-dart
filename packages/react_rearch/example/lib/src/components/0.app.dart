@@ -1,21 +1,31 @@
+// import 'dart:async';
+
 import 'package:react/react.dart' hide body, footer, header;
 import 'package:react/react_client.dart';
 import 'package:react_rearch/react_rearch.dart';
 import 'package:react_rearch_example/lib.dart';
-import 'package:rearch/rearch.dart';
 
-/// App component.
-ReactDartComponentFactoryProxy2<Component2> app = registerComponent2(_App.new);
+ReactElement app(
+        // {required String foo,}
+        ) =>
+    _app({
+      // _Props.fooField: foo,
+    });
 
-///.
+extension _Props on _App {
+  // static const fooField = 'foo';
+  // int get foo => props[fooField] as String;
+}
+
 class _App extends RearchComponent {
   @override
   String get debugName => '_App';
 
   @override
-  ReactNode? build(ComponentHandle use) {
-    final initDatetime = use.value(DateTime.now());
+  bool get debug => false;
 
+  @override
+  ReactNode? build(ComponentHandle use) {
     return div(
       {
         ...Style(
@@ -28,15 +38,11 @@ class _App extends RearchComponent {
           ),
         ).value,
       },
-      header(
-        {},
-      ),
-      content(
-        {},
-      ),
-      footer(
-        appInitDateTime: initDatetime,
-      ),
+      header(),
+      content(),
+      footer(),
     );
   }
 }
+
+ReactDartComponentFactoryProxy2<Component2> _app = registerComponent2(_App.new);

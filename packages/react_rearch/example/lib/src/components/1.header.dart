@@ -3,9 +3,17 @@ import 'package:react/react_client.dart';
 import 'package:react_rearch/react_rearch.dart';
 import 'package:react_rearch_example/lib.dart';
 
-/// App Header component.
-ReactDartComponentFactoryProxy2<Component2> header =
-    registerComponent2(_Header.new);
+ReactElement header(
+        // {required String foo,}
+        ) =>
+    _header({
+      // _Props.fooField: foo,
+    });
+
+extension _Props on _Header {
+  // static const fooField = 'foo';
+  // int get foo => props[fooField] as String;
+}
 
 class _Header extends RearchComponent {
   @override
@@ -42,3 +50,6 @@ class _Header extends RearchComponent {
     );
   }
 }
+
+ReactDartComponentFactoryProxy2<Component2> _header =
+    registerComponent2(_Header.new);

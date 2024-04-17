@@ -1,22 +1,20 @@
 part of '../widgets.dart';
 
-///.
 abstract class RearchComponent extends Component2 {
-  ///.
+  bool _building = false;
+
   String get debugName;
 
   bool get debug => false;
 
-  ///.
   void _debug(String msg) {
     if (!debug) return;
+    // ignore: avoid_print
     print('<$debugName> -- $msg');
   }
 
-  ///.
   final willUnmountListeners = <SideEffectApiCallback>{};
 
-  ///.
   final sideEffectData = <Object?>[];
 
   /// Represents a [Set] of functions that remove a dependency on a [Capsule].
@@ -31,7 +29,25 @@ abstract class RearchComponent extends Component2 {
   }
 
   @override
+  void componentDidMount() {
+    _debug('componentDidMount()');
+    super.componentDidMount();
+  }
+
+  @override
+  void componentDidUpdate(
+    Map<dynamic, dynamic> prevProps,
+    Map<dynamic, dynamic> prevState, [
+    dynamic snapshot,
+  ]) {
+    _debug('componentDidUpdate()');
+    super.componentDidUpdate(prevProps, prevState, snapshot);
+  }
+
+  @override
   void componentWillUnmount() {
+    _debug('componentWillUnmount()');
+
     for (final listener in willUnmountListeners) {
       listener();
     }
@@ -48,18 +64,23 @@ abstract class RearchComponent extends Component2 {
   ReactNode render() {
     _debug('render()');
 
+    _building = true;
+
     // Clears the old dependencies (which will be repopulated via WidgetHandle)
     clearDependencies();
 
-    return build(
+    final res = build(
       _ComponentHandleImpl(
         _ComponentSideEffectApiProxyImpl(this),
         topLevelCapsuleContainer,
       ),
     );
+
+    _building = false;
+
+    return res;
   }
 
-  ///.
   ReactNode build(ComponentHandle use);
 }
 
@@ -79,9 +100,11 @@ class _ComponentSideEffectApiProxyImpl implements ComponentSideEffectApi {
       if (isCanceled) return;
     }
 
-    component
-      .._debug('forceUpdate()')
-      ..forceUpdate();
+    if (!component._building) {
+      component
+        .._debug('forceUpdate()')
+        ..forceUpdate();
+    }
   }
 
   @override

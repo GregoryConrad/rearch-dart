@@ -3,12 +3,19 @@ import 'package:react/react_client.dart';
 import 'package:react_rearch/react_rearch.dart';
 import 'package:react_rearch_example/lib.dart';
 
-/// App Content component.
-ReactDartComponentFactoryProxy2<Component2> content =
-    registerComponent2(Content.new);
+ReactElement content(
+        // {required String foo,}
+        ) =>
+    _content({
+      // _Props.fooField: foo,
+    });
 
-///.
-class Content extends RearchComponent {
+extension _Props on _Content {
+  // static const fooField = 'foo';
+  // int get foo => props[fooField] as String;
+}
+
+class _Content extends RearchComponent {
   @override
   String get debugName => 'Body';
 
@@ -28,9 +35,10 @@ class Content extends RearchComponent {
           color: SyColor(background: '#9d6c14'),
         ).value,
       },
-      currentSection.component(
-        {},
-      ),
+      currentSection.component(),
     );
   }
 }
+
+ReactDartComponentFactoryProxy2<Component2> _content =
+    registerComponent2(_Content.new);

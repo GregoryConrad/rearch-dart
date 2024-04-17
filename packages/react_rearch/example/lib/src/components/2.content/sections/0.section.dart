@@ -5,15 +5,18 @@ import 'package:react_rearch_example/lib.dart';
 import 'package:rearch/rearch.dart';
 
 part '1.first_section.dart';
-part '2.first_section.dart';
-part '3.first_section.dart';
+part '2.second_section.dart';
+part '3.third_section.dart';
 
-///.
-abstract class Section extends RearchComponent {
+extension _SectionProps on _Section {
+  // static const fooField = 'foo';
+  // int get foo => props[fooField] as String;
+}
+
+abstract class _Section extends RearchComponent {
   @override
-  String get debugName => 'Section';
+  String get debugName => 'Section -- $title';
 
-  ///.
   String get title;
 
   @override
@@ -47,7 +50,6 @@ abstract class Section extends RearchComponent {
     );
   }
 
-  ///.
   ReactNode buildContent(ComponentHandle use);
 }
 

@@ -5,5 +5,6 @@ import 'package:react_rearch_example/lib.dart';
 
 void main() {
   // Body app
-  render(app({}), querySelector('#react_body_mount_point'));
+  // ignore: avoid_dynamic_calls
+  render(app(), querySelector('#react_body_mount_point'));
 }

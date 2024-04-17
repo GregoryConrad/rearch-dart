@@ -1,20 +1,20 @@
 part of '0.section.dart';
 
-ReactElement firstSection(
+ReactElement secondSection(
         // {required String foo,}
         ) =>
-    _firstSection({
+    _secondSection({
       // _Props.fooField: foo,
     });
 
-extension _FirstSectionProps on _Section {
+extension _SecondSectionProps on _Section {
   // static const fooField = 'foo';
   // int get foo => props[fooField] as String;
 }
 
-class _FirstSection extends _Section {
+class _SecondSection extends _Section {
   @override
-  String get title => 'First Section';
+  String get title => 'Second Section';
 
   @override
   ReactNode buildContent(
@@ -29,10 +29,10 @@ class _FirstSection extends _Section {
               ),
         ).value,
       },
-      'Section 1 content',
+      'Section 2 content',
     );
   }
 }
 
-ReactDartComponentFactoryProxy2<Component2> _firstSection =
-    registerComponent2(_FirstSection.new);
+ReactDartComponentFactoryProxy2<Component2> _secondSection =
+    registerComponent2(_SecondSection.new);

@@ -4,5 +4,4 @@ import 'package:rearch/rearch.dart';
 //   SideEffectRegistrar get use => this;
 // }
 
-///.
 extension SideEffectRegistrarExtension on SideEffectRegistrar {}

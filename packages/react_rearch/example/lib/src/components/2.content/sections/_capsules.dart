@@ -3,22 +3,29 @@ import 'package:react/react_client.dart';
 import 'package:react_rearch_example/lib.dart';
 import 'package:rearch/rearch.dart';
 
-ValueWrapper<Sections> currentSectionWrapperCapsule(CapsuleHandle use) =>
+ValueWrapper<Sections> _currentSectionWrapperCapsule(CapsuleHandle use) =>
     use.data(Sections.first);
 
-Sections currentSectionCapsule(CapsuleHandle use) =>
-    use(currentSectionWrapperCapsule).value;
+SectionsController sectionsController(CapsuleHandle use) {
+  final wrapper = use(_currentSectionWrapperCapsule);
 
-void Function() moveToPreviousSectionCapsule(CapsuleHandle use) {
-  final wrapper = use(currentSectionWrapperCapsule);
-  return () =>
-      wrapper.value = Sections.values.elementAt(wrapper.value.index - 1);
-}
+  final current = wrapper.value;
 
-void Function() moveToNextSectionCapsule(CapsuleHandle use) {
-  final wrapper = use(currentSectionWrapperCapsule);
-  return () =>
-      wrapper.value = Sections.values.elementAt(wrapper.value.index + 1);
+  return SectionsController(
+    current: current,
+    moveToPrevious: () {
+      if (current.isFirst) return false;
+
+      wrapper.value = Sections.values.elementAt(current.index - 1);
+      return true;
+    },
+    moveToNext: () {
+      if (current.isLast) return false;
+
+      wrapper.value = Sections.values.elementAt(current.index + 1);
+      return true;
+    },
+  );
 }
 
 enum Sections {
@@ -36,4 +43,16 @@ extension SectionsExtension on Sections {
         Sections.second => secondSection,
         Sections.third => thirdSection,
       };
+}
+
+class SectionsController {
+  SectionsController({
+    required this.current,
+    required this.moveToPrevious,
+    required this.moveToNext,
+  });
+
+  final Sections current;
+  final bool Function() moveToPrevious;
+  final bool Function() moveToNext;
 }

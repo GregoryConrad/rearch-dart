@@ -14,7 +14,7 @@ class Content extends RearchComponent {
 
   @override
   ReactNode? build(ComponentHandle use) {
-    final currentSection = use(currentSectionCapsule);
+    final currentSection = use(sectionsController).current;
 
     return div(
       {

@@ -48,21 +48,20 @@ abstract class Section extends RearchComponent {
 }
 
 ReactNode _sectionSelector(ComponentHandle use) {
-  final currentSection = use(currentSectionCapsule);
-  final toPreviousSection = use(moveToPreviousSectionCapsule);
-  final toNextSection = use(moveToNextSectionCapsule);
+  final controller = use(sectionsController);
+  final current = controller.current;
 
   return div(
     {},
     _sectionSelectorButton(
       '<',
-      enable: !currentSection.isFirst,
-      action: toPreviousSection,
+      enable: !current.isFirst,
+      action: controller.moveToPrevious,
     ),
     _sectionSelectorButton(
       '>',
-      enable: !currentSection.isLast,
-      action: toNextSection,
+      enable: !current.isLast,
+      action: controller.moveToNext,
     ),
   );
 }

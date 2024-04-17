@@ -74,6 +74,30 @@ void main() {
     expect(find.text('3: 123'), findsOneWidget);
   });
 
+  testWidgets('a widget may update use.data during its build', (tester) async {
+    ValueWrapper<int> rebuildableCapsule(CapsuleHandle use) => use.data(0);
+
+    final container = useContainer();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: CapsuleContainerProvider(
+          container: container,
+          child: RearchBuilder(
+            builder: (context, use) {
+              use(rebuildableCapsule);
+              final builds = ++use.data(0).value;
+              return Text('$builds');
+            },
+          ),
+        ),
+      ),
+    );
+    expect(find.text('1'), findsOneWidget);
+    container.read(rebuildableCapsule).value = 1;
+    await tester.pump();
+    expect(find.text('2'), findsOneWidget);
+  });
+
   testWidgets('PageView control test (default args)', (tester) async {
     final container = useContainer();
 

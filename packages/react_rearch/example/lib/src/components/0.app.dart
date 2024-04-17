@@ -2,6 +2,7 @@ import 'package:react/react.dart' hide body, footer, header;
 import 'package:react/react_client.dart';
 import 'package:react_rearch/react_rearch.dart';
 import 'package:react_rearch_example/lib.dart';
+import 'package:rearch/rearch.dart';
 
 /// App component.
 ReactDartComponentFactoryProxy2<Component2> app = registerComponent2(_App.new);
@@ -13,6 +14,8 @@ class _App extends RearchComponent {
 
   @override
   ReactNode? build(ComponentHandle use) {
+    final initDatetime = use.value(DateTime.now());
+
     return div(
       {
         ...Style(
@@ -32,7 +35,7 @@ class _App extends RearchComponent {
         {},
       ),
       footer(
-        {},
+        appInitDateTime: initDatetime,
       ),
     );
   }

@@ -3,14 +3,28 @@ import 'package:react/react_client.dart';
 import 'package:react_rearch/react_rearch.dart';
 import 'package:react_rearch_example/lib.dart';
 
-/// App Footer component.
-ReactDartComponentFactoryProxy2<Component2> footer =
+extension _Props on _Footer {
+  static const appInitDatetimeField = 'app-init-datetime';
+
+  DateTime get appInitDatetime => props[appInitDatetimeField] as DateTime;
+}
+
+ReactElement footer({
+  required DateTime appInitDateTime,
+}) =>
+    _footer({
+      _Props.appInitDatetimeField: appInitDateTime,
+    });
+
+ReactDartComponentFactoryProxy2<Component2> _footer =
     registerComponent2(_Footer.new);
 
-///.
 class _Footer extends RearchComponent {
   @override
   String get debugName => '_Footer';
+
+  @override
+  bool get debug => true;
 
   @override
   ReactNode? build(ComponentHandle use) {
@@ -40,7 +54,7 @@ class _Footer extends RearchComponent {
             ),
           ).value,
         },
-        'Footer',
+        'Footer ($appInitDatetime)',
       ),
     );
   }

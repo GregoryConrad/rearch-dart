@@ -2,6 +2,7 @@ import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:react_rearch/react_rearch.dart';
 import 'package:react_rearch_example/lib.dart';
+import 'package:rearch/rearch.dart';
 
 part '1.first_section.dart';
 part '2.first_section.dart';
@@ -37,6 +38,9 @@ abstract class Section extends RearchComponent {
         {},
         title,
       ),
+
+      // Counter button
+      counterButton(use),
 
       // Content
       buildContent(use),
@@ -78,3 +82,16 @@ ReactNode _sectionSelectorButton(
       },
       text,
     );
+
+ReactNode counterButton(ComponentHandle use) {
+  final controller = use(sectionsController);
+  final current = controller.current;
+  final currentCounter = use(sectionCounterCapsule)(current);
+
+  return button(
+    {
+      'onClick': (_) => currentCounter.value++,
+    },
+    'Counter: ${currentCounter.value}',
+  );
+}

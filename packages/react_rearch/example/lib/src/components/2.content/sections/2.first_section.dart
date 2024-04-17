@@ -18,8 +18,8 @@ class _SecondSection extends Section {
         ...Style(
           {},
           size: SySize(
-            fullHeight: true,
-          ),
+              // fullHeight: true,
+              ),
         ).value,
       },
       'Section 2 content',

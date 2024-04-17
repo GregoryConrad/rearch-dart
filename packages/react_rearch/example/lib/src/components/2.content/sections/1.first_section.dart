@@ -18,8 +18,8 @@ class _FirstSection extends Section {
         ...Style(
           {},
           size: SySize(
-            fullHeight: true,
-          ),
+              // fullHeight: true,
+              ),
         ).value,
       },
       'Section 1 content',

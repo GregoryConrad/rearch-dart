@@ -56,3 +56,28 @@ class SectionsController {
   final bool Function() moveToPrevious;
   final bool Function() moveToNext;
 }
+
+ValueWrapper<int> Function(Sections) sectionCounterCapsule(CapsuleHandle use) {
+  final counters = use.value(<Sections, int>{});
+
+  use.callonce(() {
+    for (final section in Sections.values) {
+      counters[section] = 0;
+    }
+  });
+
+  final rebuild = use.rebuilder();
+
+  bool setCount(Sections section, int count) {
+    final current = counters[section]!;
+    if (current == count) return false;
+    counters[section] = count;
+    rebuild();
+    return true;
+  }
+
+  return (section) => (
+        () => counters[section]!,
+        (count) => setCount(section, count),
+      );
+}

@@ -18,8 +18,8 @@ class _ThridSection extends Section {
         ...Style(
           {},
           size: SySize(
-            fullHeight: true,
-          ),
+              // fullHeight: true,
+              ),
         ).value,
       },
       'Section 3 content',

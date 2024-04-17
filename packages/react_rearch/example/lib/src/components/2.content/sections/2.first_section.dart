@@ -1,13 +1,13 @@
 part of '0.section.dart';
 
 /// App Header component.
-ReactDartComponentFactoryProxy2<Component2> firstSection =
-    registerComponent2(_FirstSection.new);
+ReactDartComponentFactoryProxy2<Component2> secondSection =
+    registerComponent2(_SecondSection.new);
 
 ///.
-class _FirstSection extends Section {
+class _SecondSection extends Section {
   @override
-  String get title => 'First Section';
+  String get title => 'Second Section';
 
   @override
   ReactNode buildContent(
@@ -22,7 +22,7 @@ class _FirstSection extends Section {
           ),
         ).value,
       },
-      'Section 1 content',
+      'Section 2 content',
     );
   }
 }

@@ -14,6 +14,8 @@ class Content extends RearchComponent {
 
   @override
   ReactNode? build(ComponentHandle use) {
+    final currentSection = use(currentSectionCapsule);
+
     return div(
       {
         ...Style(
@@ -26,7 +28,7 @@ class Content extends RearchComponent {
           color: SyColor(background: '#9d6c14'),
         ).value,
       },
-      firstSection(
+      currentSection.component(
         {},
       ),
     );

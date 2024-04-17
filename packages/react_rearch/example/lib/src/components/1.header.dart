@@ -7,7 +7,6 @@ import 'package:react_rearch_example/lib.dart';
 ReactDartComponentFactoryProxy2<Component2> header =
     registerComponent2(_Header.new);
 
-///.
 class _Header extends RearchComponent {
   @override
   String get debugName => '_Header';

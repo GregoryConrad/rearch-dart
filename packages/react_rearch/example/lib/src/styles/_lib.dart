@@ -1,1 +1,1 @@
-export 'styles.dart';
+export 'style.dart';

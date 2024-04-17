@@ -2,13 +2,12 @@ import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:react_rearch/react_rearch.dart';
 import 'package:react_rearch_example/lib.dart';
-import 'package:rearch/rearch.dart';
 
-/// Body App component.
+/// App Footer component.
 ReactDartComponentFactoryProxy2<Component2> footer =
     registerComponent2(_Footer.new);
 
-/// Initiated on loading state.
+///.
 class _Footer extends RearchComponent {
   @override
   String get debugName => '_Footer';
@@ -17,18 +16,29 @@ class _Footer extends RearchComponent {
   ReactNode? build(ComponentHandle use) {
     return div(
       {
-        'style': {
-          'minHeight': '50px',
-          'height': '5%',
-          'textAlign': 'center',
-          'backgroundColor': '#e59c4e',
-        },
+        ...Style(
+          {
+            'minHeight': '50px',
+          },
+          size: SySize(
+            heightPercent: 5,
+          ),
+          color: SyColor(
+            background: '#e59c4e',
+          ),
+          alignment: SyAlignment(
+            centerText: true,
+          ),
+        ).value,
       },
       h4(
         {
-          'style': {
-            ...styleVerticallyCenter,
-          },
+          ...Style(
+            {},
+            alignment: SyAlignment(
+              verticallyCenter: true,
+            ),
+          ).value,
         },
         'Footer',
       ),

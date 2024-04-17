@@ -1,15 +1,15 @@
-import 'package:react/react.dart' hide body, footer, header;
+import 'package:react/react.dart';
 import 'package:react/react_client.dart';
 import 'package:react_rearch/react_rearch.dart';
 import 'package:react_rearch_example/lib.dart';
 
-/// App component.
-ReactDartComponentFactoryProxy2<Component2> app = registerComponent2(_App.new);
-
 ///.
-class _App extends RearchComponent {
+abstract class Section extends RearchComponent {
   @override
-  String get debugName => '_App';
+  String get debugName => 'Section';
+
+  ///.
+  String get title;
 
   @override
   ReactNode? build(ComponentHandle use) {
@@ -17,23 +17,21 @@ class _App extends RearchComponent {
       {
         ...Style(
           {
-            'display': 'flex',
-            'flexDirection': 'column',
+            'paddingTop': '20px',
           },
           size: SySize(
             fullHeight: true,
           ),
         ).value,
       },
-      header(
+      h3(
         {},
+        title,
       ),
-      content(
-        {},
-      ),
-      footer(
-        {},
-      ),
+      buildContent(use),
     );
   }
+
+  ///.
+  ReactNode buildContent(ComponentHandle use);
 }

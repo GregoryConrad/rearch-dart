@@ -3,7 +3,6 @@
 ##  1.  Introduction
 
 Simple hello world Web App based on Dart React + ReArch.
-The code structure is copied and adapted from [flutter_rearch](https://pub.dev/packages/flutter_rearch).
 
 ##  2.  Environment setup
 
@@ -13,14 +12,18 @@ dart pub global activate webdev
 
 ##  3.  Serving
 
+https://dart.dev/tools/webdev#serve
+
 ```bash
 webdev serve
 ```
-<!-- 
+
 
 ##  4.  Building
 
+https://dart.dev/tools/webdev#build
+
 ```bash
-# webdev serve
+webdev build --output web:build
 ```
- -->
+

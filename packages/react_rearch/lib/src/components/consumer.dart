@@ -8,31 +8,31 @@ abstract class RearchComponent extends Component2 {
 
   bool _building = false;
 
-  final willUnmountListeners = <SideEffectApiCallback>{};
+  final _willUnmountListeners = <SideEffectApiCallback>{};
 
-  final sideEffectData = <Object?>[];
+  final _sideEffectData = <Object?>[];
 
   /// Represents a [Set] of functions that remove a dependency on a [Capsule].
-  final dependencyDisposers = <void Function()>{};
+  final _dependencyDisposers = <void Function()>{};
 
   /// Clears out the [Capsule] dependencies of this [RearchComponent].
-  void clearDependencies() {
-    for (final dispose in dependencyDisposers) {
+  void _clearDependencies() {
+    for (final dispose in _dependencyDisposers) {
       dispose();
     }
-    dependencyDisposers.clear();
+    _dependencyDisposers.clear();
   }
 
   @override
   void componentWillUnmount() {
-    for (final listener in willUnmountListeners) {
+    for (final listener in _willUnmountListeners) {
       listener();
     }
 
-    clearDependencies();
+    _clearDependencies();
 
     // Clean up after any side effects to avoid possible leaks
-    willUnmountListeners.clear();
+    _willUnmountListeners.clear();
 
     super.componentWillUnmount();
   }
@@ -42,7 +42,7 @@ abstract class RearchComponent extends Component2 {
     _building = true;
 
     // Clears the old dependencies (which will be repopulated via WidgetHandle)
-    clearDependencies();
+    _clearDependencies();
 
     final res = build(
       _ComponentHandleImpl(
@@ -82,11 +82,11 @@ class _ComponentSideEffectApiProxyImpl implements ComponentSideEffectApi {
 
   @override
   void registerDispose(SideEffectApiCallback callback) =>
-      component.willUnmountListeners.add(callback);
+      component._willUnmountListeners.add(callback);
 
   @override
   void unregisterDispose(SideEffectApiCallback callback) =>
-      component.willUnmountListeners.remove(callback);
+      component._willUnmountListeners.remove(callback);
 
   /// [rebuild] just marks the corresponding widget as dirty,
   /// so all affected widgets will be built together on the next frame for free.
@@ -109,7 +109,7 @@ class _ComponentHandleImpl implements ComponentHandle {
   @override
   T call<T>(Capsule<T> capsule) {
     final dispose = container.onNextUpdate(capsule, api.rebuild);
-    api.component.dependencyDisposers.add(dispose);
+    api.component._dependencyDisposers.add(dispose);
     return container.read(capsule);
   }
 
@@ -123,9 +123,9 @@ class _ComponentHandleImpl implements ComponentHandle {
     //   '"use.fooBar()" in a function callback.',
     // );
 
-    if (sideEffectDataIndex == api.component.sideEffectData.length) {
-      api.component.sideEffectData.add(sideEffect(api));
+    if (sideEffectDataIndex == api.component._sideEffectData.length) {
+      api.component._sideEffectData.add(sideEffect(api));
     }
-    return api.component.sideEffectData[sideEffectDataIndex++] as T;
+    return api.component._sideEffectData[sideEffectDataIndex++] as T;
   }
 }

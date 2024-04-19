@@ -1,6 +1,8 @@
 part of '../components.dart';
 
-abstract class RearchComponent extends Component2 {
+///.
+abstract class RearchComponent extends Component2
+    implements ComponentSideEffectApi {
   bool _needsBuild = false;
 
   @override
@@ -55,12 +57,13 @@ abstract class RearchComponent extends Component2 {
 
     return build(
       _ComponentHandleImpl(
-        _ComponentSideEffectApiProxyImpl(this),
+        this,
         _capsuleContainer,
       ),
     );
   }
 
+  ///.
   ReactNode build(ComponentHandle use);
 
   void _markNeedsBuild() {
@@ -76,13 +79,6 @@ abstract class RearchComponent extends Component2 {
 
     _needsBuild = false;
   }
-}
-
-/// This is needed so that [ComponentSideEffectApi.rebuild] doesn't conflict
-/// with [Component2.forceUpdate].
-class _ComponentSideEffectApiProxyImpl implements ComponentSideEffectApi {
-  const _ComponentSideEffectApiProxyImpl(this.component);
-  final RearchComponent component;
 
   @override
   void rebuild([
@@ -94,16 +90,16 @@ class _ComponentSideEffectApiProxyImpl implements ComponentSideEffectApi {
       if (isCanceled) return;
     }
 
-    component._markNeedsBuild();
+    _markNeedsBuild();
   }
 
   @override
   void registerDispose(SideEffectApiCallback callback) =>
-      component._willUnmountListeners.add(callback);
+      _willUnmountListeners.add(callback);
 
   @override
   void unregisterDispose(SideEffectApiCallback callback) =>
-      component._willUnmountListeners.remove(callback);
+      _willUnmountListeners.remove(callback);
 
   /// [rebuild] just marks the corresponding widget as dirty,
   /// so all affected widgets will be built together on the next frame for free.
@@ -113,20 +109,20 @@ class _ComponentSideEffectApiProxyImpl implements ComponentSideEffectApi {
   /// widget and capsule side effects within a single transaction.
   @override
   void runTransaction(void Function() sideEffectTransaction) =>
-      component._capsuleContainer.runTransaction(sideEffectTransaction);
+      _capsuleContainer.runTransaction(sideEffectTransaction);
 }
 
 class _ComponentHandleImpl implements ComponentHandle {
   _ComponentHandleImpl(this.api, this.container);
 
-  final _ComponentSideEffectApiProxyImpl api;
+  final RearchComponent api;
   final CapsuleContainer container;
   int sideEffectDataIndex = 0;
 
   @override
   T call<T>(Capsule<T> capsule) {
     final dispose = container.onNextUpdate(capsule, api.rebuild);
-    api.component._dependencyDisposers.add(dispose);
+    api._dependencyDisposers.add(dispose);
     return container.read(capsule);
   }
 
@@ -140,9 +136,9 @@ class _ComponentHandleImpl implements ComponentHandle {
     //   '"use.fooBar()" in a function callback.',
     // );
 
-    if (sideEffectDataIndex == api.component._sideEffectData.length) {
-      api.component._sideEffectData.add(sideEffect(api));
+    if (sideEffectDataIndex == api._sideEffectData.length) {
+      api._sideEffectData.add(sideEffect(api));
     }
-    return api.component._sideEffectData[sideEffectDataIndex++] as T;
+    return api._sideEffectData[sideEffectDataIndex++] as T;
   }
 }

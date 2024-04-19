@@ -1,5 +1,3 @@
-// import 'dart:async';
-
 import 'dart:async';
 
 import 'package:react/react.dart' hide body, footer, header;

@@ -1,4 +1,4 @@
-part of '../widgets.dart';
+part of '../components.dart';
 
 /// Provides [toWarmUpWidget], a mechanism to create a [Widget] from a [List]
 /// of the current states of some "warm up" [Capsule]s.

@@ -7,6 +7,7 @@ import 'package:react/react_client.dart';
 import 'package:react_rearch/react_rearch.dart';
 import 'package:rearch/rearch.dart';
 
+///.
 ReactElement app() => _appElement({});
 
 ReactDartComponentFactoryProxy2<Component2> _appElement =
@@ -51,6 +52,7 @@ class _App extends RearchComponent {
   }
 }
 
+///.
 LoadingController loadingCapsule(CapsuleHandle use) {
   final controller = use.data(true);
   final count = use.data(0);
@@ -75,7 +77,9 @@ LoadingController loadingCapsule(CapsuleHandle use) {
   );
 }
 
+///.
 class LoadingController {
+  ///.
   LoadingController({
     required this.get,
     required this.set,
@@ -83,8 +87,15 @@ class LoadingController {
     required this.count,
   });
 
+  ///.
   final bool Function() get;
+
+  ///.
   final void Function({required bool loading}) set;
+
+  ///.
   final void Function() toggle;
+
+  ///.
   final int count;
 }

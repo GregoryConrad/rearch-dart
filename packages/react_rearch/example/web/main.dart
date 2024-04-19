@@ -5,12 +5,8 @@ import 'package:react_rearch/react_rearch.dart';
 import 'package:react_rearch_example/lib.dart';
 
 void main() {
-  // ignore: avoid_print
-  print('MAIN');
-
   // ignore: avoid_dynamic_calls
   render(
-    // rearchBootstrap(child: appElement),
     rearchBootstrap(child: app()),
     querySelector('#react_body_mount_point'),
   );

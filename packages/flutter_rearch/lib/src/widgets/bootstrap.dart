@@ -1,4 +1,4 @@
-part of '../widgets.dart';
+part of '../components.dart';
 
 /// {@template rearch.bootstrapper}
 /// Bootstraps rearch for use in Flutter.

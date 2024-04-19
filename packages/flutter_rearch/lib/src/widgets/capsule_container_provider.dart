@@ -1,4 +1,4 @@
-part of '../components.dart';
+part of '../widgets.dart';
 
 /// Provides a [CapsuleContainer] to the rest of the [Widget] tree
 /// using an [InheritedWidget].

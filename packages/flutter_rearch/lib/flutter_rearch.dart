@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_rearch/src/components.dart';
+import 'package:flutter_rearch/src/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:rearch/rearch.dart';
 
 export 'src/side_effects.dart';
-export 'src/components.dart';
+export 'src/widgets.dart';
 
 /// The API exposed to [RearchConsumer]s to extend their functionality.
 ///

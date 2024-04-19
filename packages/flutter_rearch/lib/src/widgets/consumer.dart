@@ -1,4 +1,4 @@
-part of '../components.dart';
+part of '../widgets.dart';
 
 /// {@template rearch.rearchBuilder}
 /// A [Builder]-style [Widget] whose [builder] has access to a [WidgetHandle]

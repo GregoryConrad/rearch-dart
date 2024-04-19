@@ -1,5 +1,7 @@
 part of '../components.dart';
 
+final capsuleContainer = CapsuleContainer();
+
 final capsuleContainerContext = createContext<CapsuleContainer>();
 
 ReactElement rearchBootstrap({
@@ -17,13 +19,14 @@ extension _PropsExtension on _RearchBootstrap {
 }
 
 class _RearchBootstrap extends Component2 {
-  final _capsuleContainer = CapsuleContainer();
+  // final _capsuleContainer = CapsuleContainer();
 
   @override
   ReactNode render() {
     return capsuleContainerContext.Provider(
       {
-        'value': _capsuleContainer,
+        // 'value': _capsuleContainer,
+        'value': capsuleContainer,
       },
       childComponent({}),
     );

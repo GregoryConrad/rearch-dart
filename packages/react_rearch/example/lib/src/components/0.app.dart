@@ -5,25 +5,10 @@ import 'package:react/react_client.dart';
 import 'package:react_rearch/react_rearch.dart';
 import 'package:react_rearch_example/lib.dart';
 
-ReactElement app(
-        // {required String foo,}
-        ) =>
-    _app({
-      // _Props.fooField: foo,
-    });
-
-extension _Props on _App {
-  // static const fooField = 'foo';
-  // int get foo => props[fooField] as String;
-}
+ReactDartComponentFactoryProxy2<Component2> appElement =
+    registerComponent2(_App.new);
 
 class _App extends RearchComponent {
-  @override
-  String get debugName => '_App';
-
-  @override
-  bool get debug => false;
-
   @override
   ReactNode? build(ComponentHandle use) {
     return div(
@@ -44,5 +29,3 @@ class _App extends RearchComponent {
     );
   }
 }
-
-ReactDartComponentFactoryProxy2<Component2> _app = registerComponent2(_App.new);

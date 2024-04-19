@@ -1,8 +1,8 @@
 import 'package:meta/meta.dart';
 import 'package:rearch/rearch.dart';
 
+export 'src/components.dart';
 export 'src/side_effects.dart';
-export 'src/widgets.dart';
 
 /// The API exposed to [RearchConsumer]s to extend their functionality.
 ///

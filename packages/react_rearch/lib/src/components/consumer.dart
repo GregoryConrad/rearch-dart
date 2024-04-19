@@ -1,6 +1,11 @@
-part of '../widgets.dart';
+part of '../components.dart';
 
 abstract class RearchComponent extends Component2 {
+  @override
+  final Context<CapsuleContainer> contextType = capsuleContainerContext;
+
+  CapsuleContainer get _capsuleContainer => context as CapsuleContainer;
+
   bool _building = false;
 
   final willUnmountListeners = <SideEffectApiCallback>{};
@@ -42,7 +47,7 @@ abstract class RearchComponent extends Component2 {
     final res = build(
       _ComponentHandleImpl(
         _ComponentSideEffectApiProxyImpl(this),
-        topLevelCapsuleContainer,
+        _capsuleContainer,
       ),
     );
 
@@ -91,7 +96,7 @@ class _ComponentSideEffectApiProxyImpl implements ComponentSideEffectApi {
   /// widget and capsule side effects within a single transaction.
   @override
   void runTransaction(void Function() sideEffectTransaction) =>
-      topLevelCapsuleContainer.runTransaction(sideEffectTransaction);
+      component._capsuleContainer.runTransaction(sideEffectTransaction);
 }
 
 class _ComponentHandleImpl implements ComponentHandle {

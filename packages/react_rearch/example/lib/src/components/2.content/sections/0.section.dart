@@ -14,9 +14,6 @@ extension _SectionProps on _Section {
 }
 
 abstract class _Section extends RearchComponent {
-  @override
-  String get debugName => 'Section -- $title';
-
   String get title;
 
   @override

@@ -17,9 +17,6 @@ extension _Props on _Header {
 
 class _Header extends RearchComponent {
   @override
-  String get debugName => '_Header';
-
-  @override
   ReactNode? build(ComponentHandle use) {
     return div(
       {

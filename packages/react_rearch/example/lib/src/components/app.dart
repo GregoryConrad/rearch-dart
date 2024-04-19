@@ -7,79 +7,84 @@ import 'package:react/react_client.dart';
 import 'package:react_rearch/react_rearch.dart';
 import 'package:rearch/rearch.dart';
 
-// ReactDartComponentFactoryProxy2<Component2> appElement =
-//     registerComponent2(_App.new);
+ReactElement app() => _appElement({});
 
-ReactDartComponentFactoryProxy2<Component2> appBuilder() =>
+ReactDartComponentFactoryProxy2<Component2> _appElement =
     registerComponent2(_App.new);
 
 class _App extends RearchComponent {
-  _App() {
-    debug('constructor()');
-  }
-
-  @override
-  String get debugName => '_App';
-
   @override
   ReactNode? build(ComponentHandle use) {
     final loadingCtrl = use(loadingCapsule);
 
     use.effect(
-      () {
-        Timer(const Duration(seconds: 10), () {
-          // ignore: avoid_print
-          debug('TIMER callback');
-          loadingCtrl.value = false;
-        });
-
-        return null;
-      },
+      () => Timer.periodic(const Duration(seconds: 10), (_) {
+        loadingCtrl.toggle();
+      }).cancel,
       [],
     );
 
     return div(
-      {},
+      {
+        'style': {
+          'position': 'absolute',
+          'top': '50%',
+          'left': '50%',
+          'transform': 'translate(-50%, -50%)',
+          'textAlign': 'center',
+        },
+      },
       button(
         {
-          'onClick': (_) => loadingCtrl.value = false,
+          'onClick': (_) => loadingCtrl.toggle(),
         },
-        'Button',
+        'Loading: ${loadingCtrl.get() ? 'ON' : 'OFF'}',
       ),
+      label({
+        'style': {
+          'display': 'block',
+          'marginTop': '10px',
+        },
+      }),
+      'Count: ${loadingCtrl.count}',
     );
   }
 }
 
-// ignore: avoid_print
-// void _debug(String msg) => print('$msg');
-
-ValueWrapper<bool> loadingCapsule(CapsuleHandle use) {
+LoadingController loadingCapsule(CapsuleHandle use) {
   final controller = use.data(true);
+  final count = use.data(0);
+
+  final transactionRunner = use.transactionRunner();
 
   // ignore: avoid_print
   print('Loading: ${controller.value ? 'ON' : 'OFF'}');
 
-  return controller;
+  void set({required bool loading}) {
+    transactionRunner(() {
+      controller.value = loading;
+      count.value += 1;
+    });
+  }
+
+  return LoadingController(
+    get: () => controller.value,
+    set: set,
+    toggle: () => set(loading: !controller.value),
+    count: count.value,
+  );
 }
 
-// class _App extends RearchComponent {
-//   @override
-//   ReactNode? build(ComponentHandle use) {
-//     return div(
-//       {
-//         ...Style(
-//           {
-//             'display': 'flex',
-//             'flexDirection': 'column',
-//           },
-//           size: SySize(
-//             fullHeight: true,
-//           ),
-//         ).value,
-//       },
-//       header(),
-//       content(),
-//       footer(),
-//     );
-//   }
-// }
+class LoadingController {
+  LoadingController({
+    required this.get,
+    required this.set,
+    required this.toggle,
+    required this.count,
+  });
+
+  final bool Function() get;
+  final void Function({required bool loading}) set;
+  final void Function() toggle;
+  final int count;
+}

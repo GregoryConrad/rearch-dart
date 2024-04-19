@@ -4,35 +4,22 @@ final capsuleContainer = CapsuleContainer();
 
 final capsuleContainerContext = createContext<CapsuleContainer>();
 
-// ReactElement rearchBootstrap({
-//   required ReactDartComponentFactoryProxy2<Component2> child,
-// }) =>
-//     registerComponent2(_RearchBootstrap.new)({
-//       _PropsExtension.childField: child,
-//     });
-
-ReactElement rearchBootstrap({
-  required ReactDartComponentFactoryProxy2<Component2> Function() childBuilder,
-}) =>
-    registerComponent2(_RearchBootstrap.new)({
-      _PropsExtension.childBuilderField: childBuilder,
+ReactElement rearchBootstrap({required ReactElement child}) =>
+    _bootstrapElement({
+      _PropsExtension.childField: child,
     });
 
-extension _PropsExtension on _RearchBootstrap {
-  static const childBuilderField = 'child';
+ReactDartComponentFactoryProxy2<Component2> _bootstrapElement =
+    registerComponent2(_RearchBootstrap.new);
 
-  ReactDartComponentFactoryProxy2<Component2> Function() get childComponent =>
-      props[childBuilderField] as ReactDartComponentFactoryProxy2<Component2>
-          Function();
+extension _PropsExtension on _RearchBootstrap {
+  static const childField = 'child';
+
+  ReactElement get childComponent => props[childField] as ReactElement;
 }
 
 class _RearchBootstrap extends Component2 {
   // final _capsuleContainer = CapsuleContainer();
-
-  _RearchBootstrap() {
-    // ignore: avoid_print
-    print('_RearchBootstrap.constructor()');
-  }
 
   @override
   ReactNode render() {
@@ -44,7 +31,7 @@ class _RearchBootstrap extends Component2 {
         // 'value': _capsuleContainer,
         'value': capsuleContainer,
       },
-      childComponent()({}),
+      childComponent,
     );
   }
 }

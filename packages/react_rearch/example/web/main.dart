@@ -11,7 +11,7 @@ void main() {
   // ignore: avoid_dynamic_calls
   render(
     // rearchBootstrap(child: appElement),
-    rearchBootstrap(childBuilder: appBuilder),
+    rearchBootstrap(child: app()),
     querySelector('#react_body_mount_point'),
   );
 }

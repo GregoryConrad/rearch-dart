@@ -1,19 +1,12 @@
 part of '../components.dart';
 
 abstract class RearchComponent extends Component2 {
-  final debugId = DateTime.now().microsecondsSinceEpoch.toString();
-
-  String get debugName;
-
-  // ignore: avoid_print
-  void debug(String msg) => print('$debugName -- $debugId: $msg');
+  bool _needsBuild = false;
 
   @override
   final Context<CapsuleContainer> contextType = capsuleContainerContext;
 
   CapsuleContainer get _capsuleContainer => context as CapsuleContainer;
-
-  bool _building = false;
 
   final _willUnmountListeners = <SideEffectApiCallback>{};
 
@@ -28,6 +21,17 @@ abstract class RearchComponent extends Component2 {
       dispose();
     }
     _dependencyDisposers.clear();
+  }
+
+  @override
+  void componentDidUpdate(
+    Map<dynamic, dynamic> prevProps,
+    Map<dynamic, dynamic> prevState, [
+    dynamic snapshot,
+  ]) {
+    _clearNeedsBuild();
+
+    super.componentDidUpdate(prevProps, prevState, snapshot);
   }
 
   @override
@@ -46,24 +50,32 @@ abstract class RearchComponent extends Component2 {
 
   @override
   ReactNode render() {
-    _building = true;
-
     // Clears the old dependencies (which will be repopulated via WidgetHandle)
     _clearDependencies();
 
-    final res = build(
+    return build(
       _ComponentHandleImpl(
         _ComponentSideEffectApiProxyImpl(this),
         _capsuleContainer,
       ),
     );
-
-    _building = false;
-
-    return res;
   }
 
   ReactNode build(ComponentHandle use);
+
+  void _markNeedsBuild() {
+    if (_needsBuild) return;
+
+    Future.microtask(forceUpdate);
+
+    _needsBuild = true;
+  }
+
+  void _clearNeedsBuild() {
+    if (!_needsBuild) return;
+
+    _needsBuild = false;
+  }
 }
 
 /// This is needed so that [ComponentSideEffectApi.rebuild] doesn't conflict
@@ -82,9 +94,7 @@ class _ComponentSideEffectApiProxyImpl implements ComponentSideEffectApi {
       if (isCanceled) return;
     }
 
-    if (!component._building) {
-      component.forceUpdate();
-    }
+    component._markNeedsBuild();
   }
 
   @override

@@ -1,6 +1,13 @@
 part of '../components.dart';
 
 abstract class RearchComponent extends Component2 {
+  final debugId = DateTime.now().microsecondsSinceEpoch.toString();
+
+  String get debugName;
+
+  // ignore: avoid_print
+  void debug(String msg) => print('$debugName -- $debugId: $msg');
+
   @override
   final Context<CapsuleContainer> contextType = capsuleContainerContext;
 

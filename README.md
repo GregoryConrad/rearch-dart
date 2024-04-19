@@ -21,19 +21,16 @@ ReArch = re-imagined approach to application design and architecture
 
 
 ## Features
-Specifically, ReArch is a:
-- ⚡️ Reactive
-- 🔍 Testable
-- 🧱 Composable
-- 🔌 Extendable
-- ⬆️ Scalable
-- 🧮 Functional
-- 🪢 Databinding 
-- 💉 Dependency Injection
+Specifically, ReArch is a novel solution to:
+- ⚡️ State Management
+- 🧮 Incremental Computation
+- 🧱 Component-Based Software Engineering
 
-Framework.
-
-That's a mouthful! But in short, ReArch is an entirely new approach to building applications.
+And with those, come:
+- Reactivity through declarative code
+- Loose coupling and high testability
+- App-level composability via a functional approach to dependency inversion
+- [Feature composition through _side effects_](https://blog.gsconrad.com/2023/12/22/the-problem-with-state-management.html)
 
 
 ## In a Nutshell
@@ -161,9 +158,8 @@ While ReArch can be used for state management, it is also much more;
 it provides a solution to build *any* application by borrowing from the fields of
 component-based software engineering and incremental computation.
 
-> ReArch is the subject of my master's thesis;
-check back here later for a link to the final write up
-if you want to learn more about the theory behind ReArch.
+> ReArch was also the the subject of my
+> [master's thesis](https://digitalwpi.wpi.edu/concern/etds/hm50tw88x?locale=en).
 
 Further, ReArch has an *extremely powerful* side effects system, and that is not an understatement.
 You will *never* have to wait on a new feature; you can just create a side effect!
@@ -356,8 +352,10 @@ with pre-Dart 3 packages like `get_it`
 (which is actually, technically speaking, a "service locater").
 Coming from `get_it`, you should welcome ReArch,
 since all dependency inversion is done for you automatically with zero boilerplate!
-Further, ReArch is a _reactive_ dependency injection framework; `get_it` lacks reactivity.
-But, if you don't want the reactivity; no problem!
+
+Further, ReArch is a _reactive_ dependency injection framework;
+`get_it` lacks _inter-state reactivity_ (note: just UI updates may be achieved through `watch_it`).
+But, if you don't want ReArch's reactivity; no problem!
 You don't have to use it, but it is there in case you do.
 
 </details>
@@ -381,6 +379,32 @@ This has multiple reasons, but a big one is because streams cannot *correctly* s
 (Some say it requires a PhD to properly understand how to work with streams!)
 4. Streams require a bit of syntactic and thought overhead,
 in addition to requiring a DI/service locator tool to access them.
+
+</details>
+
+
+<details>
+<summary>
+
+#### Why not Signals?
+
+</summary>
+
+Signals only constitute a subset of ReArch's functionality.
+If you took ReArch and removed:
+- Containers, instead opting for global singletons
+- The builtin side effects, instead opting for only a few hard-coded types of signals
+- [Side effect composition](https://blog.gsconrad.com/2023/12/22/the-problem-with-state-management.html)
+- The ability for capsules to define their own API for interactions, instead allowing only `.value`
+  - To explain this a bit more: what if you want custom state validation logic alongside your state?
+
+Then you'd arrive at ReArch.
+
+So, if you like Signals, you'll likely love ReArch,
+because you'll get all of the benefits of Signals
+but with many more features (mostly due to ReArch's side effects model).
+The only main difference is in the API,
+but that is easy enough to adjust to--signals and capsules tend to map one-to-one.
 
 </details>
 

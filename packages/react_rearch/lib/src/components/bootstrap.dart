@@ -1,9 +1,12 @@
 part of '../components.dart';
 
+///.
 final capsuleContainer = CapsuleContainer();
 
+///.
 final capsuleContainerContext = createContext<CapsuleContainer>();
 
+///.
 ReactElement rearchBootstrap({required ReactElement child}) =>
     _bootstrapElement({
       _PropsExtension.childField: child,
@@ -24,8 +27,6 @@ class _RearchBootstrap extends Component2 {
   @override
   ReactNode render() {
     // ignore: avoid_print
-    print('_RearchBootstrap.render()');
-
     return capsuleContainerContext.Provider(
       {
         // 'value': _capsuleContainer,

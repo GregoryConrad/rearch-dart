@@ -4,6 +4,7 @@ part of '../components.dart';
 abstract class RearchComponent extends Component2
     implements ComponentSideEffectApi {
   bool _needsBuild = false;
+  bool _unmounting = false;
 
   @override
   final Context<CapsuleContainer> contextType = capsuleContainerContext;
@@ -38,6 +39,8 @@ abstract class RearchComponent extends Component2
 
   @override
   void componentWillUnmount() {
+    _unmounting = true;
+
     for (final listener in _willUnmountListeners) {
       listener();
     }
@@ -69,7 +72,10 @@ abstract class RearchComponent extends Component2
   void _markNeedsBuild() {
     if (_needsBuild) return;
 
-    Future.microtask(forceUpdate);
+    Future.microtask(() {
+      if (_unmounting) return;
+      forceUpdate();
+    });
 
     _needsBuild = true;
   }

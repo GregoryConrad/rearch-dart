@@ -26,16 +26,16 @@ abstract class RearchComponent extends Component2
     _dependencyDisposers.clear();
   }
 
-  @override
-  void componentDidUpdate(
-    Map<dynamic, dynamic> prevProps,
-    Map<dynamic, dynamic> prevState, [
-    dynamic snapshot,
-  ]) {
-    _clearNeedsBuild();
+  // @override
+  // void componentDidUpdate(
+  //   Map<dynamic, dynamic> prevProps,
+  //   Map<dynamic, dynamic> prevState, [
+  //   dynamic snapshot,
+  // ]) {
+  //   _clearNeedsBuild();
 
-    super.componentDidUpdate(prevProps, prevState, snapshot);
-  }
+  //   super.componentDidUpdate(prevProps, prevState, snapshot);
+  // }
 
   @override
   void componentWillUnmount() {
@@ -55,6 +55,8 @@ abstract class RearchComponent extends Component2
 
   @override
   ReactNode render() {
+    _clearNeedsBuild();
+
     // Clears the old dependencies (which will be repopulated via WidgetHandle)
     _clearDependencies();
 

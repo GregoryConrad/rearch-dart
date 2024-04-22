@@ -113,9 +113,11 @@ abstract class RearchComponent extends Component2
       if (isCanceled) return;
     }
 
-    if (_markNeedsBuild()) {
-      onMarkedNeedsBuild();
-    }
+    // if (_markNeedsBuild()) {
+    //   onMarkedNeedsBuild();
+    // }
+
+    forceUpdate();
   }
 
   /// Event method.

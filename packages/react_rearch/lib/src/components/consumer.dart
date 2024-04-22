@@ -82,7 +82,12 @@ abstract class RearchComponent extends Component2
     //   forceUpdate();
     // });
 
-    Future.delayed(const Duration(milliseconds: 1000), () {
+    // Future.delayed(const Duration(milliseconds: 1000), () {
+    //   if (_unmounting) return;
+    //   forceUpdate();
+    // });
+
+    Future.delayed(Duration.zero, () {
       if (_unmounting) return;
       forceUpdate();
     });

@@ -71,15 +71,25 @@ abstract class RearchComponent extends Component2
   ///.
   ReactNode build(ComponentHandle use);
 
-  void _markNeedsBuild() {
-    if (_needsBuild) return;
+  /// Marks this component to needs rebuild.
+  ///
+  /// Returns false if was already marked. Returns true otherwise.
+  bool _markNeedsBuild() {
+    if (_needsBuild) return false;
 
-    Future.microtask(() {
+    // Future.microtask(() {
+    //   if (_unmounting) return;
+    //   forceUpdate();
+    // });
+
+    Future.delayed(const Duration(milliseconds: 1000), () {
       if (_unmounting) return;
       forceUpdate();
     });
 
     _needsBuild = true;
+
+    return true;
   }
 
   void _clearNeedsBuild() {
@@ -98,8 +108,13 @@ abstract class RearchComponent extends Component2
       if (isCanceled) return;
     }
 
-    _markNeedsBuild();
+    if (_markNeedsBuild()) {
+      onMarkedNeedsBuild();
+    }
   }
+
+  /// Event method.
+  void onMarkedNeedsBuild() {}
 
   @override
   void registerDispose(SideEffectApiCallback callback) =>

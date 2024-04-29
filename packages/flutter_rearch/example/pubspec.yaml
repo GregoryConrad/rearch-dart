@@ -9,7 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_mimir: ^0.0.2
-  flutter_rearch: ^1.6.0+0
+  flutter_rearch: ^1.6.1
   mimir: ^0.0.2
   rearch: ^1.8.0+0
 

@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-04-29
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.6.1`](#flutter_rearch---v161)
+
+---
+
+#### `flutter_rearch` - `v1.6.1`
+
+ - **FIX**: rebuild RearchElement when its widget updates ([#164](https://github.com/GregoryConrad/rearch-dart/issues/164)).
+
+
 ## 2024-04-15
 
 ### Changes

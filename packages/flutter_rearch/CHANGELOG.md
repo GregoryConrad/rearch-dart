@@ -1,3 +1,7 @@
+## 1.6.1
+
+ - **FIX**: rebuild RearchElement when its widget updates ([#164](https://github.com/GregoryConrad/rearch-dart/issues/164)).
+
 ## 1.6.0+0
 
  - docs: update outdated parts of README

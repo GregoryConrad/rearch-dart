@@ -69,6 +69,15 @@ class _RearchElement extends ComponentElement {
     );
   }
 
+  // NOTE: for some reason, Flutter doesn't rebuild an Element automatically
+  // when its Widget changes; thus, we need to override this method.
+  // See https://github.com/GregoryConrad/rearch-dart/issues/163
+  @override
+  void update(RearchConsumer newWidget) {
+    super.update(newWidget);
+    rebuild(force: true);
+  }
+
   @override
   void deactivate() {
     for (final listener in deactivateListeners) {

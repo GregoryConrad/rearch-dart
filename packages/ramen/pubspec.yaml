@@ -1,0 +1,19 @@
+name: ramen
+description: A re-imagined web UI framework written around ReArch
+version: 0.0.0-dev.0
+homepage: https://rearch.gsconrad.com
+documentation: https://rearch.gsconrad.com
+repository: https://github.com/GregoryConrad/rearch-dart
+issue_tracker: https://github.com/GregoryConrad/rearch-dart/issues
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  fast_immutable_collections: ^10.2.2
+  meta: ^1.14.0
+  rearch: ^1.8.0+0
+  web: ^0.5.1
+
+dev_dependencies:
+  test: ^1.24.4

@@ -398,13 +398,29 @@ If you took ReArch and removed:
 - The ability for capsules to define their own API for interactions, instead allowing only `.value`
   - To explain this a bit more: what if you want custom state validation logic alongside your state?
 
-Then you'd arrive at ReArch.
+Then you'd arrive at Signals.
 
 So, if you like Signals, you'll likely love ReArch,
 because you'll get all of the benefits of Signals
 but with many more features (mostly due to ReArch's side effects model).
 The only main difference is in the API,
 but that is easy enough to adjust to--signals and capsules tend to map one-to-one.
+
+If you _must have_ the easier-to-learn Signals API, just add this line to your project:
+```dart
+/// Quick capsule wrapper to enable Signals-like syntax.
+Capsule<T> capsule<T>(Capsule<T> c) => c;
+
+// And in the rest of your code:
+final myCapsule = capsule((use) {
+  final someOtherData = use(someOtherCapsule);
+  return use.data(123); // returns a myValue.value for updating state
+});
+```
+Note that I personally don't recommend the `capsule()` syntax
+since anyone _reading_ such code without an IDE will have no idea what the types are.
+But, if you're doing solo work on a project and you always have an editor with LSP support,
+then knock yourself out.
 
 </details>
 

@@ -1,3 +1,7 @@
+## 1.8.0+1
+
+ - Bump "rearch" to `1.8.0+1`.
+
 ## 1.8.0+0
 
  - docs: update outdated parts of README

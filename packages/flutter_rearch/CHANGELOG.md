@@ -1,3 +1,7 @@
+## 1.6.2
+
+ - **FIX**: prevent premature idempotent capsule disposal ([#173](https://github.com/GregoryConrad/rearch-dart/issues/173)).
+
 ## 1.6.1
 
  - **FIX**: rebuild RearchElement when its widget updates ([#164](https://github.com/GregoryConrad/rearch-dart/issues/164)).

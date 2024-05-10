@@ -18,6 +18,53 @@ void main() {
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
   });
+
+  testWidgets('Used idempotent capsules will not dispose on each build (#170)',
+      (tester) async {
+    var builds = 0;
+    void idempotentCapsule(CapsuleHandle use) => builds++;
+    await tester.pumpWidget(
+      RearchBootstrapper(
+        child: MaterialApp(
+          home: Scaffold(
+            body: RearchBuilder(
+              builder: (context, use) {
+                final count = use.data(0);
+                if (count.value < 2 || count.value.isEven) {
+                  use(idempotentCapsule);
+                }
+
+                return TextButton(
+                  onPressed: () => count.value++,
+                  child: Text(count.value.toString()),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(builds, equals(1)); // count == 0
+    await tester.tap(find.byType(TextButton));
+    await tester.pump();
+    expect(builds, equals(1)); // count == 1
+    await tester.tap(find.byType(TextButton));
+    await tester.pump();
+    expect(builds, equals(1)); // count == 2
+    await tester.tap(find.byType(TextButton));
+    await tester.pump();
+    expect(builds, equals(1)); // count == 3, capsule not used, disposed
+    await tester.tap(find.byType(TextButton));
+    await tester.pump();
+    expect(builds, equals(2)); // count == 4, capsule used, rebuilt
+    await tester.tap(find.byType(TextButton));
+    await tester.pump();
+    expect(builds, equals(2)); // count == 5, capsule not used, disposed
+    await tester.tap(find.byType(TextButton));
+    await tester.pump();
+    expect(builds, equals(3)); // count == 6, capsule used, rebuilt
+  });
 }
 
 class ParentConsumer extends RearchConsumer {

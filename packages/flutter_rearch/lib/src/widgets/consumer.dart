@@ -42,31 +42,60 @@ class _RearchElement extends ComponentElement {
   final disposeListeners = <SideEffectApiCallback>{};
   final sideEffectData = <Object?>[];
 
-  /// Represents a [Set] of functions that remove a dependency on a [Capsule].
-  final dependencyDisposers = <void Function()>{};
+  /// Represents a [Map] of capsules to void [Function]s that
+  /// remove the dependency of this [Element] on those capsules.
+  final capsuleToRemoveDependency = <Capsule<Object?>, void Function()>{};
+
+  /// Represents the [Set] of `use`d capsules in the ongoing build.
+  final capsulesUsedInCurrBuild = <Capsule<Object?>>{};
 
   /// Clears out the [Capsule] dependencies of this [_RearchElement].
   void clearDependencies() {
-    for (final dispose in dependencyDisposers) {
+    for (final dispose in capsuleToRemoveDependency.values) {
       dispose();
     }
-    dependencyDisposers.clear();
+    capsuleToRemoveDependency.clear();
   }
 
   @override
   Widget build() {
-    // Clears the old dependencies (which will be repopulated via WidgetHandle)
-    clearDependencies();
-
     final container = CapsuleContainerProvider.containerOf(this);
-    final consumer = super.widget as RearchConsumer;
-    return consumer.build(
-      this,
-      _WidgetHandleImpl(
-        _WidgetSideEffectApiProxyImpl(this),
-        container,
-      ),
-    );
+    try {
+      final consumer = super.widget as RearchConsumer;
+      return consumer.build(
+        this,
+        _WidgetHandleImpl(
+          _WidgetSideEffectApiProxyImpl(this),
+          container,
+        ),
+      );
+    } finally {
+      // We need to do some dependency management here to ensure that we
+      // get all the capsule updates we need, but nothing more.
+
+      // First, let's remove any no-longer used dependencies.
+      capsuleToRemoveDependency.entries
+          .where((e) => !capsulesUsedInCurrBuild.contains(e.key))
+          .toList()
+          .forEach((e) {
+        e.value(); // dispose() from onNextUpdate
+        capsuleToRemoveDependency.remove(e.key);
+      });
+
+      // Next, for each capsule used in the current build,
+      // let's make sure we depend upon it.
+      capsulesUsedInCurrBuild
+          .where((cap) => !capsuleToRemoveDependency.containsKey(cap))
+          .forEach((cap) {
+        capsuleToRemoveDependency[cap] = container.onNextUpdate(cap, () {
+          markNeedsBuild();
+          capsuleToRemoveDependency.remove(cap);
+        });
+      });
+
+      // Finally, let's reset everything for the next build.
+      capsulesUsedInCurrBuild.clear();
+    }
   }
 
   // NOTE: for some reason, Flutter doesn't rebuild an Element automatically
@@ -161,8 +190,7 @@ class _WidgetHandleImpl implements WidgetHandle {
 
   @override
   T call<T>(Capsule<T> capsule) {
-    final dispose = container.onNextUpdate(capsule, api.rebuild);
-    api.manager.dependencyDisposers.add(dispose);
+    api.manager.capsulesUsedInCurrBuild.add(capsule);
     return container.read(capsule);
   }
 

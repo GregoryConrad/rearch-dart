@@ -513,4 +513,19 @@ void main() {
       expect(container.read(rebuildsSelfCapsule).value, equals(3));
     });
   });
+
+  group('warmUp', () {
+    test('when capsules are all AsyncData', () async {
+      final container = useContainer();
+      AsyncValue<int> intCapsule(CapsuleHandle use) => const AsyncData<int>(0);
+      await container.warmUp([intCapsule]);
+      expect(container.read(intCapsule), equals(const AsyncData(0)));
+    });
+
+    test('when capsule resolves to error', () async {
+      final container = useContainer();
+      AsyncValue<int> intCapsule(CapsuleHandle use) => throw Error();
+      expect(container.warmUp([intCapsule]), throwsA(isA<Error>()));
+    });
+  });
 }

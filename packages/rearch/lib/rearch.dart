@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:meta/meta.dart';
 import 'package:rearch/src/node.dart';
 import 'package:rearch/src/side_effects.dart';
+import 'package:rearch/src/types.dart';
 
 export 'src/side_effects.dart';
 export 'src/types.dart';
@@ -224,6 +227,28 @@ class CapsuleContainer implements Disposable {
     for (final manager in _capsules.values.toList()) {
       manager.dispose();
     }
+  }
+
+  /// Warms up the specified capsules by waiting for them to all be [AsyncData].
+  Future<void> warmUp<T extends AsyncValue<dynamic>>(
+    Iterable<Capsule<T>> capsules,
+  ) async {
+    final completer = Completer<()>();
+    final dispose = listen((use) {
+      final resolved = capsules.map((capsule) => use(capsule));
+
+      if (resolved.every((capsule) => capsule is AsyncData)) {
+        completer.complete(());
+      }
+
+      final asyncError = resolved.whereType<AsyncError<dynamic>>().firstOrNull;
+      if (asyncError != null) {
+        completer.completeError(asyncError.error);
+      }
+    });
+
+    await completer.future;
+    dispose();
   }
 }
 

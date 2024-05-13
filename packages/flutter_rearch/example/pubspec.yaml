@@ -9,9 +9,9 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_mimir: ^0.0.2
-  flutter_rearch: ^1.6.2
+  flutter_rearch: ^1.6.3
   mimir: ^0.0.2
-  rearch: ^1.8.0+1
+  rearch: ^1.9.0
 
 dev_dependencies:
   flutter_test:

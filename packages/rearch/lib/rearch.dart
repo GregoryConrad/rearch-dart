@@ -9,6 +9,7 @@ export 'src/side_effects.dart';
 export 'src/types.dart';
 
 part 'src/impl.dart';
+part 'src/capsule_warm_up.dart';
 
 /// Represents a disposable object.
 // ignore: one_member_abstracts
@@ -62,8 +63,7 @@ abstract interface class SideEffectRegistrar {
 
 /// The handle given to a [Capsule] to build its data.
 /// See [CapsuleReader] and [SideEffectRegistrar].
-abstract interface class CapsuleHandle
-    implements CapsuleReader, SideEffectRegistrar {}
+abstract interface class CapsuleHandle implements CapsuleReader, SideEffectRegistrar {}
 
 /// Defines what a [SideEffect] should look like (a [Function]
 /// that consumes a [SideEffectApi] and returns something).
@@ -133,10 +133,8 @@ class CapsuleContainer implements Disposable {
     sideEffectTransaction();
 
     if (isRootTxn) {
-      final managersToRebuild = _sideEffectMutationsToCallInTxn!
-          .map((mutation) => mutation())
-          .nonNulls
-          .toSet();
+      final managersToRebuild =
+          _sideEffectMutationsToCallInTxn!.map((mutation) => mutation()).nonNulls.toSet();
       DataflowGraphNode.buildNodesAndDependents(managersToRebuild);
       _sideEffectMutationsToCallInTxn = null;
     }
@@ -211,9 +209,7 @@ class CapsuleContainer implements Disposable {
       // by searching the graph and finding other disposable nodes,
       // but this should cover 99% of cases effectively with no extra cost.
       final capManager = _capsules[capsule];
-      if (capManager != null &&
-          capManager.isIdempotent &&
-          capManager.hasNoDependents) {
+      if (capManager != null && capManager.isIdempotent && capManager.hasNoDependents) {
         capManager.dispose();
       }
     };
@@ -227,28 +223,6 @@ class CapsuleContainer implements Disposable {
     for (final manager in _capsules.values.toList()) {
       manager.dispose();
     }
-  }
-
-  /// Warms up the specified capsules by waiting for them to all be [AsyncData].
-  Future<void> warmUp<T extends AsyncValue<dynamic>>(
-    Iterable<Capsule<T>> capsules,
-  ) async {
-    final completer = Completer<()>();
-    final dispose = listen((use) {
-      final resolved = capsules.map((capsule) => use(capsule));
-
-      if (resolved.every((capsule) => capsule is AsyncData)) {
-        completer.complete(());
-      }
-
-      final asyncError = resolved.whereType<AsyncError<dynamic>>().firstOrNull;
-      if (asyncError != null) {
-        completer.completeError(asyncError.error);
-      }
-    });
-
-    await completer.future;
-    dispose();
   }
 }
 

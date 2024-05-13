@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:meta/meta.dart';
 import 'package:rearch/src/node.dart';
 import 'package:rearch/src/side_effects.dart';
+import 'package:rearch/src/types.dart';
 
 export 'src/side_effects.dart';
 export 'src/types.dart';
 
 part 'src/impl.dart';
+part 'src/capsule_warm_up.dart';
 
 /// Represents a disposable object.
 // ignore: one_member_abstracts

@@ -63,7 +63,8 @@ abstract interface class SideEffectRegistrar {
 
 /// The handle given to a [Capsule] to build its data.
 /// See [CapsuleReader] and [SideEffectRegistrar].
-abstract interface class CapsuleHandle implements CapsuleReader, SideEffectRegistrar {}
+abstract interface class CapsuleHandle
+    implements CapsuleReader, SideEffectRegistrar {}
 
 /// Defines what a [SideEffect] should look like (a [Function]
 /// that consumes a [SideEffectApi] and returns something).
@@ -133,8 +134,10 @@ class CapsuleContainer implements Disposable {
     sideEffectTransaction();
 
     if (isRootTxn) {
-      final managersToRebuild =
-          _sideEffectMutationsToCallInTxn!.map((mutation) => mutation()).nonNulls.toSet();
+      final managersToRebuild = _sideEffectMutationsToCallInTxn!
+          .map((mutation) => mutation())
+          .nonNulls
+          .toSet();
       DataflowGraphNode.buildNodesAndDependents(managersToRebuild);
       _sideEffectMutationsToCallInTxn = null;
     }
@@ -209,7 +212,9 @@ class CapsuleContainer implements Disposable {
       // by searching the graph and finding other disposable nodes,
       // but this should cover 99% of cases effectively with no extra cost.
       final capManager = _capsules[capsule];
-      if (capManager != null && capManager.isIdempotent && capManager.hasNoDependents) {
+      if (capManager != null &&
+          capManager.isIdempotent &&
+          capManager.hasNoDependents) {
         capManager.dispose();
       }
     };

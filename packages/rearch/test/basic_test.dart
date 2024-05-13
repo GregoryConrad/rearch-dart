@@ -112,7 +112,8 @@ void main() {
   });
 
   test('listeners cannot trigger rebuilds', () {
-    (int, void Function(int)) statefulCapsule(CapsuleHandle use) => use.state(0);
+    (int, void Function(int)) statefulCapsule(CapsuleHandle use) =>
+        use.state(0);
 
     final container = useContainer();
     expect(
@@ -122,7 +123,8 @@ void main() {
   });
 
   test('capsules cannot trigger rebuild in an ongoing build', () {
-    (int, void Function(int)) statefulCapsule(CapsuleHandle use) => use.state(0);
+    (int, void Function(int)) statefulCapsule(CapsuleHandle use) =>
+        use.state(0);
     void shouldThrow(CapsuleHandle use) => use(statefulCapsule).$2(1234);
 
     final container = useContainer();
@@ -477,7 +479,8 @@ void main() {
   test('use() in lists works correctly (spun off of issue #36)', () {
     int intCapsule(CapsuleHandle use) => 0;
     double doubleCapsule(CapsuleHandle use) => 0;
-    List<num> upcastedListCapsule1(CapsuleHandle use) => [use(intCapsule), use(doubleCapsule)];
+    List<num> upcastedListCapsule1(CapsuleHandle use) =>
+        [use(intCapsule), use(doubleCapsule)];
     List<num> upcastedListCapsule2(CapsuleHandle use) =>
         [intCapsule, doubleCapsule].map(use.call).toList();
 
@@ -490,8 +493,10 @@ void main() {
 
   group('valid/invalid locations to trigger rebuilds', () {
     void Function() rebuildableCapsule(CapsuleHandle use) => use.rebuilder();
-    void callsOtherCapsulesRebuildCapsule(CapsuleHandle use) => use(rebuildableCapsule)();
-    ValueWrapper<int> rebuildsSelfCapsule(CapsuleHandle use) => use.data(0)..value += 1;
+    void callsOtherCapsulesRebuildCapsule(CapsuleHandle use) =>
+        use(rebuildableCapsule)();
+    ValueWrapper<int> rebuildsSelfCapsule(CapsuleHandle use) =>
+        use.data(0)..value += 1;
 
     test("rebuilds may not be triggered in a different capsule's build", () {
       final container = useContainer();
@@ -519,9 +524,12 @@ void main() {
 
     test('when capsule resolves to error', () async {
       final container = useContainer();
-      Future<int> intAsyncCapsule(CapsuleHandle use) async => throw UnsupportedError('boom');
-      AsyncValue<int> intWarmUpCapsule(CapsuleHandle use) => use.future(use(intAsyncCapsule));
-      expect(container.warmUp([intWarmUpCapsule]), throwsA(isA<UnsupportedError>()));
+      Future<int> intAsyncCapsule(CapsuleHandle use) async =>
+          throw UnsupportedError('boom');
+      AsyncValue<int> intWarmUpCapsule(CapsuleHandle use) =>
+          use.future(use(intAsyncCapsule));
+      expect(container.warmUp([intWarmUpCapsule]),
+          throwsA(isA<UnsupportedError>()));
     });
   });
 }

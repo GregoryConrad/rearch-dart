@@ -528,8 +528,10 @@ void main() {
           throw UnsupportedError('boom');
       AsyncValue<int> intWarmUpCapsule(CapsuleHandle use) =>
           use.future(use(intAsyncCapsule));
-      expect(container.warmUp([intWarmUpCapsule]),
-          throwsA(isA<UnsupportedError>()));
+      expect(
+        container.warmUp([intWarmUpCapsule]),
+        throwsA(isA<UnsupportedError>()),
+      );
     });
   });
 }

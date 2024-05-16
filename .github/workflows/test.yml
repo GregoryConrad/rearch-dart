@@ -21,7 +21,7 @@ jobs:
       - name: Check code format
         run: melos format --set-exit-if-changed
       - name: Run code analysis
-        run: melos analyze
+        run: melos analyze --fatal-infos --fatal-warnings
       - name: Run tests
         run: melos run test
 

@@ -1,6 +1,7 @@
 part of '../rearch.dart';
 
-/// Provides [warmUp], a mechanism to wait for the specified capsules to be [AsyncData].
+/// Provides [warmUp], a mechanism that waits for the specified capsules
+/// to be [AsyncData].
 extension WarmUpCapsuleContainer on CapsuleContainer {
   /// Warms up the specified capsules by waiting for them to all be [AsyncData].
   Future<void> warmUp<T>(

@@ -1,3 +1,7 @@
+## 1.10.0
+
+ - **FEAT**: add `use.disposable` side effect.
+
 ## 1.9.0
 
  - **FEAT**: introduce `container.warmUp` extension method ([#176](https://github.com/GregoryConrad/rearch-dart/issues/176)).

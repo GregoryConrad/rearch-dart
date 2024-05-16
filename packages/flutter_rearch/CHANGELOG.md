@@ -1,3 +1,7 @@
+## 1.6.4
+
+ - **FIX**: dispose FocusNodes created via side effects.
+
 ## 1.6.3
 
  - Update a dependency to the latest release.

@@ -177,6 +177,23 @@ extension BuiltinSideEffects on SideEffectRegistrar {
     }
   }
 
+  /// A shortcut over [memo] and [effect] to handle disposable objects.
+  /// Specifically, this:
+  /// 1. Creates some value via [init]
+  /// 2. Automatically recreates that value whenever [dependencies] change
+  /// 3. Automatically dispose all outdated values via [dispose]
+  ///
+  /// Not specify dependencies will only create the value once.
+  T disposable<T>(
+    T Function() init,
+    void Function(T) dispose, [
+    List<Object?> dependencies = const [],
+  ]) {
+    final value = use.memo(init, dependencies);
+    use.effect(() => () => dispose(value), [value]);
+    return value;
+  }
+
   /// A simple implementation of the reducer pattern as a side effect.
   ///
   /// The React docs do a great job of explaining the reducer pattern more.

@@ -388,4 +388,41 @@ void main() {
     container2.read(testCapsule).$1();
     expect(initCalls, equals(1));
   });
+
+  group('disposable creates and disposes objects', () {
+    test('without dependencies', () {
+      var check = 0;
+      int capsule(CapsuleHandle use) {
+        return use.disposable(() => 123, (i) => check = i);
+      }
+
+      final container = CapsuleContainer();
+      expect(container.read(capsule), equals(123));
+      expect(check, equals(0));
+      container.dispose();
+      expect(check, equals(123));
+    });
+
+    test('with dependencies', () {
+      var check = 0;
+      (int, void Function()) capsule(CapsuleHandle use) {
+        final count = use.data(1);
+        final c = use.disposable(
+          () => count.value,
+          (i) => check = i,
+          [count.value],
+        );
+        return (c, () => count.value++);
+      }
+
+      final container = CapsuleContainer();
+      expect(container.read(capsule).$1, equals(1));
+      expect(check, equals(0));
+      container.read(capsule).$2();
+      expect(container.read(capsule).$1, equals(2));
+      expect(check, equals(1));
+      container.dispose();
+      expect(check, equals(2));
+    });
+  });
 }

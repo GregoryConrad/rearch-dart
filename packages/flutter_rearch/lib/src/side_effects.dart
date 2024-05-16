@@ -86,7 +86,7 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
     bool descendantsAreFocusable = true,
     bool descendantsAreTraversable = true,
   }) {
-    return use.callonce(FocusNode.new)
+    return use.disposable(FocusNode.new, (node) => node.dispose())
       ..debugLabel = debugLabel
       // ignore: deprecated_member_use
       ..onKey = onKey
@@ -107,7 +107,7 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
     TraversalEdgeBehavior traversalEdgeBehavior =
         TraversalEdgeBehavior.closedLoop,
   }) {
-    return use.callonce(FocusScopeNode.new)
+    return use.disposable(FocusScopeNode.new, (node) => node.dispose())
       ..debugLabel = debugLabel
       // ignore: deprecated_member_use
       ..onKey = onKey
@@ -125,7 +125,7 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
     void Function(ScrollPosition)? onAttach,
     void Function(ScrollPosition)? onDetach,
   }) {
-    final controller = use.memo(
+    return use.disposable(
       () => PageController(
         initialPage: initialPage,
         keepPage: keepPage,
@@ -133,10 +133,8 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
         onAttach: onAttach,
         onDetach: onDetach,
       ),
+      (controller) => controller.dispose(),
       [initialPage, keepPage, viewportFraction, onAttach, onDetach],
     );
-    use.effect(() => controller.dispose, [controller]);
-
-    return controller;
   }
 }

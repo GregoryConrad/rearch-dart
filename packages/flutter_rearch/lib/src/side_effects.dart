@@ -41,7 +41,7 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
           onAttach: onAttach,
           onDetach: onDetach,
         ),
-        (controller) => controller.dispose,
+        (controller) => controller.dispose(),
       );
 
   /// Creates a single use [TickerProvider].

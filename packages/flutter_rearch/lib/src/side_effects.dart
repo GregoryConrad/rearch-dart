@@ -25,6 +25,25 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
   TextEditingController textEditingController({String? initialText}) =>
       _textEditingController(this, initialText: initialText);
 
+  /// Provides a way to easily get a copy of a [ScrollController].
+  ScrollController scrollController({
+    double initialScrollOffset = 0.0,
+    bool keepScrollOffset = true,
+    String? debugLabel,
+    void Function(ScrollPosition)? onAttach,
+    void Function(ScrollPosition)? onDetach,
+  }) =>
+      use.disposable(
+        () => ScrollController(
+          initialScrollOffset: initialScrollOffset,
+          keepScrollOffset: keepScrollOffset,
+          debugLabel: debugLabel,
+          onAttach: onAttach,
+          onDetach: onDetach,
+        ),
+        (controller) => controller.dispose,
+      );
+
   /// Creates a single use [TickerProvider].
   /// Used by [animationController] when `vsync` is not set.
   TickerProvider singleTickerProvider() => _singleTickerProvider(this);

@@ -1,9 +1,9 @@
 part of '../widgets.dart';
 
-/// Provides [toWarmUpWidget], a mechanism to create a [Widget] from a [List]
-/// of the current states of some "warm up" [Capsule]s.
-extension CapsuleWarmUp<T> on List<AsyncValue<T>> {
-  /// Creates a [Widget] from a [List] of the current states of
+/// Provides [toWarmUpWidget], a mechanism to create a [Widget] from an
+/// [Iterable] of the current states of some "warm up" [Capsule]s.
+extension CapsuleWarmUp<T> on Iterable<AsyncValue<T>> {
+  /// Creates a [Widget] from an [Iterable] of the current states of
   /// some "warm up" [Capsule]s.
   ///
   /// - [child] is returned when all of the current states are [AsyncData].

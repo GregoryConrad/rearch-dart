@@ -3,6 +3,8 @@ import 'package:flutter_rearch/flutter_rearch.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rearch/rearch.dart';
 
+import 'util.dart';
+
 void main() {
   testWidgets('RearchConsumer rebuilds when constructor params change (#163)',
       (tester) async {
@@ -64,6 +66,96 @@ void main() {
     await tester.tap(find.byType(TextButton));
     await tester.pump();
     expect(builds, equals(3)); // count == 6, capsule used, rebuilt
+  });
+
+  group('capsule warm up widget extension', () {
+    ValueWrapper<(AsyncValue<int>, AsyncValue<bool>)> manager(
+      CapsuleHandle use,
+    ) =>
+        use.data(const (AsyncLoading(None()), AsyncLoading(None())));
+    AsyncValue<int> c1(CapsuleHandle use) => use(manager).value.$1;
+    AsyncValue<bool> c2(CapsuleHandle use) => use(manager).value.$2;
+
+    testWidgets('waits until all AsyncData', (tester) async {
+      final container = useContainer();
+      await tester.pumpWidget(
+        CapsuleContainerProvider(
+          container: container,
+          child: MaterialApp(
+            home: Scaffold(
+              body: RearchBuilder(
+                builder: (context, use) {
+                  return [c1, c2].map(use.call).toWarmUpWidget(
+                        loading: const Text('loading'),
+                        child: const Text('warmed up'),
+                        errorBuilder: (_) => throw UnsupportedError(
+                          'should not occur in this test',
+                        ),
+                      );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('loading'), findsOneWidget);
+      expect(find.text('warmed up'), findsNothing);
+
+      container.read(manager).value =
+          const (AsyncData(123), AsyncLoading(None()));
+      await tester.pumpAndSettle();
+      expect(find.text('loading'), findsOneWidget);
+      expect(find.text('warmed up'), findsNothing);
+
+      container.read(manager).value = const (AsyncData(123), AsyncData(false));
+      await tester.pumpAndSettle();
+      expect(find.text('loading'), findsNothing);
+      expect(find.text('warmed up'), findsOneWidget);
+    });
+
+    testWidgets('shows error on the first AsyncError', (tester) async {
+      final container = useContainer();
+      await tester.pumpWidget(
+        CapsuleContainerProvider(
+          container: container,
+          child: MaterialApp(
+            home: Scaffold(
+              body: RearchBuilder(
+                builder: (context, use) {
+                  return [c1, c2].map(use.call).toWarmUpWidget(
+                        loading: const Text('loading'),
+                        child: const Text('warmed up'),
+                        errorBuilder: (errors) =>
+                            Text(errors.single.error as String),
+                      );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('loading'), findsOneWidget);
+      expect(find.text('error'), findsNothing);
+      expect(find.text('warmed up'), findsNothing);
+
+      container.read(manager).value =
+          const (AsyncData(123), AsyncLoading(None()));
+      await tester.pumpAndSettle();
+      expect(find.text('loading'), findsOneWidget);
+      expect(find.text('error'), findsNothing);
+      expect(find.text('warmed up'), findsNothing);
+
+      container.read(manager).value = (
+        const AsyncData(123),
+        AsyncError('error', StackTrace.current, const None()),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('loading'), findsNothing);
+      expect(find.text('error'), findsOneWidget);
+      expect(find.text('warmed up'), findsNothing);
+    });
   });
 }
 

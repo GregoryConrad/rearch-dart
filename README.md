@@ -74,36 +74,7 @@ Widget counterAppBody(BuildContext context, WidgetHandle use) {
     ),
   );
 }
-
-// Or, until static metaprogramming roles around:
-class CounterAppBody extends RearchConsumer {
-  const CounterAppBody({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetHandle use) {
-    final (count, incrementCount) = use(countManager);
-    final countPlusOne = use(countPlusOneCapsule);
-    return Scaffold(
-      appBar: AppBar(title: Text('ReArch Demo')),
-      floatingActionButton: FloatingActionButton(
-        onPressed: incrementCount,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
-      body: Center(
-        child: Text(
-          '$count + 1 = $countPlusOne',
-          style: TextTheme.of(context).headlineLarge,
-        ),
-      ),
-    );
-  }
-}
 ```
-
-*Note: the `@rearchWidget` above requires
-[static metaprogramming](https://github.com/dart-lang/language/issues/1482),
-which has not yet been released.*
 
 
 ## Getting Started

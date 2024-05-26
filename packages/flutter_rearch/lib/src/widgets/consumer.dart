@@ -47,7 +47,7 @@ class _RearchElement extends ComponentElement {
   final capsuleToRemoveDependency = <Capsule<Object?>, void Function()>{};
 
   /// Represents the [Set] of `use`d capsules in the ongoing build.
-  final capsulesUsedInCurrBuild = <Capsule<Object?>>{};
+  Set<Capsule<Object?>>? capsulesUsedInCurrBuild;
 
   /// Clears out the [Capsule] dependencies of this [_RearchElement].
   void clearDependencies() {
@@ -59,6 +59,7 @@ class _RearchElement extends ComponentElement {
 
   @override
   Widget build() {
+    capsulesUsedInCurrBuild = {};
     final container = CapsuleContainerProvider.containerOf(this);
     try {
       final consumer = super.widget as RearchConsumer;
@@ -75,7 +76,7 @@ class _RearchElement extends ComponentElement {
 
       // First, let's remove any no-longer used dependencies.
       capsuleToRemoveDependency.entries
-          .where((e) => !capsulesUsedInCurrBuild.contains(e.key))
+          .where((e) => !capsulesUsedInCurrBuild!.contains(e.key))
           .toList()
           .forEach((e) {
         e.value(); // dispose() from onNextUpdate
@@ -84,7 +85,7 @@ class _RearchElement extends ComponentElement {
 
       // Next, for each capsule used in the current build,
       // let's make sure we depend upon it.
-      capsulesUsedInCurrBuild
+      capsulesUsedInCurrBuild!
           .where((cap) => !capsuleToRemoveDependency.containsKey(cap))
           .forEach((cap) {
         capsuleToRemoveDependency[cap] = container.onNextUpdate(cap, () {
@@ -94,7 +95,7 @@ class _RearchElement extends ComponentElement {
       });
 
       // Finally, let's reset everything for the next build.
-      capsulesUsedInCurrBuild.clear();
+      capsulesUsedInCurrBuild = null;
     }
   }
 
@@ -190,7 +191,26 @@ class _WidgetHandleImpl implements WidgetHandle {
 
   @override
   T call<T>(Capsule<T> capsule) {
-    api.manager.capsulesUsedInCurrBuild.add(capsule);
+    api.manager.capsulesUsedInCurrBuild?.add(capsule);
+    final isCurrentlyBuilding = api.manager.capsulesUsedInCurrBuild != null;
+    if (!isCurrentlyBuilding) {
+      log(
+        'You attempted to use() a capsule outside of the widget build!\n'
+        'While this is currently allowed to support things such as:\n'
+        '  onPressed: () => use(myManager).value = newState,\n'
+        'You should *not* be relying upon this behavior, as:\n'
+        '  1. I reserve the right to change this behavior in the future\n'
+        '  2. Rebuilds will *not* be triggered when the capsule changes\n'
+        'To fix this, simply add a line near the start of your build function '
+        'that preemptively use()-s the capsule and stores that result. '
+        'This warning can also be triggered if you have a Builder-style widget '
+        'that uses the WidgetHandle of one of its ancestors; '
+        'the same fix applies in that situation.',
+        level: 900, // NOTE: this is Level.WARNING from package:logging
+        stackTrace: StackTrace.current,
+      );
+    }
+
     return container.read(capsule);
   }
 

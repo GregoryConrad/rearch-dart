@@ -9,7 +9,7 @@ dependencies:
   equatable: ^2.0.5
   flutter:
     sdk: flutter
-  flutter_rearch: ^1.6.4
+  flutter_rearch: ^1.6.5
   http: ^1.2.1
   rearch: ^1.10.0
 

@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-05-26
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.6.5`](#flutter_rearch---v165)
+
+---
+
+#### `flutter_rearch` - `v1.6.5`
+
+ - **FIX**: add warning for previously silent but faulty `use()`s ([#188](https://github.com/GregoryConrad/rearch-dart/issues/188)).
+
+
 ## 2024-05-16
 
 ### Changes

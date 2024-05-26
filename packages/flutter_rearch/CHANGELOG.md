@@ -1,3 +1,7 @@
+## 1.6.5
+
+ - **FIX**: add warning for previously silent but faulty `use()`s ([#188](https://github.com/GregoryConrad/rearch-dart/issues/188)).
+
 ## 1.6.4
 
  - **FIX**: dispose FocusNodes created via side effects.

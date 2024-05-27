@@ -1,3 +1,7 @@
+## 1.6.5+0
+
+ - **DOCS**: update outdated bloc documentation links on README (#190)
+
 ## 1.6.5
 
  - **FIX**: add warning for previously silent but faulty `use()`s ([#188](https://github.com/GregoryConrad/rearch-dart/issues/188)).

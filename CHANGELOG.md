@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-05-27
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`rearch` - `v1.10.0+0`](#rearch---v11000)
+ - [`flutter_rearch` - `v1.6.5+0`](#flutter_rearch---v1650)
+ - [`ramen` - `v0.0.0-dev.5`](#ramen---v000-dev5)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `ramen` - `v0.0.0-dev.5`
+
+---
+
+#### `rearch` - `v1.10.0+0`
+
+ - **DOCS**: update outdated bloc documentation links on README (#190)
+
+#### `flutter_rearch` - `v1.6.5+0`
+
+ - **DOCS**: update outdated bloc documentation links on README (#190)
+
+
 ## 2024-05-26
 
 ### Changes

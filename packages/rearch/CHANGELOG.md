@@ -1,3 +1,7 @@
+## 1.10.0+0
+
+ - **DOCS**: update outdated bloc documentation links on README (#190)
+
 ## 1.10.0
 
  - **FEAT**: add `use.disposable` side effect.

@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart' as flutter;
+import 'package:flutter_rearch/flutter_rearch.dart' as flutter_rearch;
 import 'package:macros/macros.dart';
 
 // /// Creates a new [RearchConsumer] that delegates its [RearchConsumer.build]
@@ -7,9 +9,11 @@ import 'package:macros/macros.dart';
 // TODO(GregoryConrad): transfer doc comments
 // TODO(GregoryConrad): add better type checking/assertions, see:
 //   https://github.com/dart-lang/language/issues/3606
-// TODO(GregoryConrad): can we do stateless RearchInheritedWidget too?
 
+// NOTE: this is still prototype code
 // ignore_for_file: public_member_api_docs
+// ignore_for_file: unused_import
+// ignore_for_file: deprecated_member_use_from_same_package
 
 macro class RearchWidget implements FunctionTypesMacro {
   const RearchWidget();
@@ -41,52 +45,44 @@ macro class RearchWidget implements FunctionTypesMacro {
       );
     }
 
-    final constructorParams = [
-      for (final param in data.externalPositParams) 'this.${param.code.name!},',
-      '{',
-      for (final param in data.externalNamedParams)
-        if (param.isRequired)
-          'required this.${param.code.name!},'
-        else ...[
-          'this.${param.code.name!} = ',
-          param.code.defaultValue ?? 'null',
-          ',',
-        ],
-      'super.key,',
-      '}',
-    ];
+    final widgetCode = '''
+class ${data.widgetName}{{typeParamsParamCode}} extends {{RearchConsumer}} {        
+  const ${data.widgetName}(
+    ${data.externalPositParams.map((param) => 'this.${param.code.name!},').join()}
+    { {{constructorNamedParams}} super.key, }
+  );
 
-    final widgetCode = [
-      ...[
-        'class ',
-        data.widgetName,
-        if (data.typeParams.isNotEmpty) ...data.typeParamsParamCode,
-        ' extends ',
-        if (data.isStateless) 'StatelessWidget' else 'RearchConsumer',
-        ' {',
-      ],
-      ...['const ', data.widgetName, '(', ...constructorParams, ');'],
-      ...data.classFields,
-      ...[
-        'Widget',
-        ' build(',
-        ...[
-          ...['BuildContext', ' ', data.contextName, ', '],
-          if (!data.isStateless) ...['WidgetHandle', ' ', data.useName],
-        ],
-        ') => ',
-        ...[
-          data.functionName,
-          if (data.typeParams.isNotEmpty) ...data.typeParamsArgCode,
-          '(',
-          data.functionArgs,
-          ');',
-        ],
-      ],
-      '}',
-    ];
+  {{classFields}}
 
-    builder.declareType(data.widgetName, DeclarationCode.fromParts(widgetCode));
+  {{Widget}} build({{BuildContext}} ${data.contextName}, {{WidgetHandle}} ${data.useName}) =>
+    ${data.functionName}{{typeParamsArgCode}}(${data.functionArgs});
+}
+'''
+        .substitute({
+          ...await _createDefaultTypeSubstitutions(builder),
+          'classFields': data.classFields,
+          if (data.typeParams.isNotEmpty) ...{
+            'typeParamsParamCode': data.typeParamsParamCode,
+            'typeParamsArgCode': data.typeParamsArgCode,
+          } else ...{
+            'typeParamsParamCode': '',
+            'typeParamsArgCode': '',
+          },
+          'constructorNamedParams': data.externalNamedParams.map((param) {
+            if (param.isRequired) {
+              return 'required this.${param.code.name!},';
+            }
+            return [
+              'this.${param.code.name!} = ',
+              param.code.defaultValue ?? 'null',
+              ',',
+            ];
+          }),
+        })
+        .flatten()
+        .toList()
+        .toDeclarationCode();
+    builder.declareType(data.widgetName, widgetCode);
   }
 }
 
@@ -117,154 +113,98 @@ macro class RearchInheritedWidget implements FunctionTypesMacro {
     final inheritedWidgetName = r'_$' + data.widgetName;
     const dataName = '_data';
 
-    final rearchWidgetConstructorParams = [
-      for (final param in data.externalPositParams) 'this.${param.code.name!},',
-      '{',
-      for (final param in data.externalNamedParams)
-        if (param.isRequired)
-          'required this.${param.code.name!},'
-        else ...[
-          'this.${param.code.name!} = ',
-          param.code.defaultValue ?? 'null',
-          ',',
-        ],
-      'required this.child,',
-      'super.key,',
-      '}',
-    ];
+    final inheritedWidgetCode = '''
+class $inheritedWidgetName{{typeParamsParamCode}} extends {{InheritedWidget}} {
+  const $inheritedWidgetName(this.$dataName, {required super.child});
 
-    final inheritedWidgetCode = [
-      ...[
-        'class ',
-        inheritedWidgetName,
-        if (data.typeParams.isNotEmpty) ...data.typeParamsParamCode,
-        ' extends ',
-        'InheritedWidget',
-        ' {',
-      ],
-      ...[
-        'const ',
-        inheritedWidgetName,
-        '(this.',
-        dataName,
-        ', {required super.child});',
-      ],
-      ...['final ', data.dataType.code, ' ', dataName, ';'],
-      ...[
-        'bool',
-        ' updateShouldNotify(',
-        inheritedWidgetName,
-        ' oldWidget) => oldWidget.',
-        dataName,
-        ' != ',
-        dataName,
-        ';',
-      ],
-      ...[
-        'static ',
-        inheritedWidgetName,
-        '? _maybeOf(',
-        'BuildContext',
-        ' context) => ',
-        'context.dependOnInheritedWidgetOfExactType<',
-        inheritedWidgetName,
-        '>();',
-      ],
-      ...[
-        'static ',
-        inheritedWidgetName,
-        ' _of(',
-        'BuildContext',
-        ' context) {',
-        'final widget = _maybeOf(context);',
-        "assert(widget != null, 'No ",
-        data.widgetName,
-        " found in context');",
-        'return widget!;',
-        '}',
-      ],
-      '}',
-    ];
-    builder.declareType(
-      inheritedWidgetName,
-      DeclarationCode.fromParts(inheritedWidgetCode),
+  final {{dataType}} $dataName;
+
+  {{bool}} updateShouldNotify($inheritedWidgetName oldWidget) =>
+    oldWidget.$dataName != $dataName;
+
+  static $inheritedWidgetName? _maybeOf({{BuildContext}} context) =>
+    context.dependOnInheritedWidgetOfExactType<$inheritedWidgetName>();
+
+  static $inheritedWidgetName _of({{BuildContext}} context) {
+    final widget = _maybeOf(context);
+    assert(widget != null, 'No "${data.widgetName}" found in context');
+    return widget!;
+  }
+}
+'''
+        .substitute({
+          ...await _createDefaultTypeSubstitutions(builder),
+          'dataType': data.dataType.code,
+          if (data.typeParams.isNotEmpty) ...{
+            'typeParamsParamCode': data.typeParamsParamCode,
+            'typeParamsArgCode': data.typeParamsArgCode,
+          } else ...{
+            'typeParamsParamCode': '',
+            'typeParamsArgCode': '',
+          },
+        })
+        .flatten()
+        .toList()
+        .toDeclarationCode();
+    builder.declareType(inheritedWidgetName, inheritedWidgetCode);
+
+    final rearchWidgetCode = '''
+class ${data.widgetName}{{typeParamsParamCode}} extends {{RearchConsumer}} {
+  const ${data.widgetName}(
+    ${data.externalPositParams.map((param) => 'this.${param.code.name!},').join()}
+    { {{constructorNamedParams}} required this.child, super.key, }
+  );
+
+  final {{Widget}} child;
+
+  {{classFields}}
+
+  {{Widget}} build({{BuildContext}} ${data.contextName}, {{WidgetHandle}} ${data.useName}) =>
+    $inheritedWidgetName(
+      ${data.functionName}{{typeParamsArgCode}}(${data.functionArgs}),
+      child: child,
     );
 
-    final rearchWidgetCode = [
-      ...[
-        'class ',
-        data.widgetName,
-        if (data.typeParams.isNotEmpty) ...data.typeParamsParamCode,
-        ' extends ',
-        'RearchConsumer',
-        ' {',
-      ],
-      ...[
-        'const ',
-        data.widgetName,
-        '(',
-        ...rearchWidgetConstructorParams,
-        ');',
-      ],
-      ...['final ', 'Widget', ' child;'],
-      ...data.classFields,
-      ...[
-        'Widget',
-        ' build(',
-        ...[
-          'BuildContext',
-          ' ',
-          data.contextName,
-          ', ',
-          'WidgetHandle',
-          ' ',
-          data.useName,
-        ],
-        ') => ',
-        inheritedWidgetName,
-        '(',
-        data.functionName,
-        if (data.typeParams.isNotEmpty) ...data.typeParamsArgCode,
-        '(',
-        data.functionArgs,
-        '),',
-        'child: child,',
-        ');',
-      ],
-      ...[
-        'static ',
-        data.dataType.code.asNullable,
-        ' maybeOf(',
-        'BuildContext',
-        ' context) => ',
-        inheritedWidgetName,
-        '._maybeOf(context)?.',
-        dataName,
-        ';',
-      ],
-      ...[
-        'static ',
-        data.dataType.code,
-        ' of(',
-        'BuildContext',
-        ' context) => ',
-        inheritedWidgetName,
-        '._of(context).',
-        dataName,
-        ';',
-      ],
-      '}',
-    ];
-    builder.declareType(
-      data.widgetName,
-      DeclarationCode.fromParts(rearchWidgetCode),
-    );
+  static {{nullableDataType}} maybeOf({{BuildContext}} context) =>
+    $inheritedWidgetName._maybeOf(context)?.$dataName;
+
+  static {{dataType}} of({{BuildContext}} context) =>
+    $inheritedWidgetName._of(context).$dataName;
+}
+'''
+        .substitute({
+          ...await _createDefaultTypeSubstitutions(builder),
+          'classFields': data.classFields,
+          'dataType': data.dataType.code,
+          'nullableDataType': data.dataType.code.asNullable,
+          if (data.typeParams.isNotEmpty) ...{
+            'typeParamsParamCode': data.typeParamsParamCode,
+            'typeParamsArgCode': data.typeParamsArgCode,
+          } else ...{
+            'typeParamsParamCode': '',
+            'typeParamsArgCode': '',
+          },
+          'constructorNamedParams': data.externalNamedParams.map((param) {
+            if (param.isRequired) {
+              return 'required this.${param.code.name!},';
+            }
+            return [
+              'this.${param.code.name!} = ',
+              param.code.defaultValue ?? 'null',
+              ',',
+            ];
+          }),
+        })
+        .flatten()
+        .toList()
+        .toDeclarationCode();
+    builder.declareType(data.widgetName, rearchWidgetCode);
   }
 }
 
 class _RearchWidgetFunctionMacroData {
   _RearchWidgetFunctionMacroData(this.function);
-  late final FunctionDeclaration function;
+  final FunctionDeclaration function;
 
   final useName = '__use';
   final contextName = '__context';
@@ -284,10 +224,6 @@ class _RearchWidgetFunctionMacroData {
   // Needed for error reporting purposes
   late final firstOptPositParam =
       positParams.where((p) => !p.isRequired).firstOrNull;
-
-  // Do we need a RearchConsumer (for managing some state via WidgetHandle)?
-  late final isStateless =
-      !positParams.followedBy(namedParams).any(isParamWidgetHandle);
 
   bool isParamWidgetHandle(FormalParameterDeclaration param) =>
       param.type.isA('WidgetHandle');
@@ -332,6 +268,35 @@ class _RearchWidgetFunctionMacroData {
   ];
 }
 
+Future<Map<String, Identifier>> _createTypeSubstitutions(
+  TypePhaseIntrospector resolver,
+  Map<String, String> types,
+) async {
+  return {
+    for (final MapEntry(key: type, value: lib) in types.entries)
+      // NOTE: there is no alternative right now.
+      // ignore: deprecated_member_use
+      type: await resolver.resolveIdentifier(Uri.parse(lib), type),
+  };
+}
+
+Future<Map<String, Identifier>> _createDefaultTypeSubstitutions(
+  TypePhaseIntrospector resolver,
+) {
+  const dartCore = 'dart:core';
+  const flutter = 'package:flutter/widgets.dart';
+  const flutterRearch = 'package:flutter_rearch/flutter_rearch.dart';
+
+  return _createTypeSubstitutions(resolver, {
+    'bool': dartCore,
+    'Widget': flutter,
+    'BuildContext': flutter,
+    'InheritedWidget': flutter,
+    'WidgetHandle': flutterRearch,
+    'RearchConsumer': flutterRearch,
+  });
+}
+
 extension _EzTypes on TypeAnnotation {
   String get typeName {
     final NamedTypeAnnotation(
@@ -342,6 +307,7 @@ extension _EzTypes on TypeAnnotation {
     return '$name${typeArgs.isNotEmpty ? '<$typeArgs>' : ''}';
   }
 
+  @Deprecated('replace with safe API')
   bool isA(String name) => typeName == name;
 }
 
@@ -372,4 +338,36 @@ extension _Interspersed<T> on Iterable<T> {
       yield i.current;
     }
   }
+}
+
+extension _Substitute on String {
+  Iterable<Object> substitute(Map<String, Object> substitutes) sync* {
+    final regex = RegExp('{{(.*?)}}');
+    var lastIndex = 0;
+    for (final match in regex.allMatches(this)) {
+      yield substring(lastIndex, match.start);
+      final key = match.group(1);
+      final substitution = substitutes[key] ??
+          (() => throw ArgumentError('"$key" was not provided'))();
+      yield substitution;
+      lastIndex = match.end;
+    }
+    yield substring(lastIndex);
+  }
+}
+
+extension _Flatten on Iterable<Object> {
+  Iterable<Object> flatten() sync* {
+    for (final obj in this) {
+      if (obj is Iterable<Object>) {
+        yield* obj.flatten();
+      } else {
+        yield obj;
+      }
+    }
+  }
+}
+
+extension _ToDeclarationCode on List<Object> {
+  DeclarationCode toDeclarationCode() => DeclarationCode.fromParts(this);
 }

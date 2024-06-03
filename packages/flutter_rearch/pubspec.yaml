@@ -7,13 +7,13 @@ repository: https://github.com/GregoryConrad/rearch-dart
 issue_tracker: https://github.com/GregoryConrad/rearch-dart/issues
 
 environment:
-  sdk: ">=3.5.0-167.0.dev <4.0.0"
+  sdk: ">=3.5.0-214.0.dev <4.0.0"
   flutter: ">=3.19.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  macros: ^0.1.0-main.5
+  macros: ^0.1.2-main.0
   meta: ^1.10.0
   rearch: ^1.15.0
 

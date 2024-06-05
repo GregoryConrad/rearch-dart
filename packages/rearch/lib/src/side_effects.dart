@@ -291,8 +291,7 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// To remove this cached data from the returned [AsyncValue],
   /// you may call [AsyncValueConvenience.withoutPreviousData].
   AsyncValue<T>? nullableFuture<T>(Future<T>? future) {
-    // NOTE: we convert to a stream here because we can cancel
-    // a stream subscription; there is no builtin way to cancel a future.
+    // NOTE: we convert to a stream here to reuse our cancellation code.
     final asNullableStream = use.memo(() => future?.asStream(), [future]);
     return use.nullableStream(asNullableStream);
   }
@@ -317,24 +316,20 @@ extension BuiltinSideEffects on SideEffectRegistrar {
       AsyncLoading<T>(None<T>()),
     );
 
-    final (getSubscription, setSubscription) =
-        use.data<StreamSubscription<T>?>(null);
-    use.effect(() => getSubscription()?.cancel, [getSubscription()]);
+    use.effect(
+      () {
+        setValue(AsyncLoading(getValue().data));
 
-    final oldStream = use.previous(stream);
-    final needToInitializeState = stream != oldStream;
-
-    if (needToInitializeState) {
-      setValue(AsyncLoading(getValue().data));
-      setSubscription(
-        stream?.listen(
+        final subscription = stream?.listen(
           (data) => setValue(AsyncData(data)),
           onError: (Object error, StackTrace trace) =>
               setValue(AsyncError(error, trace, getValue().data)),
           cancelOnError: false,
-        ),
-      );
-    }
+        );
+        return () => subscription?.cancel();
+      },
+      [stream],
+    );
 
     return stream == null ? null : getValue();
   }

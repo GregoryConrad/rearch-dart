@@ -362,4 +362,49 @@ void main() {
 
     await tester.pumpAndSettle();
   });
+
+  testWidgets('automatic keep alive can be deactivated (#199)', (tester) async {
+    await tester.pumpWidget(
+      RearchBootstrapper(
+        child: MaterialApp(
+          home: RearchBuilder(
+            builder: (context, use) {
+              final switchedPage = use.data(false);
+
+              if (switchedPage.value) {
+                return const Text('No assert!');
+              }
+
+              return CustomScrollView(
+                slivers: [
+                  SliverList.list(
+                    children: List.generate(50, (index) {
+                      return RearchBuilder(
+                        builder: (context, use) {
+                          use.automaticKeepAlive();
+                          return SizedBox(
+                            width: 600,
+                            height: 200,
+                            child: TextButton(
+                              onPressed: () => switchedPage.value = true,
+                              child: Text('switch $index'),
+                            ),
+                          );
+                        },
+                      );
+                    }),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('switch 0'));
+    await tester.pump();
+
+    expect(find.text('No assert!'), findsOneWidget);
+  });
 }

@@ -11,44 +11,41 @@ void _automaticKeepAlive(
 }) {
   final api = use.api();
 
-  final handle = use.memo(_CustomKeepAliveHandle.new);
-  use.effect(() => handle.dispose, [handle]);
+  final handle = use.disposable(_CustomKeepAliveHandle.new, (h) => h.dispose());
 
-  // Dirty tracks whether or not we will need to request a new keep alive
-  // in case keepAlive == true
-  final (getDirty, setDirty) = use.data(true);
-  final requestKeepAlive = use.memo(
-    () => () {
-      // It is only safe to dispatch a notification when dirty is true
-      if (getDirty()) {
-        setDirty(false);
-        KeepAliveNotification(handle).dispatch(api.context);
-      }
-    },
-    [getDirty, setDirty, handle, api.context],
-  );
-  final removeKeepAlive = use.memo(
-    () => () {
-      // It is always safe to remove keep alives
-      handle.removeKeepAlive();
-      setDirty(true);
-    },
-    [handle, setDirty],
-  );
+  // Tracks whether or not we need to request/remove a keep alive
+  // (if there's no change, there's nothing to do).
+  // NOTE: this would make use of use.data,
+  // but that'd trigger markNeedsBuild() in deactivate,
+  // which then throws an assert.
+  // See: https://github.com/GregoryConrad/rearch-dart/issues/199
+  final lastKnownState = use.callonce(() {
+    var value = false;
+    return (() => value, (bool newValue) => value = newValue);
+  });
+
+  void requestKeepAliveIfNeeded() {
+    if (lastKnownState.value) return;
+    lastKnownState.value = true;
+    KeepAliveNotification(handle).dispatch(api.context);
+  }
+
+  void removeKeepAliveIfNeeded() {
+    if (!lastKnownState.value) return;
+    lastKnownState.value = false;
+    handle.removeKeepAlive();
+  }
 
   // Remove keep alives on deactivate to prevent leaks per documentation
-  use.effect(
-    () {
-      api.addDeactivateListener(removeKeepAlive);
-      return () => api.removeDeactivateListener(removeKeepAlive);
-    },
-    [api, removeKeepAlive],
-  );
+  use.effect(() {
+    api.addDeactivateListener(removeKeepAliveIfNeeded);
+    return () => api.removeDeactivateListener(removeKeepAliveIfNeeded);
+  });
 
   // Request/remove the keep alive as necessary
   if (keepAlive) {
-    requestKeepAlive();
+    requestKeepAliveIfNeeded();
   } else {
-    removeKeepAlive();
+    removeKeepAliveIfNeeded();
   }
 }

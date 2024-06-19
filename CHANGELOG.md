@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-06-18
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.6.7`](#flutter_rearch---v167)
+
+---
+
+#### `flutter_rearch` - `v1.6.7`
+
+ - **FIX**: remove erroneous markNeedsBuild call in use.automaticKeepAlive ([#200](https://github.com/GregoryConrad/rearch-dart/issues/200)).
+
+
 ## 2024-06-05
 
 ### Changes

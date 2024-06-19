@@ -1,3 +1,7 @@
+## 1.6.7
+
+ - **FIX**: remove erroneous markNeedsBuild call in use.automaticKeepAlive ([#200](https://github.com/GregoryConrad/rearch-dart/issues/200)).
+
 ## 1.6.6
 
  - **FIX**: correct use.stream/future cancellation code ([#196](https://github.com/GregoryConrad/rearch-dart/issues/196)).

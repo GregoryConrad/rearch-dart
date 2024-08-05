@@ -13,7 +13,7 @@ dependencies:
   flutter_rearch: ^1.6.7
   graphview: ^1.2.0
   rearch: ^1.10.1
-  url_strategy: ^0.2.0
+  url_strategy: ^0.3.0
 
 flutter:
   uses-material-design: true

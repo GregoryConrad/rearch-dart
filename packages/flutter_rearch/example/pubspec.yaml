@@ -8,9 +8,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_mimir: ^0.0.2
+  flutter_mimir: ^0.1.0
   flutter_rearch: ^1.6.7
-  mimir: ^0.0.2
+  mimir: ^0.1.0
   rearch: ^1.10.1
 
 dev_dependencies:

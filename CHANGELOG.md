@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-08-17
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.6.8`](#flutter_rearch---v168)
+
+---
+
+#### `flutter_rearch` - `v1.6.8`
+
+ - **FIX**: add workaround for flutter hot reload bug ([#210](https://github.com/GregoryConrad/rearch-dart/issues/210)).
+
+
 ## 2024-06-18
 
 ### Changes

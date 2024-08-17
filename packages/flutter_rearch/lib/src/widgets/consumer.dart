@@ -74,24 +74,24 @@ class _RearchElement extends ComponentElement {
       // We need to do some dependency management here to ensure that we
       // get all the capsule updates we need, but nothing more.
 
-      // First, let's remove any no-longer used dependencies.
-      capsuleToRemoveDependency.entries
-          .where((e) => !capsulesUsedInCurrBuild!.contains(e.key))
-          .toList()
-          .forEach((e) {
-        e.value(); // dispose() from onNextUpdate
-        capsuleToRemoveDependency.remove(e.key);
-      });
+      // First, ensure we depend upon every capsule used in the current build.
+      for (final capsule in capsulesUsedInCurrBuild!) {
+        capsuleToRemoveDependency.putIfAbsent(
+          capsule,
+          () => container.onNextUpdate(capsule, () {
+            markNeedsBuild();
+            capsuleToRemoveDependency.remove(capsule);
+          }),
+        );
+      }
 
-      // Next, for each capsule used in the current build,
-      // let's make sure we depend upon it.
-      capsulesUsedInCurrBuild!
-          .where((cap) => !capsuleToRemoveDependency.containsKey(cap))
-          .forEach((cap) {
-        capsuleToRemoveDependency[cap] = container.onNextUpdate(cap, () {
-          markNeedsBuild();
-          capsuleToRemoveDependency.remove(cap);
-        });
+      // Next, remove any no-longer used dependencies.
+      capsuleToRemoveDependency.keys
+          .toSet()
+          .difference(capsulesUsedInCurrBuild!)
+          .forEach((capsule) {
+        // NOTE: this will call the dispose() returned from onNextUpdate
+        capsuleToRemoveDependency.remove(capsule)!.call();
       });
 
       // Finally, let's reset everything for the next build.

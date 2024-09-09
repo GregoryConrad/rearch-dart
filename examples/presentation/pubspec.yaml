@@ -9,7 +9,7 @@ dependencies:
   device_frame: ^1.1.0
   flutter:
     sdk: flutter
-  flutter_deck: ^0.15.0
+  flutter_deck: ^0.16.1
   flutter_rearch: ^1.6.8
   graphview: ^1.2.0
   rearch: ^1.10.1

@@ -31,28 +31,17 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// You may set the value of returned [ValueWrapper] both:
   /// 1. Outside of the build, like a normal call to `setState`
   /// 2. Inside of the build, to use its value inside build
-  /// This serves as an easier [stateGetterSetter] replacement
-  /// and can also be used instead of [state].
+  ///
+  /// This is a more powerful alternative to [state].
   ValueWrapper<T> data<T>(T initial) => use.lazyData(() => initial);
 
   /// Keeps track of some data that can be stateful.
   /// You may set the value of returned [ValueWrapper] both:
   /// 1. Outside of the build, like a normal call to `setState`
   /// 2. Inside of the build, to use its value inside build
-  /// This serves as an easier [lazyStateGetterSetter] replacement
-  /// and can also be used instead of [lazyState].
-  ValueWrapper<T> lazyData<T>(T Function() init) =>
-      use.lazyStateGetterSetter(init);
-
-  /// Side effect that provides a way for capsules to contain some state,
-  /// where the initial state is computationally expensive.
-  /// Further, instead of returning the state directly, this instead returns
-  /// a getter that is safe to capture in closures.
-  /// Similar to the `useState` hook from React;
-  /// see https://react.dev/reference/react/useState
-  /// # NOTE
-  /// New applications are recommended to use [lazyData] instead.
-  (T Function(), void Function(T)) lazyStateGetterSetter<T>(T Function() init) {
+  ///
+  /// This is a more powerful alternative to [lazyState].
+  ValueWrapper<T> lazyData<T>(T Function() init) {
     // We use register directly to keep the same setter function across rebuilds
     // (but we need to return a new getter on each build, see below for more)
     final (getter, setter) = use.register((api) {
@@ -89,31 +78,51 @@ extension BuiltinSideEffects on SideEffectRegistrar {
     return (() => getter(), setter);
   }
 
+  /// Side effect that provides a way for capsules to contain some state,
+  /// where the initial state is computationally expensive.
+  /// Further, instead of returning the state directly, this instead returns
+  /// a getter that is safe to capture in closures.
+  ///
+  /// Similar to the `useState` hook from React;
+  /// see https://react.dev/reference/react/useState
+  ///
+  /// # NOTE
+  /// New applications are recommended to use [lazyData] instead.
+  @Deprecated('Use `use.lazyData` instead')
+  ValueWrapper<T> lazyStateGetterSetter<T>(T Function() init) =>
+      use.lazyData(init);
+
   /// Side effect that provides a way for capsules to contain some state.
   /// Further, instead of returning the state directly, this instead returns
   /// a getter that is safe to capture in closures.
+  ///
   /// Similar to the `useState` hook from React;
   /// see https://react.dev/reference/react/useState
+  ///
   /// # NOTE
   /// New applications are recommended to use [data] instead.
-  (T Function(), void Function(T)) stateGetterSetter<T>(T initial) =>
-      use.lazyStateGetterSetter(() => initial);
+  @Deprecated('Use `use.data` instead')
+  ValueWrapper<T> stateGetterSetter<T>(T initial) => use.data(initial);
 
   /// Side effect that provides a way for capsules to contain some state,
   /// where the initial state is computationally expensive.
+  ///
   /// Similar to the `useState` hook from React;
   /// see https://react.dev/reference/react/useState
+  ///
   /// # NOTE
   /// While [lazyState] will continue to work just fine,
   /// it is recommended that newer applications also take a look at [lazyData].
   (T, void Function(T)) lazyState<T>(T Function() init) {
-    final (getter, setter) = use.lazyStateGetterSetter(init);
+    final (getter, setter) = use.lazyData(init);
     return (getter(), setter);
   }
 
   /// Side effect that provides a way for capsules to contain some state.
+  ///
   /// Similar to the `useState` hook from React;
   /// see https://react.dev/reference/react/useState
+  ///
   /// # NOTE
   /// While [state] will continue to work just fine,
   /// it is recommended that newer applications also take a look at [data].
@@ -121,12 +130,14 @@ extension BuiltinSideEffects on SideEffectRegistrar {
 
   /// Side effect that provides a way for capsules to hold onto some value
   /// between builds, where the initial value is computationally expensive.
+  ///
   /// Similar to the `useRef` hook from React;
   /// see https://react.dev/reference/react/useRef
   T lazyValue<T>(T Function() init) => use.callonce(init);
 
   /// Side effect that provides a way for capsules to hold onto some value
   /// between builds.
+  ///
   /// Similar to the `useRef` hook from React;
   /// see https://react.dev/reference/react/useRef
   T value<T>(T initial) => use.lazyValue(() => initial);

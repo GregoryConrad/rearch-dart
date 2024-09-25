@@ -4,9 +4,8 @@ import 'package:test/test.dart';
 import 'util.dart';
 
 void main() {
-  test('stateGetterSetter dependents should rebuild when state updated', () {
-    (int Function(), void Function(int)) stateCapsule(CapsuleHandle use) =>
-        use.stateGetterSetter(0);
+  test('use.data() dependents should rebuild when state updated', () {
+    ValueWrapper<int> stateCapsule(CapsuleHandle use) => use.data(0);
     int currStateCapsule(CapsuleHandle use) => use(stateCapsule).$1();
 
     final container = useContainer();
@@ -391,9 +390,9 @@ void main() {
 
     test('side effect mutations are batched at end of txn', () {
       var builds = 0;
-      (int Function(), void Function(int)) lazyStateCapsule(CapsuleHandle use) {
+      ValueWrapper<int> lazyStateCapsule(CapsuleHandle use) {
         builds++;
-        return use.stateGetterSetter(0);
+        return use.data(0);
       }
 
       final container = useContainer();
@@ -408,11 +407,10 @@ void main() {
     });
   });
 
-  test("lazyStateGetterSetter doesn't call init fn unless necessary", () {
+  test("use.lazyData() doesn't call init fn unless necessary", () {
     var initCalls = 0;
     void init() => initCalls++;
-    (void Function(), void Function(void)) testCapsule(CapsuleHandle use) =>
-        use.lazyStateGetterSetter(init);
+    ValueWrapper<void> testCapsule(CapsuleHandle use) => use.lazyData(init);
 
     final container1 = useContainer();
     container1.read(testCapsule).$1();

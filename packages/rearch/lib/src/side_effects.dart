@@ -444,7 +444,8 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   }
 
   /// A side effect that allows you to watch a future that can be refreshed
-  /// by invoking the supplied callback.
+  /// by invoking the supplied callback
+  /// (which will also give you an updated copy of that future).
   ///
   /// You supply a [futureFactory], which is a function that must
   /// return a new instance of a future to be watched.
@@ -453,12 +454,12 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   ///
   /// Internally creates the future to watch on the first build
   /// and then again whenever the returned callback is invoked.
-  (AsyncValue<T>, void Function()) refreshableFuture<T>(
+  (AsyncValue<T>, Future<T> Function()) refreshableFuture<T>(
     Future<T> Function() futureFactory,
   ) {
-    final (currFuture, setFuture) = use.lazyState(futureFactory);
-    final futureState = use.future(currFuture);
-    return (futureState, () => setFuture(futureFactory()));
+    final future = use.lazyData(futureFactory);
+    final futureState = use.future(future.value);
+    return (futureState, () => future.value = futureFactory());
   }
 
   /// A side effect that allows you to watch a future lazily

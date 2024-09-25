@@ -42,6 +42,41 @@ void main() {
     expect((getState() as AsyncError<int>).previousData, equals(const Some(0)));
   });
 
+  test('refreshableFuture', () async {
+    var shouldError = false;
+
+    (AsyncValue<int>, Future<int> Function()) testCapsule(CapsuleHandle use) {
+      return use.refreshableFuture(() async {
+        if (shouldError) throw Exception();
+        return 0;
+      });
+    }
+
+    final container = useContainer();
+
+    AsyncValue<int> getState() => container.read(testCapsule).$1;
+    Future<int> refresh() => container.read(testCapsule).$2();
+
+    expect(getState(), equals(const AsyncLoading(None<int>())));
+    await Future.delayed(Duration.zero, () => null);
+    expect(getState(), equals(const AsyncData(0)));
+
+    shouldError = true;
+    final future = refresh();
+
+    expect(getState(), equals(const AsyncLoading(Some(0))));
+    expect(future, throwsA(isA<Exception>()));
+    await Future.delayed(Duration.zero, () => null);
+    expect((getState() as AsyncError<int>).previousData, equals(const Some(0)));
+
+    shouldError = false;
+    final newFuture = refresh();
+
+    expect(getState(), equals(const AsyncLoading(Some(0))));
+    expect(await newFuture, equals(0));
+    expect((getState() as AsyncData<int>).data, equals(0));
+  });
+
   test('hydrate', () async {
     var writtenData = -1;
     var shouldWriteError = false;

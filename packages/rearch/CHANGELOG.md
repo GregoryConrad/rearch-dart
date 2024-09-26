@@ -1,3 +1,8 @@
+## 1.11.0
+
+ - **REFACTOR**: deprecate old state side effects ([#224](https://github.com/GregoryConrad/rearch-dart/issues/224)).
+ - **FEAT**: `use.refreshableFuture` now returns its future ([#223](https://github.com/GregoryConrad/rearch-dart/issues/223)).
+
 ## 1.10.1
 
  - **FIX**: correct use.stream/future cancellation code ([#196](https://github.com/GregoryConrad/rearch-dart/issues/196)).

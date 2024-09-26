@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-09-26
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`rearch` - `v1.11.0`](#rearch---v1110)
+ - [`flutter_rearch` - `v1.6.9`](#flutter_rearch---v169)
+ - [`ramen` - `v0.0.0-dev.7`](#ramen---v000-dev7)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutter_rearch` - `v1.6.9`
+ - `ramen` - `v0.0.0-dev.7`
+
+---
+
+#### `rearch` - `v1.11.0`
+
+ - **REFACTOR**: deprecate old state side effects ([#224](https://github.com/GregoryConrad/rearch-dart/issues/224)).
+ - **FEAT**: `use.refreshableFuture` now returns its future ([#223](https://github.com/GregoryConrad/rearch-dart/issues/223)).
+
+
 ## 2024-08-17
 
 ### Changes

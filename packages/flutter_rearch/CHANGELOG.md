@@ -1,3 +1,7 @@
+## 1.6.9
+
+ - Update a dependency to the latest release.
+
 ## 1.6.8
 
  - **FIX**: add workaround for flutter hot reload bug ([#210](https://github.com/GregoryConrad/rearch-dart/issues/210)).

@@ -97,3 +97,56 @@ extension DynamicCapsuleAccess<Param, Return>
     return (CapsuleReader use) => use(use(this)._get(p));
   }
 }
+
+/// Shorthand for a fully formed dynamic capsule.
+/// See [ExperimentalSideEffects.dynamic] for more.
+///
+/// Basic usage:
+/// ```dart
+/// final myDynamicCapsule = dynamicCapsule((use, Foo foo) {
+///   return use(barCapsule).useFoo(foo);
+/// });
+/// ```
+///
+/// # Warning
+/// Due to limitations in Dart's type system,
+/// if you wish to use the created capsule recursively,
+/// you will need to explicitly write the return type like so:
+/// ```dart
+/// final Capsule<DynamicCapsule<int, BigInt>> fibonacciCapsule =
+///     dynamicCapsule((use, int n) {
+///   return switch (n) {
+///     _ when n < 0 => throw ArgumentError.value(n),
+///     0 => BigInt.zero,
+///     1 => BigInt.one,
+///     _ => use(fibonacciCapsule[n - 1]) + use(fibonacciCapsule[n - 2]),
+///   };
+/// });
+/// ```
+/// NOTE: I'd recommend specifying the return type under all situations
+/// regardless, as it'll increase code reability.
+Capsule<DynamicCapsule<Param, Return>> dynamicCapsule<Param, Return>(
+  Return Function(CapsuleHandle, Param) dyn,
+) {
+  return (CapsuleHandle use) => use.dynamic(dyn);
+}
+
+/// Shorthand for a fully formed capsule.
+///
+/// Basic usage:
+/// ```dart
+/// final countPlusOneCapsule = capsule((use) {
+///   return use(countCapsule) + 1;
+/// });
+/// ```
+///
+/// # Warning
+/// Although [capsule] is convenient,
+/// source code created with it loses explicitly written type information.
+/// For that reason, it is strongly recommended to use [capsule] as such:
+/// ```dart
+/// final Capsule<int> countPlusOneCapsule = capsule((use) {
+///   return use(countCapsule) + 1;
+/// });
+/// ```
+Capsule<T> capsule<T>(Capsule<T> cap) => cap;

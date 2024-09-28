@@ -1,3 +1,4 @@
+import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 import 'package:test/test.dart';
 
@@ -456,6 +457,27 @@ void main() {
       expect(check, equals(1));
       container.dispose();
       expect(check, equals(2));
+    });
+  });
+
+  group('dynamic capsules', () {
+    // NOTE: due to a Dart type system bug (relating only to local variables),
+    // this has to be written with `late final` and defined on a new line.
+    late final Capsule<DynamicCapsule<int, BigInt>> fibonacciCapsule;
+    fibonacciCapsule = dynamicCapsule((use, int n) {
+      return switch (n) {
+        _ when n < 0 => throw ArgumentError.value(n),
+        0 => BigInt.zero,
+        1 => BigInt.one,
+        _ => use(fibonacciCapsule[n - 1]) + use(fibonacciCapsule[n - 2]),
+      };
+    });
+
+    test('allow correct creation of fibonacci numbers', () {
+      expect(
+        useContainer().read(fibonacciCapsule[100]).toString(),
+        equals('354224848179261915075'),
+      );
     });
   });
 }

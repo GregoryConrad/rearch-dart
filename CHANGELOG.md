@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-09-28
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`rearch` - `v1.12.0`](#rearch---v1120)
+ - [`flutter_rearch` - `v1.6.10`](#flutter_rearch---v1610)
+ - [`ramen` - `v0.0.0-dev.8`](#ramen---v000-dev8)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutter_rearch` - `v1.6.10`
+ - `ramen` - `v0.0.0-dev.8`
+
+---
+
+#### `rearch` - `v1.12.0`
+
+ - **FEAT**: add experimental `capsule`/`dynamicCapsule` ([#226](https://github.com/GregoryConrad/rearch-dart/issues/226)).
+ - **FEAT**: add experimental dynamic capsules side effect ([#225](https://github.com/GregoryConrad/rearch-dart/issues/225)).
+
+
 ## 2024-09-26
 
 ### Changes

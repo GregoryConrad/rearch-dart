@@ -1,3 +1,8 @@
+## 1.12.0
+
+ - **FEAT**: add experimental `capsule`/`dynamicCapsule` ([#226](https://github.com/GregoryConrad/rearch-dart/issues/226)).
+ - **FEAT**: add experimental dynamic capsules side effect ([#225](https://github.com/GregoryConrad/rearch-dart/issues/225)).
+
 ## 1.11.0
 
  - **REFACTOR**: deprecate old state side effects ([#224](https://github.com/GregoryConrad/rearch-dart/issues/224)).

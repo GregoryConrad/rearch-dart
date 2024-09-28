@@ -10,9 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_deck: ^0.16.1
-  flutter_rearch: ^1.6.9
+  flutter_rearch: ^1.6.10
   graphview: ^1.2.0
-  rearch: ^1.11.0
+  rearch: ^1.12.0
   url_strategy: ^0.3.0
 
 flutter:

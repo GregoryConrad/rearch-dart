@@ -286,6 +286,21 @@ void main() {
     expect(builds[changingWatcher], equals(3));
   });
 
+  test('errors propagate correctly', () {
+    Never throwsErrorCapsule(CapsuleHandle use) =>
+        throw UnsupportedError('capsule should throw');
+    Never dependentCapsule(CapsuleHandle use) => use(throwsErrorCapsule);
+    final container = useContainer();
+    expect(
+      () => container.read(throwsErrorCapsule),
+      throwsA(isA<UnsupportedError>()),
+    );
+    expect(
+      () => container.read(dependentCapsule),
+      throwsA(isA<UnsupportedError>()),
+    );
+  });
+
   // We use a more sophisticated graph here for a more thorough
   // test of all functionality
   //

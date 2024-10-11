@@ -6,3 +6,9 @@ CapsuleContainer useContainer() {
   addTearDown(container.dispose);
   return container;
 }
+
+MockableContainer useMockableContainer() {
+  final container = MockableContainer();
+  addTearDown(container.dispose);
+  return container;
+}

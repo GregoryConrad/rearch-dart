@@ -1,3 +1,4 @@
+import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 import 'package:test/test.dart';
 
@@ -517,6 +518,39 @@ void main() {
         container.warmUp([intWarmUpCapsule]),
         throwsA(isA<UnsupportedError>()),
       );
+    });
+  });
+
+  group('MockCapsuleContainer', () {
+    final cap = capsule((use) => 0);
+
+    test('throws when mocking initialized capsule', () {
+      expect(
+        () => useMockableContainer()
+          ..read(cap)
+          ..mock(cap).apply((use) => 123),
+        throwsA(isA<StateError>()),
+      );
+    });
+
+    test('throws when mocking already mocked capsule', () {
+      expect(
+        () => useMockableContainer()
+          ..mock(cap).apply((use) => 321)
+          ..mock(cap).apply((use) => 123),
+        throwsA(isA<StateError>()),
+      );
+    });
+
+    test('correctly mocks capsules', () {
+      final container = useMockableContainer().mock(cap).apply((use) => 123);
+      expect(container.read(cap), 123);
+
+      final dependent = capsule((use) => 2 * use(cap));
+      expect(container.read(dependent), equals(246));
+
+      final newCap = capsule((use) => use(cap));
+      expect(container.mock(newCap).apply((use) => 0).read(newCap), equals(0));
     });
   });
 }

@@ -102,29 +102,33 @@ void main() {
     const expectedTemperature = 11.0;
     const expectedWeatherCode = 1.0; // = cloudy
     final container = useContainer()
-      ..mock(searchLocationAction, (String query) async {
-        if (query != cityQuery) {
-          throw Exception('Location query did not match expectations');
-        }
-        return const Location(
-          id: 0,
-          name: expectedCity,
-          latitude: expectedLatitude,
-          longitude: expectedLongitude,
-        );
-      })
-      ..mock(fetchWeatherAction, ({
-        required double latitude,
-        required double longitude,
-      }) async {
-        if (latitude != expectedLatitude && longitude != expectedLongitude) {
-          throw Exception('Weather query did not match expectations');
-        }
-        return const Weather(
-          temperature: expectedTemperature,
-          weatherCode: expectedWeatherCode,
-        );
-      });
+      ..mock(searchLocationAction).apply(
+        (use) => (String query) async {
+          if (query != cityQuery) {
+            throw Exception('Location query did not match expectations');
+          }
+          return const Location(
+            id: 0,
+            name: expectedCity,
+            latitude: expectedLatitude,
+            longitude: expectedLongitude,
+          );
+        },
+      )
+      ..mock(fetchWeatherAction).apply(
+        (use) => ({
+          required double latitude,
+          required double longitude,
+        }) async {
+          if (latitude != expectedLatitude && longitude != expectedLongitude) {
+            throw Exception('Weather query did not match expectations');
+          }
+          return const Weather(
+            temperature: expectedTemperature,
+            weatherCode: expectedWeatherCode,
+          );
+        },
+      );
 
     await tester.pumpWidget(
       CapsuleContainerProvider(
@@ -151,7 +155,8 @@ MockableContainer useContainer() {
 
 (MockableContainer, MockClient) useMockedClientContainer() {
   final mockClient = MockClient();
-  final container = useContainer()..mock(httpClientCapsule, mockClient);
+  final container = useContainer()
+    ..mock(httpClientCapsule).apply((use) => mockClient);
   return (container, mockClient);
 }
 

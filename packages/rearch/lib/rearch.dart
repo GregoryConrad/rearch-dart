@@ -146,7 +146,7 @@ class CapsuleContainer implements Disposable {
   _CapsuleManager _managerOf(_UntypedCapsule capsule) {
     return _capsules.putIfAbsent(
       capsule,
-      () => _CapsuleManager(this, capsule)..buildSelf(),
+      () => _CapsuleManager(this, capsule),
     );
   }
 
@@ -231,23 +231,54 @@ class CapsuleContainer implements Disposable {
   }
 }
 
-/// A [CapsuleContainer] that additionally allows you to [mock] capsules out
+/// A [CapsuleContainer] that additionally allows you to [mock] capsules
 /// as a convenience when testing.
 ///
 /// # WARNING
 /// Only use a [MockableContainer] within your tests!
-@experimental
-class MockableContainer extends CapsuleContainer {
-  /// Mocks the specified [capsule] dependency with the supplied [data].
+// NOTE: this `extends CapsuleContainer` for use by `CapsuleContainerProvider`
+final class MockableContainer extends CapsuleContainer {
+  /// Creates a [MockBuilder]
+  /// for this [MockableContainer] and the supplied [capsule].
+  ///
+  /// See also: [MockBuilder.apply]
+  // NOTE: this returns a MockBuilder to get around a type system annoyance:
+  // `mock((use) => 123, (use) => false)` raises no analysis warnings/errors
+  MockBuilder<T> mock<T>(Capsule<T> capsule) => MockBuilder._(this, capsule);
+}
+
+/// An intermediary created by [MockableContainer.mock].
+///
+/// Call [apply] to apply the mock backing this [MockBuilder].
+final class MockBuilder<T> {
+  const MockBuilder._(this._container, this._capsule);
+
+  final MockableContainer _container;
+  final Capsule<T> _capsule;
+
+  /// Applies the mock created by [MockableContainer.mock]
+  /// with the supplied [replacement] capsule.
+  ///
+  /// Feel free to define [replacement] in-line, like `(use) => 123`.
+  ///
   /// # WARNING
-  /// When [mock] is called, [capsule] will be permanently mocked
-  /// for the rest of the [MockableContainer]'s life.
-  // NOTE: we explicitly initialize to avoid the buildSelf call
-  @experimental
-  void mock<T>(Capsule<T> capsule, T data) =>
-      _capsules.putIfAbsent(capsule, () => _CapsuleManager(this, capsule))
-        ..clearDependencies()
-        ..data = data;
+  /// The capsule being mocked _must_ not have been read from the container
+  /// before calling this function.
+  ///
+  /// Further, when [apply] is called, [replacement] will be a permanent mock
+  /// (for the rest of the [MockableContainer]'s life).
+  MockableContainer apply(Capsule<T> replacement) {
+    if (_container._capsules.containsKey(_capsule)) {
+      throw StateError('capsule already initialized before call to mock()');
+    }
+
+    _container._capsules[_capsule] = _CapsuleManager(_container, (use) {
+      use.asListener(); // NOTE: prevent idempotent GC
+      return replacement(use);
+    });
+
+    return _container; // allow for method chaining
+  }
 }
 
 /// Provides the [map] convenience method on [Capsule]s.

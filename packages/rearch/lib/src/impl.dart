@@ -4,8 +4,9 @@ typedef _UntypedCapsule = Capsule<Object?>;
 
 class _CapsuleManager extends DataflowGraphNode
     implements SideEffectApi, Disposable {
-  /// NOTE: [buildSelf] should also normally be called on construction
-  _CapsuleManager(this.container, this.capsule);
+  _CapsuleManager(this.container, this.capsule) {
+    buildSelf();
+  }
 
   final CapsuleContainer container;
   final _UntypedCapsule capsule;

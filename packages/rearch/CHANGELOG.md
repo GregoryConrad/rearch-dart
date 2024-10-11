@@ -1,3 +1,7 @@
+## 1.13.0
+
+ - **FEAT**: stabilize and improve ergonomics of MockableContainer ([#230](https://github.com/GregoryConrad/rearch-dart/issues/230)).
+
 ## 1.12.0
 
  - **FEAT**: add experimental `capsule`/`dynamicCapsule` ([#226](https://github.com/GregoryConrad/rearch-dart/issues/226)).

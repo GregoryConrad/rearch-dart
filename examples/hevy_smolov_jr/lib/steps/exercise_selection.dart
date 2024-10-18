@@ -21,7 +21,7 @@ class ExerciseSelectionStep extends RearchConsumer {
       AsyncLoading<List<Exercise>>() =>
         const Center(child: CircularProgressIndicator()),
       AsyncError<List<Exercise>>(:final error) => Text(
-          '${error.runtimeType} encountered while loading your exercises; '
+          'Error encountered while loading your exercises; '
           'try checking your API key and/or refreshing the page.\n'
           '$error',
         ),

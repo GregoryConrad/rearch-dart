@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
+import 'package:hevy_smolov_jr/api/raw_hevy_api.dart';
 import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,7 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 final Capsule<Future<SharedPreferencesWithCache>> sharedPrefsAsyncCapsule =
     capsule((use) {
   return SharedPreferencesWithCache.create(
-    cacheOptions: const SharedPreferencesWithCacheOptions(),
+    cacheOptions: const SharedPreferencesWithCacheOptions(
+      allowList: {
+        sharedPrefsApiKeyKey,
+      },
+    ),
   );
 });
 

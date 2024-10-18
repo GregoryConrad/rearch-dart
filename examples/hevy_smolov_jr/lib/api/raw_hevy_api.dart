@@ -5,16 +5,18 @@ import 'package:http/http.dart' as http;
 import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 
+/// The shared preferences key used to store the user's Hevy API key
+const sharedPrefsApiKeyKey = 'api-key';
+
 /// [Capsule] representing the user's Hevy API key.
 final Capsule<(String, void Function(String))> apiKeyCapsule = capsule((use) {
-  const sharedPrefsKey = 'api-key';
   final sharedPrefs = use(sharedPrefsCapsule);
   final (apiKey, setApiKey) =
-      use.state(sharedPrefs.getString(sharedPrefsKey) ?? '');
+      use.state(sharedPrefs.getString(sharedPrefsApiKeyKey) ?? '');
   return (
     apiKey,
     (newApiKey) {
-      sharedPrefs.setString(sharedPrefsKey, newApiKey);
+      sharedPrefs.setString(sharedPrefsApiKeyKey, newApiKey);
       setApiKey(newApiKey);
     },
   );

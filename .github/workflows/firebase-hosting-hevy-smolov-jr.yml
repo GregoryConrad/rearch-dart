@@ -1,0 +1,26 @@
+name: Deploy Hevy Smolov Jr to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+      - uses: bluefireteam/melos-action@v2
+      - name: Run tests
+        run: melos run test
+      - name: Build for web
+        run: flutter build web
+        working-directory: examples/hevy_smolov_jr
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          entryPoint: examples/hevy_smolov_jr
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_HEVY_SMOLOV_JR }}'
+          channelId: live
+          projectId: hevy-smolov-jr

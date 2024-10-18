@@ -1,0 +1,12 @@
+{
+    "name": "Smolov Jr Calculator for Hevy",
+    "short_name": "Hevy Smolov Jr",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#7C4DFF",
+    "theme_color": "#7C4DFF",
+    "description": "Smolov Jr Calculator for Hevy",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": []
+}

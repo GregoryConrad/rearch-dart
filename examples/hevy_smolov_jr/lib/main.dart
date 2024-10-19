@@ -80,40 +80,48 @@ class HomePage extends RearchConsumer {
               onStepTapped: currStep.$2,
               onStepCancel: isFirstStep ? null : () => currStep.value--,
               onStepContinue: isLastStep ? null : () => currStep.value++,
-              controlsBuilder: (context, details) {
-                final theme = Theme.of(context);
-                return ElevatedButtonTheme(
-                  data: ElevatedButtonThemeData(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.colorScheme.primary,
-                      foregroundColor: theme.colorScheme.onPrimary,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 32),
-                    child: Row(
-                      children: [
-                        if (!isFirstStep)
-                          TextButton(
-                            onPressed: details.onStepCancel,
-                            child: const Text('Go Back'),
-                          ),
-                        const SizedBox(width: 16),
-                        if (!isLastStep)
-                          ElevatedButton.icon(
-                            onPressed: details.onStepContinue,
-                            label: const Text('Continue'),
-                          ),
-                        if (isLastStep) const SaveProgramButton(),
-                      ],
-                    ),
-                  ),
-                );
-              },
+              controlsBuilder: _stepperControlsBuilder,
             ),
           ),
         ),
       ),
     );
   }
+}
+
+Widget _stepperControlsBuilder(BuildContext context, ControlsDetails details) {
+  final ControlsDetails(:stepIndex, :onStepContinue, :onStepCancel) = details;
+  const numSteps = 5;
+  final isFirstStep = stepIndex == 0;
+  final isLastStep = stepIndex == numSteps - 1;
+  final theme = Theme.of(context);
+
+  return ElevatedButtonTheme(
+    data: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
+      ),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.only(top: 32),
+      child: Row(
+        children: [
+          if (!isFirstStep) ...[
+            TextButton(
+              onPressed: onStepCancel,
+              child: const Text('Go Back'),
+            ),
+            const SizedBox(width: 16),
+          ],
+          if (!isLastStep)
+            ElevatedButton.icon(
+              onPressed: onStepContinue,
+              label: const Text('Continue'),
+            ),
+          if (isLastStep) const SaveProgramButton(),
+        ],
+      ),
+    ),
+  );
 }

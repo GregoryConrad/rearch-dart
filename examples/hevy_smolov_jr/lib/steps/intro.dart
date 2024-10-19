@@ -38,6 +38,7 @@ class IntroStep extends StatelessWidget {
           'Although originally designed for squats, Smolov Jr has been known '
           'to also work well on a variety of other lifts.',
         ),
+        const SizedBox(height: 16),
         const OutlinedButton(
           onPressed: _openSmolovJrInfo,
           child: Text('Click here for more Smolov Jr information'),

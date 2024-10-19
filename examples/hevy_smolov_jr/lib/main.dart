@@ -51,7 +51,6 @@ class HomePage extends RearchConsumer {
       ),
       Step(
         title: const Text('Exercise Selection'),
-        subtitle: const Text('More exercise options coming soon!'),
         content: const ExerciseSelectionStep(),
         isActive: currStep.value == 2,
       ),

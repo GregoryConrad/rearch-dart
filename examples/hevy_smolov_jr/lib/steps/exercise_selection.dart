@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
+import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:hevy_smolov_jr/api/wrapped_hevy_api.dart';
 import 'package:hevy_smolov_jr/smolov_jr_config/config.dart';
 import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 
 /// Displays the exercise selection step contents.
-// TODO(GregoryConrad): add exercise search feature
-// - exercise search is based on levenshtein distance across words
-// - remove the subtitle/note in the main.dart Steps list
 class ExerciseSelectionStep extends RearchConsumer {
   /// Displays the exercise selection step contents.
   const ExerciseSelectionStep({super.key});
@@ -25,18 +23,23 @@ class ExerciseSelectionStep extends RearchConsumer {
           'try checking your API key and/or refreshing the page.\n'
           '$error',
         ),
-      AsyncData<List<Exercise>>(:final data) =>
-        _CuratedExercisePicker(curatedExercises: data),
+      AsyncData<List<Exercise>>(:final data) => Column(
+          children: [
+            const _AllExercisePicker(),
+            const SizedBox(height: 16),
+            _CuratedExercisePicker(curatedExercises: data),
+          ],
+        ),
     };
   }
 }
 
-class _CuratedExercisePicker extends RearchConsumer {
+class _CuratedExercisePicker extends StatelessWidget {
   const _CuratedExercisePicker({required this.curatedExercises});
   final List<Exercise> curatedExercises;
 
   @override
-  Widget build(BuildContext context, WidgetHandle use) {
+  Widget build(BuildContext context) {
     final smolovJrConfig = ScopedSmolovJrConfig.of(context);
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 600),
@@ -82,11 +85,47 @@ final Capsule<Future<List<Exercise>>> _curatedExercisesCapsule =
       .toList();
 });
 
+class _AllExercisePicker extends RearchConsumer {
+  const _AllExercisePicker();
+
+  @override
+  Widget build(BuildContext context, WidgetHandle use) {
+    final searchExercises = use(_searchExercisesAction);
+    final smolovJrConfig = ScopedSmolovJrConfig.of(context);
+    return SearchAnchor.bar(
+      barHintText: 'Search for an exercise...',
+      viewConstraints: const BoxConstraints(maxHeight: 464),
+      suggestionsBuilder: (context, controller) async {
+        final exercises = await searchExercises(controller.text);
+        return [
+          for (final exercise in exercises)
+            ListTile(
+              title: Text(exercise.title),
+              subtitle: Text(exercise.primaryMuscleGroup.replaceAll('_', ' ')),
+              onTap: () {
+                controller.closeView(exercise.title);
+                smolovJrConfig.value =
+                    smolovJrConfig.value.copyWith(exercise: exercise);
+              },
+            ),
+        ];
+      },
+    );
+  }
+}
+
 /// Provides a mechanism to search for exercises based on a provided query.
-// final Capsule<Future<List<Exercise>> Function(String query)>
-//     _searchExercisesAction = capsule((use) {
-//   final exercisesFuture = use(exercisesCapsule);
-//   return (query) async {
-//     return exercisesFuture;
-//   };
-// });
+final Capsule<Future<List<Exercise>> Function(String query)>
+    _searchExercisesAction = capsule((use) {
+  final exercisesFuture = use(exercisesCapsule);
+  return (query) async {
+    final exercises = await exercisesFuture;
+    if (query == '') return exercises;
+    return extractAllSorted(
+      query: query,
+      cutoff: 50,
+      choices: exercises,
+      getter: (e) => e.title,
+    ).map((result) => result.choice).toList();
+  };
+});

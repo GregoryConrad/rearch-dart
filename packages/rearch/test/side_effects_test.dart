@@ -461,10 +461,10 @@ void main() {
   });
 
   group('dynamic capsules', () {
-    // NOTE: due to a Dart type system bug (relating only to local variables),
+    // NOTE: due to a Dart type system quirk (relating only to local variables),
     // this has to be written with `late final` and defined on a new line.
-    late final Capsule<DynamicCapsule<int, BigInt>> fibonacciCapsule;
-    fibonacciCapsule = dynamicCapsule((use, int n) {
+    late final DynamicCapsule<int, BigInt> fibonacciCapsule;
+    fibonacciCapsule = capsule.dynamic((use, int n) {
       return switch (n) {
         _ when n < 0 => throw ArgumentError.value(n),
         0 => BigInt.zero,

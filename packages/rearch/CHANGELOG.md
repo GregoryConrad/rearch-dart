@@ -1,3 +1,7 @@
+## 1.14.0
+
+ - **FEAT**: introduce new experimental dynamic capsule syntax ([#233](https://github.com/GregoryConrad/rearch-dart/issues/233)).
+
 ## 1.13.0
 
  - **FEAT**: stabilize and improve ergonomics of MockableContainer ([#230](https://github.com/GregoryConrad/rearch-dart/issues/230)).

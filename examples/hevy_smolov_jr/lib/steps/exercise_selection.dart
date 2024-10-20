@@ -81,7 +81,7 @@ final Capsule<Future<List<Exercise>>> _curatedExercisesCapsule =
   final exercises = await use(exercisesCapsule);
   return curatedExerciseNames
       .map((name) => exercises.where((e) => e.title == name).firstOrNull)
-      .whereType<Exercise>()
+      .nonNulls
       .toList();
 });
 

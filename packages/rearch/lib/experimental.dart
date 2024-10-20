@@ -44,40 +44,36 @@ extension ExperimentalSideEffects on SideEffectRegistrar {
   ///
   /// If what you are trying to do doesn't fit into one of the above categories,
   /// do _not_ use [dynamic]. Instead, write your code in a different way.
-  DynamicCapsule<Param, Return> dynamic<Param, Return>(
+  DynamicOrchestrator<Param, Return> dynamic<Param, Return>(
     Return Function(CapsuleHandle, Param) dyn,
   ) {
-    return use.lazyValue(() => _DynamicCapsuleImpl(dyn));
+    return use.lazyValue(() => DynamicOrchestrator._(dyn));
   }
 }
 
-final class _DynamicCapsuleImpl<Param, Return>
-    implements DynamicCapsule<Param, Return> {
-  _DynamicCapsuleImpl(this.dyn);
-  final Return Function(CapsuleHandle, Param) dyn;
-  final Map<Param, Capsule<Return>> capsules = {};
+/// Orchestrates a set of dynamic capsules.
+/// See [ExperimentalSideEffects.dynamic] for more.
+///
+/// There is currently no publicly available API on this class;
+/// instead, use [DynamicCapsuleAccess] to read a dynamic capsule.
+final class DynamicOrchestrator<Param, Return> {
+  DynamicOrchestrator._(this._dyn);
+  final Return Function(CapsuleHandle, Param) _dyn;
+  final Map<Param, Capsule<Return>> _capsules = {};
 
-  @override
-  Capsule<Return> _get(param) {
-    // TODO(GregoryConrad): remove capsule from map on capsule disposal?
-    // That would require a way to register a disposal that keeps idempotence.
-    return capsules.putIfAbsent(param, () {
+  Capsule<Return> _get(Param param) {
+    return _capsules.putIfAbsent(param, () {
       return (CapsuleHandle handle) {
-        return dyn(handle, param);
+        return _dyn(handle, param);
       };
     });
   }
 }
 
-/// Represents a dynamic capsule.
-/// See [ExperimentalSideEffects.dynamic] for more.
-///
-/// There is currently no publicly available API on this interface;
-/// instead, use [DynamicCapsuleAccess] to read the dynamic capsule.
-// ignore: one_member_abstracts
-abstract interface class DynamicCapsule<Param, Return> {
-  Capsule<Return> _get(Param param);
-}
+/// Shorthand for dynamic capsules,
+/// which are [Capsule]s whose data are [DynamicOrchestrator]s.
+typedef DynamicCapsule<Param, Return>
+    = Capsule<DynamicOrchestrator<Param, Return>>;
 
 /// Allows you to read dynamic capsules.
 ///
@@ -85,8 +81,7 @@ abstract interface class DynamicCapsule<Param, Return> {
 /// ```dart
 /// use(myDynamicCapsule[123]);
 /// ```
-extension DynamicCapsuleAccess<Param, Return>
-    on Capsule<DynamicCapsule<Param, Return>> {
+extension DynamicCapsuleAccess<Param, Return> on DynamicCapsule<Param, Return> {
   /// Allows you to read dynamic capsules.
   ///
   /// Example:
@@ -98,37 +93,50 @@ extension DynamicCapsuleAccess<Param, Return>
   }
 }
 
-/// Shorthand for a fully formed dynamic capsule.
-/// See [ExperimentalSideEffects.dynamic] for more.
+/// Used to instantiate [capsule].
 ///
-/// Basic usage:
-/// ```dart
-/// final myDynamicCapsule = dynamicCapsule((use, Foo foo) {
-///   return use(barCapsule).useFoo(foo);
-/// });
-/// ```
-///
-/// # Warning
-/// Due to limitations in Dart's type system,
-/// if you wish to use the created capsule recursively,
-/// you will need to explicitly write the return type like so:
-/// ```dart
-/// final Capsule<DynamicCapsule<int, BigInt>> fibonacciCapsule =
-///     dynamicCapsule((use, int n) {
-///   return switch (n) {
-///     _ when n < 0 => throw ArgumentError.value(n),
-///     0 => BigInt.zero,
-///     1 => BigInt.one,
-///     _ => use(fibonacciCapsule[n - 1]) + use(fibonacciCapsule[n - 2]),
-///   };
-/// });
-/// ```
-/// NOTE: I'd recommend specifying the return type under all situations
-/// regardless, as it'll increase code reability.
-Capsule<DynamicCapsule<Param, Return>> dynamicCapsule<Param, Return>(
-  Return Function(CapsuleHandle, Param) dyn,
-) {
-  return (CapsuleHandle use) => use.dynamic(dyn);
+/// This is public so that you may define your own extensions on it.
+final class CapsuleCreationConvenience {
+  const CapsuleCreationConvenience._();
+
+  /// Simplified syntax to create [Capsule]s. See [capsule].
+  Capsule<T> call<T>(Capsule<T> cap) => cap;
+}
+
+/// Provides [dynamic].
+extension DynamicCapsuleCreationConvenience on CapsuleCreationConvenience {
+  /// Shorthand for a fully formed dynamic capsule.
+  /// See [ExperimentalSideEffects.dynamic] for more.
+  ///
+  /// Basic usage:
+  /// ```dart
+  /// final myDynamicCapsule = capsule.dynamic((use, Foo foo) {
+  ///   return use(barCapsule).useFoo(foo);
+  /// });
+  /// ```
+  ///
+  /// # Warning
+  /// Due to limitations in Dart's type system,
+  /// if you wish to use the created capsule recursively,
+  /// you will need to explicitly write the return type like so:
+  /// ```dart
+  /// final DynamicCapsule<int, BigInt> fibonacciCapsule =
+  ///     capsule.dynamic((use, int n) {
+  ///   return switch (n) {
+  ///     _ when n < 0 => throw ArgumentError.value(n),
+  ///     0 => BigInt.zero,
+  ///     1 => BigInt.one,
+  ///     _ => use(fibonacciCapsule[n - 1]) + use(fibonacciCapsule[n - 2]),
+  ///   };
+  /// });
+  /// ```
+  /// NOTE: I'd recommend specifying the return type under all situations
+  /// regardless, as it'll increase code reability.
+  DynamicCapsule<Param, Return> dynamic<Param, Return>(
+    Return Function(CapsuleHandle, Param) dyn,
+  ) {
+    return (CapsuleHandle use) => use.dynamic(dyn);
+  }
 }
 
 /// Shorthand for a fully formed capsule.
@@ -149,4 +157,4 @@ Capsule<DynamicCapsule<Param, Return>> dynamicCapsule<Param, Return>(
 ///   return use(countCapsule) + 1;
 /// });
 /// ```
-Capsule<T> capsule<T>(Capsule<T> cap) => cap;
+const capsule = CapsuleCreationConvenience._();

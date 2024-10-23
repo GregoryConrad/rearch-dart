@@ -41,7 +41,7 @@ class IntroStep extends StatelessWidget {
         const SizedBox(height: 16),
         const OutlinedButton(
           onPressed: _openSmolovJrInfo,
-          child: Text('Click here for more Smolov Jr information'),
+          child: Text('More Smolov Jr Information'),
         ),
         const SizedBox(height: 16),
         const Text(

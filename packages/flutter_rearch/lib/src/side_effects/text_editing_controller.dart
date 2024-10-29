@@ -7,6 +7,5 @@ TextEditingController _textEditingController(
   return use.disposable(
     () => TextEditingController(text: initialText),
     (controller) => controller.dispose(),
-    [initialText],
   );
 }

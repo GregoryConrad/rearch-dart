@@ -4,7 +4,9 @@ TextEditingController _textEditingController(
   WidgetSideEffectRegistrar use, {
   String? initialText,
 }) {
-  final controller = use.memo(() => TextEditingController(text: initialText));
-  use.effect(() => controller.dispose, [controller]);
-  return controller;
+  return use.disposable(
+    () => TextEditingController(text: initialText),
+    (controller) => controller.dispose(),
+    [initialText],
+  );
 }

@@ -70,7 +70,7 @@ AnimationController _animationController(
 }) {
   vsync ??= use.singleTickerProvider();
 
-  final controller = use.memo(
+  return use.disposable(
     () => AnimationController(
       vsync: vsync!,
       duration: duration,
@@ -81,12 +81,8 @@ AnimationController _animationController(
       animationBehavior: animationBehavior,
       value: initialValue,
     ),
-  );
-  use.effect(() => controller.dispose, [controller]);
-
-  controller
+    (controller) => controller.dispose(),
+  )
     ..duration = duration
     ..reverseDuration = reverseDuration;
-
-  return controller;
 }

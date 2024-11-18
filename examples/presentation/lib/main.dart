@@ -322,7 +322,11 @@ class PresentationApp extends StatelessWidget {
 /// Ideally, we would just have a macro,
 /// but static metaprogramming isn't a thing quite yet.
 class FunctionalSlide extends FlutterDeckSlideWidget {
-  const FunctionalSlide({required super.configuration, required this.builder});
+  const FunctionalSlide({
+    required super.configuration,
+    required this.builder,
+    super.key,
+  });
 
   final FlutterDeckSlide Function(BuildContext context) builder;
 

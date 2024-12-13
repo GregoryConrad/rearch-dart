@@ -116,7 +116,7 @@ class ServingPlayerCard extends StatelessWidget {
       bottom: anchorOnTop ? null : 32,
       child: Center(
         child: Card(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withValues(alpha: 0.1),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Text(

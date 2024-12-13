@@ -341,7 +341,7 @@ class CustomAppBar extends StatelessWidget {
             elevation: 2,
             scrolledUnderElevation: 2,
             backgroundColor:
-                Theme.of(context).colorScheme.surface.withOpacity(0.7),
+                Theme.of(context).colorScheme.surface.withValues(alpha: 0.7),
             actions: [
               IconButton(
                 tooltip: completionStatus
@@ -483,7 +483,7 @@ class TodoItem extends RearchConsumer {
       key: ValueKey(timestamp),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Card(
-        color: Theme.of(context).colorScheme.surface.withOpacity(0.6),
+        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.6),
         child: ListTile(
           title: Text(title),
           subtitle: description != null ? Text(description) : null,
@@ -529,7 +529,7 @@ class DynamicBackground extends RearchConsumer {
               centerX: random.nextDouble(),
               centerY: random.nextDouble(),
               color: Color.lerp(color1, color2, random.nextDouble())!
-                  .withOpacity(0.3),
+                  .withValues(alpha: 0.3),
               radius: avgCircleRadius +
                   avgCircleRadius * (random.nextDouble() - 0.5),
               appear: Duration(

@@ -1181,7 +1181,7 @@ FlutterDeckSlide dartAndFlutterLibrary(BuildContext context) {
           ),
           const SizedBox(height: 32),
           Card(
-            color: Colors.white.withOpacity(0.4),
+            color: Colors.white.withValues(alpha: 0.4),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(

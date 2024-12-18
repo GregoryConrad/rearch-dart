@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
 import 'package:hevy_smolov_jr/api/raw_hevy_api.dart';
-import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

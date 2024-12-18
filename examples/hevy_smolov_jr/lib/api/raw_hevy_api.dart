@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:hevy_smolov_jr/shared_prefs.dart';
 import 'package:http/http.dart' as http;
-import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 
 /// The shared preferences key used to store the user's Hevy API key

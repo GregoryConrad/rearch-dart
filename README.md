@@ -36,20 +36,19 @@ And with those, come:
 ## In a Nutshell
 Define your "capsules" (en-_capsulated_ pieces of data) at the top level:
 ```dart
-// Capsules are simply functions that consume a CapsuleHandle.
-// The CapsuleHandle lets you get the data of other capsules,
-// in addition to using a large variety of side effects.
-
 // This particular capsule manages a count from a classic example counter app,
 // using the state side effect.
-(int, void Function()) countManager(CapsuleHandle use) {
+final Capsule<(int, void Function())> countManager = capsule((CapsuleHandle use) {
   final (count, setCount) = use.state(0);
   return (count, () => setCount(count + 1));
-}
+});
 
 // This capsule provides the current count, plus one.
-int countPlusOneCapsule(CapsuleHandle use) => use(countManager).$1 + 1;
+final Capsule<int> countPlusOneCapsule = capsule((use) => use(countManager).$1 + 1);
 ```
+Capsules are simply functions that consume a `CapsuleHandle`.
+The `CapsuleHandle` lets you get the data of capsules via `use(someCapsule)`,
+in addition to using a large variety of side effects via `use.sideEffect()`.
 
 And then, if you are using Flutter, define some widgets:
 ```dart

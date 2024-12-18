@@ -1,3 +1,7 @@
+## 1.6.13
+
+ - **REFACTOR**: migrate widget side effects over to `use.disposable` ([#235](https://github.com/GregoryConrad/rearch-dart/issues/235)).
+
 ## 1.6.12
 
  - Update a dependency to the latest release.

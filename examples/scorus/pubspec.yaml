@@ -9,8 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_rearch: ^1.6.12
-  rearch: ^1.14.0
+  flutter_rearch: ^1.6.13
+  rearch: ^1.15.0
 
 dev_dependencies:
   flutter_test:

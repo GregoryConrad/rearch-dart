@@ -1,3 +1,7 @@
+## 1.15.0
+
+ - **FEAT**: add `capsule` capsule creation convenience ([#245](https://github.com/GregoryConrad/rearch-dart/issues/245)).
+
 ## 1.14.0
 
  - **FEAT**: introduce new experimental dynamic capsule syntax ([#233](https://github.com/GregoryConrad/rearch-dart/issues/233)).

@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-12-18
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.6.13`](#flutter_rearch---v1613)
+ - [`rearch` - `v1.15.0`](#rearch---v1150)
+ - [`ramen` - `v0.0.0-dev.11`](#ramen---v000-dev11)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `ramen` - `v0.0.0-dev.11`
+
+---
+
+#### `flutter_rearch` - `v1.6.13`
+
+ - **REFACTOR**: migrate widget side effects over to `use.disposable` ([#235](https://github.com/GregoryConrad/rearch-dart/issues/235)).
+
+#### `rearch` - `v1.15.0`
+
+ - **FEAT**: add `capsule` capsule creation convenience ([#245](https://github.com/GregoryConrad/rearch-dart/issues/245)).
+
+
 ## 2024-10-20
 
 ### Changes

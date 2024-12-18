@@ -49,3 +49,7 @@ updates:
     directory: "/examples/weather_app"
     schedule:
       interval: weekly
+  - package-ecosystem: pub
+    directory: "/examples/hevy_smolov_jr"
+    schedule:
+      interval: weekly

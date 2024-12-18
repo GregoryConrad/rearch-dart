@@ -1,4 +1,3 @@
-import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 import 'package:test/test.dart';
 

@@ -292,3 +292,24 @@ extension CapsuleMapper<T> on Capsule<T> {
     return (CapsuleReader use) => mapper(use(this));
   }
 }
+
+/// Shorthand for a fully formed [Capsule]
+/// ([Capsule]s are just [Function]s that consume [CapsuleHandle]s).
+///
+/// Basic usage:
+/// ```dart
+/// final countPlusOneCapsule = capsule((use) {
+///   return use(countCapsule) + 1;
+/// });
+/// ```
+///
+/// # Warning
+/// Although [capsule] is convenient,
+/// source code created with it loses explicitly written type information.
+/// For that reason, it is strongly recommended to use [capsule] as such:
+/// ```dart
+/// final Capsule<int> countPlusOneCapsule = capsule((use) {
+///   return use(countCapsule) + 1;
+/// });
+/// ```
+Capsule<T> capsule<T>(Capsule<T> cap) => cap;

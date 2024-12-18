@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hevy_smolov_jr/api/raw_hevy_api.dart';
-import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 
 part 'wrapped_hevy_api.g.dart';

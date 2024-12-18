@@ -93,15 +93,8 @@ extension DynamicCapsuleAccess<Param, Return> on DynamicCapsule<Param, Return> {
   }
 }
 
-/// Used to instantiate [capsule].
-///
-/// This is public so that you may define your own extensions on it.
-final class CapsuleCreationConvenience {
-  const CapsuleCreationConvenience._();
-
-  /// Simplified syntax to create [Capsule]s. See [capsule].
-  Capsule<T> call<T>(Capsule<T> cap) => cap;
-}
+/// This is public so that you may define your own extensions on [capsule].
+typedef CapsuleCreationConvenience = Capsule<T> Function<T>(Capsule<T>);
 
 /// Provides [dynamic].
 extension DynamicCapsuleCreationConvenience on CapsuleCreationConvenience {
@@ -138,23 +131,3 @@ extension DynamicCapsuleCreationConvenience on CapsuleCreationConvenience {
     return (CapsuleHandle use) => use.dynamic(dyn);
   }
 }
-
-/// Shorthand for a fully formed capsule.
-///
-/// Basic usage:
-/// ```dart
-/// final countPlusOneCapsule = capsule((use) {
-///   return use(countCapsule) + 1;
-/// });
-/// ```
-///
-/// # Warning
-/// Although [capsule] is convenient,
-/// source code created with it loses explicitly written type information.
-/// For that reason, it is strongly recommended to use [capsule] as such:
-/// ```dart
-/// final Capsule<int> countPlusOneCapsule = capsule((use) {
-///   return use(countCapsule) + 1;
-/// });
-/// ```
-const capsule = CapsuleCreationConvenience._();

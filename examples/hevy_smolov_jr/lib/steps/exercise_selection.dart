@@ -3,6 +3,7 @@ import 'package:flutter_rearch/flutter_rearch.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:hevy_smolov_jr/api/wrapped_hevy_api.dart';
 import 'package:hevy_smolov_jr/smolov_jr_config/config.dart';
+import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 
 /// Displays the exercise selection step contents.
@@ -51,10 +52,9 @@ class _CuratedExercisePicker extends StatelessWidget {
             ChoiceChip(
               label: Text(exercise.title),
               selected: smolovJrConfig.value.exercise == exercise,
-              onSelected: (selected) {
-                smolovJrConfig.value =
-                    smolovJrConfig.value.copyWith(exercise: exercise);
-              },
+              onSelected: (selected) => smolovJrConfig.updateWith(
+                (config) => config.copyWith(exercise: exercise),
+              ),
             ),
         ],
       ),
@@ -103,8 +103,9 @@ class _AllExercisePicker extends RearchConsumer {
               subtitle: Text(exercise.primaryMuscleGroup.replaceAll('_', ' ')),
               onTap: () {
                 controller.closeView(exercise.title);
-                smolovJrConfig.value =
-                    smolovJrConfig.value.copyWith(exercise: exercise);
+                smolovJrConfig.updateWith(
+                  (config) => config.copyWith(exercise: exercise),
+                );
               },
             ),
         ];

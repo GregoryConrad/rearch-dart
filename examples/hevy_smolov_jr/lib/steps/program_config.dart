@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hevy_smolov_jr/smolov_jr_config/config.dart';
+import 'package:rearch/experimental.dart';
 import 'package:rearch/rearch.dart';
 
 /// Displays the program configuration step/
@@ -20,8 +21,9 @@ class ProgramConfigInputStep extends StatelessWidget {
               child: TextFormField(
                 keyboardType: TextInputType.number,
                 initialValue: smolovJrConfig.value.restSeconds.toString(),
-                onChanged: (s) => smolovJrConfig.value =
-                    smolovJrConfig.value.copyWith(restSeconds: int.tryParse(s)),
+                onChanged: (s) => smolovJrConfig.updateWith(
+                  (config) => config.copyWith(restSeconds: int.tryParse(s)),
+                ),
                 decoration: const InputDecoration(
                   hintText: 'rest',
                   suffixIcon: Text('seconds'),
@@ -40,8 +42,7 @@ class ProgramConfigInputStep extends StatelessWidget {
                 initialSelection: smolovJrConfig.value.unit,
                 onSelected: (unit) {
                   if (unit == null) return;
-                  smolovJrConfig.value =
-                      smolovJrConfig.value.copyWith(unit: unit);
+                  smolovJrConfig.updateWith((c) => c.copyWith(unit: unit));
                 },
                 dropdownMenuEntries: [
                   for (final unit in WeightUnit.values)
@@ -64,8 +65,9 @@ class ProgramConfigInputStep extends StatelessWidget {
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
                 initialValue: smolovJrConfig.value.increment.toString(),
-                onChanged: (s) => smolovJrConfig.value =
-                    smolovJrConfig.value.copyWith(increment: num.parse(s)),
+                onChanged: (s) => smolovJrConfig.updateWith(
+                  (config) => config.copyWith(increment: num.parse(s)),
+                ),
                 decoration: InputDecoration(
                   hintText: 'weight',
                   suffixIcon: Text(smolovJrConfig.value.unit.name),
@@ -86,8 +88,9 @@ class ProgramConfigInputStep extends StatelessWidget {
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
                 initialValue: smolovJrConfig.value.oneRepMax.toString(),
-                onChanged: (s) => smolovJrConfig.value =
-                    smolovJrConfig.value.copyWith(oneRepMax: num.parse(s)),
+                onChanged: (s) => smolovJrConfig.updateWith(
+                  (config) => config.copyWith(oneRepMax: num.parse(s)),
+                ),
                 decoration: InputDecoration(
                   hintText: 'weight',
                   suffixIcon: Text(smolovJrConfig.value.unit.name),
@@ -107,8 +110,9 @@ class ProgramConfigInputStep extends StatelessWidget {
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: true),
                   initialValue: smolovJrConfig.value.bodyWeight.toString(),
-                  onChanged: (s) => smolovJrConfig.value =
-                      smolovJrConfig.value.copyWith(bodyWeight: num.parse(s)),
+                  onChanged: (s) => smolovJrConfig.updateWith(
+                    (config) => config.copyWith(bodyWeight: num.parse(s)),
+                  ),
                   decoration: InputDecoration(
                     hintText: 'weight',
                     suffixIcon: Text(smolovJrConfig.value.unit.name),

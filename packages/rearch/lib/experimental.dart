@@ -131,3 +131,19 @@ extension DynamicCapsuleCreationConvenience on CapsuleCreationConvenience {
     return (CapsuleHandle use) => use.dynamic(dyn);
   }
 }
+
+/// Provides [updateWith].
+extension ValueWrapperUpdateWith<T> on ValueWrapper<T> {
+  /// Updates the current [ValueWrapperProperty.value]
+  /// with the result of calling [mutater] on it.
+  ///
+  /// This can make it easier to update states using their `copyWith` methods:
+  /// ```dart
+  /// final myDataManager = capsule((use) => use.data(MyData()));
+  /// // ...
+  /// use(myDataManager).updateWith((data) => data.copyWith(foo: bar));
+  /// ```
+  /// NOTE: this is experimental because I think a future macro that generates a
+  /// dedicated `updateWith` for each type of `ValueWrapper<T>` could be nice.
+  void updateWith(T Function(T) mutater) => value = mutater(value);
+}

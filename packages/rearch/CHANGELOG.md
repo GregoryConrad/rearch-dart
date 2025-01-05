@@ -1,3 +1,7 @@
+## 1.16.0
+
+ - **FEAT**: add experimental `updateWith` method on `ValueWrapper` ([#254](https://github.com/GregoryConrad/rearch-dart/issues/254)).
+
 ## 1.15.0
 
  - **FEAT**: add `capsule` capsule creation convenience ([#245](https://github.com/GregoryConrad/rearch-dart/issues/245)).

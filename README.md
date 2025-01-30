@@ -55,27 +55,6 @@ And then, if you are using Flutter, define some widgets:
 // Widgets are just like a special kind of capsule!
 // Instead of a CapsuleHandle, they consume a WidgetHandle.
 // They also live at the top level.
-@rearchWidget
-Widget counterAppBody(BuildContext context, WidgetHandle use) {
-  final (count, incrementCount) = use(countManager);
-  final countPlusOne = use(countPlusOneCapsule);
-  return Scaffold(
-    appBar: AppBar(title: Text('ReArch Demo')),
-    floatingActionButton: FloatingActionButton(
-      onPressed: incrementCount,
-      tooltip: 'Increment',
-      child: Icon(Icons.add),
-    ),
-    body: Center(
-      child: Text(
-        '$count + 1 = $countPlusOne',
-        style: TextTheme.of(context).headlineLarge,
-      ),
-    ),
-  );
-}
-
-// Or, until static metaprogramming roles around:
 class CounterAppBody extends RearchConsumer {
   const CounterAppBody({super.key});
 
@@ -100,10 +79,6 @@ class CounterAppBody extends RearchConsumer {
   }
 }
 ```
-
-*Note: the `@rearchWidget` above requires
-[static metaprogramming](https://github.com/dart-lang/language/issues/1482),
-which has not yet been released.*
 
 
 ## Getting Started

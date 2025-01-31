@@ -8,12 +8,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_rearch: ^1.6.14
+  flutter_rearch: ^1.6.14+0
   freezed_annotation: ^2.4.4
   fuzzywuzzy: ^1.2.0
   http: ^1.2.2
   json_annotation: ^4.9.0
-  rearch: ^1.16.0
+  rearch: ^1.16.0+0
   shared_preferences: ^2.3.2
   url_launcher: ^6.3.1
 

@@ -1,3 +1,7 @@
+## 1.16.0+0
+
+ - Bump "rearch" to `1.16.0+0`.
+
 ## 1.16.0
 
  - **FEAT**: add experimental `updateWith` method on `ValueWrapper` ([#254](https://github.com/GregoryConrad/rearch-dart/issues/254)).

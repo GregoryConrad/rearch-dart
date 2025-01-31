@@ -1,3 +1,7 @@
+## 1.6.14+0
+
+ - Bump "flutter_rearch" to `1.6.14+0`.
+
 ## 1.6.14
 
  - Update a dependency to the latest release.

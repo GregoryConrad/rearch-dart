@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_rearch/experimental.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hevy_smolov_jr/api/wrapped_hevy_api.dart';
@@ -112,49 +113,19 @@ extension SmolovJrConfigConvenience on SmolovJrConfig {
 }
 
 /// Provides the current [SmolovJrConfig] to descendants in the [Widget] tree.
-ValueWrapper<SmolovJrConfig> scopedSmolovJrConfig(WidgetHandle use) {
-  return use.lazyData(SmolovJrConfig.initial);
-}
-
-// NOTE: we really need macros...
-// ignore: public_member_api_docs
-class ScopedSmolovJrConfig extends RearchConsumer {
-  // ignore: public_member_api_docs
-  const ScopedSmolovJrConfig({required this.child, super.key});
-  // ignore: public_member_api_docs
-  final Widget child;
+class SmolovJrConfigInjection extends RearchInjection<SmolovJrConfigInjection,
+    ValueWrapper<SmolovJrConfig>> {
+  /// Provides the current [SmolovJrConfig] to descendants in the [Widget] tree.
+  const SmolovJrConfigInjection({required super.child, super.key});
 
   @override
-  Widget build(BuildContext context, WidgetHandle use) {
-    return _ScopedSmolovJrConfig(
-      scopedSmolovJrConfig(use),
-      child: child,
-    );
+  ValueWrapper<SmolovJrConfig> build(BuildContext context, WidgetHandle use) {
+    return use.lazyData(SmolovJrConfig.initial);
   }
 
-  // ignore: public_member_api_docs
-  static ValueWrapper<SmolovJrConfig>? maybeOf(BuildContext context) =>
-      _ScopedSmolovJrConfig._maybeOf(context)?._data;
-
-  // ignore: public_member_api_docs
-  static ValueWrapper<SmolovJrConfig> of(BuildContext context) =>
-      _ScopedSmolovJrConfig._of(context)._data;
-}
-
-class _ScopedSmolovJrConfig extends InheritedWidget {
-  const _ScopedSmolovJrConfig(this._data, {required super.child});
-  final ValueWrapper<SmolovJrConfig> _data;
-
-  @override
-  bool updateShouldNotify(_ScopedSmolovJrConfig oldWidget) =>
-      oldWidget._data != _data;
-
-  static _ScopedSmolovJrConfig? _maybeOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<_ScopedSmolovJrConfig>();
-
-  static _ScopedSmolovJrConfig _of(BuildContext context) {
-    final widget = _maybeOf(context);
-    assert(widget != null, 'No ScopedSmolovJrConfig found in context');
-    return widget!;
+  /// Provides the current [SmolovJrConfig] to descendants in the [Widget] tree.
+  static ValueWrapper<SmolovJrConfig> of(BuildContext context) {
+    return RearchInjection.of<SmolovJrConfigInjection,
+        ValueWrapper<SmolovJrConfig>>(context);
   }
 }

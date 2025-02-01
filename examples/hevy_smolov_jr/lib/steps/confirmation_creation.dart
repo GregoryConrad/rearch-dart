@@ -13,7 +13,7 @@ class ConfirmationAndCreationStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final smolovJrConfig = ScopedSmolovJrConfig.of(context).value;
+    final smolovJrConfig = SmolovJrConfigInjection.of(context).value;
     if (smolovJrConfig.exercise == null) {
       return const Text('Select an exercise in the previous step to continue');
     }
@@ -44,7 +44,7 @@ class SaveProgramButton extends RearchConsumer {
   @override
   Widget build(BuildContext context, WidgetHandle use) {
     final (:mutate, :state, clear: _) = use.mutation<void>();
-    final config = ScopedSmolovJrConfig.of(context).value;
+    final config = SmolovJrConfigInjection.of(context).value;
     final rawCreateProgram = use(createProgramAction);
     final createProgram = use.memo(
       () {

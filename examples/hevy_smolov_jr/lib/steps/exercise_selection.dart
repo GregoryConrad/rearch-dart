@@ -40,7 +40,7 @@ class _CuratedExercisePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final smolovJrConfig = ScopedSmolovJrConfig.of(context);
+    final smolovJrConfig = SmolovJrConfigInjection.of(context);
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 600),
       child: Wrap(
@@ -90,7 +90,7 @@ class _AllExercisePicker extends RearchConsumer {
   @override
   Widget build(BuildContext context, WidgetHandle use) {
     final searchExercises = use(_searchExercisesAction);
-    final smolovJrConfig = ScopedSmolovJrConfig.of(context);
+    final smolovJrConfig = SmolovJrConfigInjection.of(context);
     return SearchAnchor.bar(
       barHintText: 'Search for an exercise...',
       viewConstraints: const BoxConstraints(maxHeight: 464),

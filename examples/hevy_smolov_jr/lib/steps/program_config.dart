@@ -10,7 +10,7 @@ class ProgramConfigInputStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final smolovJrConfig = ScopedSmolovJrConfig.of(context);
+    final smolovJrConfig = SmolovJrConfigInjection.of(context);
     return Column(
       children: [
         Row(

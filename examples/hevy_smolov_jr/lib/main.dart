@@ -69,7 +69,7 @@ class HomePage extends RearchConsumer {
     final isLastStep = currStep.value == steps.length - 1;
 
     return Scaffold(
-      body: ScopedSmolovJrConfig(
+      body: SmolovJrConfigInjection(
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 800),

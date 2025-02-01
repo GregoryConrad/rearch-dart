@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-02-01
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.7.0`](#flutter_rearch---v170)
+
+---
+
+#### `flutter_rearch` - `v1.7.0`
+
+ - **FEAT**: add experimental `RearchInjection` widget for scoped state ([#267](https://github.com/GregoryConrad/rearch-dart/issues/267)).
+
+
 ## 2025-01-30
 
 ### Changes

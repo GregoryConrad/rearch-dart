@@ -1,3 +1,7 @@
+## 1.7.0
+
+ - **FEAT**: add experimental `RearchInjection` widget for scoped state ([#267](https://github.com/GregoryConrad/rearch-dart/issues/267)).
+
 ## 1.6.14+0
 
  - Bump "flutter_rearch" to `1.6.14+0`.

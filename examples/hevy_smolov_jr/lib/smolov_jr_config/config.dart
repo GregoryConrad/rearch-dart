@@ -27,7 +27,7 @@ extension on WeightUnit {
 
 /// Represents the necessary config for the Smolov Jr program.
 @freezed
-class SmolovJrConfig with _$SmolovJrConfig {
+sealed class SmolovJrConfig with _$SmolovJrConfig {
   /// Creates a [SmolovJrConfig].
   const factory SmolovJrConfig({
     /// 1rm _without_ bodyweight included, in case this is a body weight lift

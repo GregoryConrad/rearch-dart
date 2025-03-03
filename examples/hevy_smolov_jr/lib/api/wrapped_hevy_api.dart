@@ -9,7 +9,7 @@ part 'wrapped_hevy_api.freezed.dart';
 // ignore_for_file: public_member_api_docs
 
 @freezed
-class ExerciseTemplatesResponse with _$ExerciseTemplatesResponse {
+sealed class ExerciseTemplatesResponse with _$ExerciseTemplatesResponse {
   const factory ExerciseTemplatesResponse({
     required int pageCount,
     required int page,
@@ -21,7 +21,7 @@ class ExerciseTemplatesResponse with _$ExerciseTemplatesResponse {
 }
 
 @freezed
-class Exercise with _$Exercise {
+sealed class Exercise with _$Exercise {
   const factory Exercise({
     required String id,
     required String title,
@@ -74,7 +74,7 @@ final Capsule<Future<int> Function({required String folderName})>
 });
 
 @freezed
-class RoutineTemplate with _$RoutineTemplate {
+sealed class RoutineTemplate with _$RoutineTemplate {
   const factory RoutineTemplate({
     required String title,
     required List<RoutineTemplateExercise> exercises,
@@ -87,7 +87,7 @@ class RoutineTemplate with _$RoutineTemplate {
 }
 
 @freezed
-class RoutineTemplateExercise with _$RoutineTemplateExercise {
+sealed class RoutineTemplateExercise with _$RoutineTemplateExercise {
   const factory RoutineTemplateExercise({
     required String exerciseTemplateId,
     required List<RoutineTemplateSet> sets,
@@ -101,7 +101,7 @@ class RoutineTemplateExercise with _$RoutineTemplateExercise {
 }
 
 @freezed
-class RoutineTemplateSet with _$RoutineTemplateSet {
+sealed class RoutineTemplateSet with _$RoutineTemplateSet {
   const factory RoutineTemplateSet._({
     required String type,
     num? weightKg,

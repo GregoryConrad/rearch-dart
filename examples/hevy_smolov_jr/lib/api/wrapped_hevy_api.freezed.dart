@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,99 +10,65 @@ part of 'wrapped_hevy_api.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-ExerciseTemplatesResponse _$ExerciseTemplatesResponseFromJson(
-    Map<String, dynamic> json) {
-  return _ExerciseTemplatesResponse.fromJson(json);
-}
 
 /// @nodoc
 mixin _$ExerciseTemplatesResponse {
-  int get pageCount => throw _privateConstructorUsedError;
-  int get page => throw _privateConstructorUsedError;
-  List<Exercise> get exerciseTemplates => throw _privateConstructorUsedError;
-
-  /// Serializes this ExerciseTemplatesResponse to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  int get pageCount;
+  int get page;
+  List<Exercise> get exerciseTemplates;
 
   /// Create a copy of ExerciseTemplatesResponse
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ExerciseTemplatesResponseCopyWith<ExerciseTemplatesResponse> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ExerciseTemplatesResponseCopyWith<$Res> {
-  factory $ExerciseTemplatesResponseCopyWith(ExerciseTemplatesResponse value,
-          $Res Function(ExerciseTemplatesResponse) then) =
-      _$ExerciseTemplatesResponseCopyWithImpl<$Res, ExerciseTemplatesResponse>;
-  @useResult
-  $Res call({int pageCount, int page, List<Exercise> exerciseTemplates});
-}
-
-/// @nodoc
-class _$ExerciseTemplatesResponseCopyWithImpl<$Res,
-        $Val extends ExerciseTemplatesResponse>
-    implements $ExerciseTemplatesResponseCopyWith<$Res> {
-  _$ExerciseTemplatesResponseCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of ExerciseTemplatesResponse
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $ExerciseTemplatesResponseCopyWith<ExerciseTemplatesResponse> get copyWith =>
+      _$ExerciseTemplatesResponseCopyWithImpl<ExerciseTemplatesResponse>(
+          this as ExerciseTemplatesResponse, _$identity);
+
+  /// Serializes this ExerciseTemplatesResponse to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? pageCount = null,
-    Object? page = null,
-    Object? exerciseTemplates = null,
-  }) {
-    return _then(_value.copyWith(
-      pageCount: null == pageCount
-          ? _value.pageCount
-          : pageCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      page: null == page
-          ? _value.page
-          : page // ignore: cast_nullable_to_non_nullable
-              as int,
-      exerciseTemplates: null == exerciseTemplates
-          ? _value.exerciseTemplates
-          : exerciseTemplates // ignore: cast_nullable_to_non_nullable
-              as List<Exercise>,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is ExerciseTemplatesResponse &&
+            (identical(other.pageCount, pageCount) ||
+                other.pageCount == pageCount) &&
+            (identical(other.page, page) || other.page == page) &&
+            const DeepCollectionEquality()
+                .equals(other.exerciseTemplates, exerciseTemplates));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, pageCount, page,
+      const DeepCollectionEquality().hash(exerciseTemplates));
+
+  @override
+  String toString() {
+    return 'ExerciseTemplatesResponse(pageCount: $pageCount, page: $page, exerciseTemplates: $exerciseTemplates)';
   }
 }
 
 /// @nodoc
-abstract class _$$ExerciseTemplatesResponseImplCopyWith<$Res>
-    implements $ExerciseTemplatesResponseCopyWith<$Res> {
-  factory _$$ExerciseTemplatesResponseImplCopyWith(
-          _$ExerciseTemplatesResponseImpl value,
-          $Res Function(_$ExerciseTemplatesResponseImpl) then) =
-      __$$ExerciseTemplatesResponseImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $ExerciseTemplatesResponseCopyWith<$Res> {
+  factory $ExerciseTemplatesResponseCopyWith(ExerciseTemplatesResponse value,
+          $Res Function(ExerciseTemplatesResponse) _then) =
+      _$ExerciseTemplatesResponseCopyWithImpl;
   @useResult
   $Res call({int pageCount, int page, List<Exercise> exerciseTemplates});
 }
 
 /// @nodoc
-class __$$ExerciseTemplatesResponseImplCopyWithImpl<$Res>
-    extends _$ExerciseTemplatesResponseCopyWithImpl<$Res,
-        _$ExerciseTemplatesResponseImpl>
-    implements _$$ExerciseTemplatesResponseImplCopyWith<$Res> {
-  __$$ExerciseTemplatesResponseImplCopyWithImpl(
-      _$ExerciseTemplatesResponseImpl _value,
-      $Res Function(_$ExerciseTemplatesResponseImpl) _then)
-      : super(_value, _then);
+class _$ExerciseTemplatesResponseCopyWithImpl<$Res>
+    implements $ExerciseTemplatesResponseCopyWith<$Res> {
+  _$ExerciseTemplatesResponseCopyWithImpl(this._self, this._then);
+
+  final ExerciseTemplatesResponse _self;
+  final $Res Function(ExerciseTemplatesResponse) _then;
 
   /// Create a copy of ExerciseTemplatesResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -112,17 +79,17 @@ class __$$ExerciseTemplatesResponseImplCopyWithImpl<$Res>
     Object? page = null,
     Object? exerciseTemplates = null,
   }) {
-    return _then(_$ExerciseTemplatesResponseImpl(
+    return _then(_self.copyWith(
       pageCount: null == pageCount
-          ? _value.pageCount
+          ? _self.pageCount
           : pageCount // ignore: cast_nullable_to_non_nullable
               as int,
       page: null == page
-          ? _value.page
+          ? _self.page
           : page // ignore: cast_nullable_to_non_nullable
               as int,
       exerciseTemplates: null == exerciseTemplates
-          ? _value._exerciseTemplates
+          ? _self.exerciseTemplates
           : exerciseTemplates // ignore: cast_nullable_to_non_nullable
               as List<Exercise>,
     ));
@@ -131,15 +98,14 @@ class __$$ExerciseTemplatesResponseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ExerciseTemplatesResponseImpl implements _ExerciseTemplatesResponse {
-  const _$ExerciseTemplatesResponseImpl(
+class _ExerciseTemplatesResponse implements ExerciseTemplatesResponse {
+  const _ExerciseTemplatesResponse(
       {required this.pageCount,
       required this.page,
       required final List<Exercise> exerciseTemplates})
       : _exerciseTemplates = exerciseTemplates;
-
-  factory _$ExerciseTemplatesResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ExerciseTemplatesResponseImplFromJson(json);
+  factory _ExerciseTemplatesResponse.fromJson(Map<String, dynamic> json) =>
+      _$ExerciseTemplatesResponseFromJson(json);
 
   @override
   final int pageCount;
@@ -154,16 +120,28 @@ class _$ExerciseTemplatesResponseImpl implements _ExerciseTemplatesResponse {
     return EqualUnmodifiableListView(_exerciseTemplates);
   }
 
+  /// Create a copy of ExerciseTemplatesResponse
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'ExerciseTemplatesResponse(pageCount: $pageCount, page: $page, exerciseTemplates: $exerciseTemplates)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ExerciseTemplatesResponseCopyWith<_ExerciseTemplatesResponse>
+      get copyWith =>
+          __$ExerciseTemplatesResponseCopyWithImpl<_ExerciseTemplatesResponse>(
+              this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$ExerciseTemplatesResponseToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ExerciseTemplatesResponseImpl &&
+            other is _ExerciseTemplatesResponse &&
             (identical(other.pageCount, pageCount) ||
                 other.pageCount == pageCount) &&
             (identical(other.page, page) || other.page == page) &&
@@ -176,150 +154,117 @@ class _$ExerciseTemplatesResponseImpl implements _ExerciseTemplatesResponse {
   int get hashCode => Object.hash(runtimeType, pageCount, page,
       const DeepCollectionEquality().hash(_exerciseTemplates));
 
-  /// Create a copy of ExerciseTemplatesResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$ExerciseTemplatesResponseImplCopyWith<_$ExerciseTemplatesResponseImpl>
-      get copyWith => __$$ExerciseTemplatesResponseImplCopyWithImpl<
-          _$ExerciseTemplatesResponseImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ExerciseTemplatesResponseImplToJson(
-      this,
-    );
+  String toString() {
+    return 'ExerciseTemplatesResponse(pageCount: $pageCount, page: $page, exerciseTemplates: $exerciseTemplates)';
   }
 }
 
-abstract class _ExerciseTemplatesResponse implements ExerciseTemplatesResponse {
-  const factory _ExerciseTemplatesResponse(
-          {required final int pageCount,
-          required final int page,
-          required final List<Exercise> exerciseTemplates}) =
-      _$ExerciseTemplatesResponseImpl;
+/// @nodoc
+abstract mixin class _$ExerciseTemplatesResponseCopyWith<$Res>
+    implements $ExerciseTemplatesResponseCopyWith<$Res> {
+  factory _$ExerciseTemplatesResponseCopyWith(_ExerciseTemplatesResponse value,
+          $Res Function(_ExerciseTemplatesResponse) _then) =
+      __$ExerciseTemplatesResponseCopyWithImpl;
+  @override
+  @useResult
+  $Res call({int pageCount, int page, List<Exercise> exerciseTemplates});
+}
 
-  factory _ExerciseTemplatesResponse.fromJson(Map<String, dynamic> json) =
-      _$ExerciseTemplatesResponseImpl.fromJson;
+/// @nodoc
+class __$ExerciseTemplatesResponseCopyWithImpl<$Res>
+    implements _$ExerciseTemplatesResponseCopyWith<$Res> {
+  __$ExerciseTemplatesResponseCopyWithImpl(this._self, this._then);
 
-  @override
-  int get pageCount;
-  @override
-  int get page;
-  @override
-  List<Exercise> get exerciseTemplates;
+  final _ExerciseTemplatesResponse _self;
+  final $Res Function(_ExerciseTemplatesResponse) _then;
 
   /// Create a copy of ExerciseTemplatesResponse
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ExerciseTemplatesResponseImplCopyWith<_$ExerciseTemplatesResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
-
-Exercise _$ExerciseFromJson(Map<String, dynamic> json) {
-  return _Exercise.fromJson(json);
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? pageCount = null,
+    Object? page = null,
+    Object? exerciseTemplates = null,
+  }) {
+    return _then(_ExerciseTemplatesResponse(
+      pageCount: null == pageCount
+          ? _self.pageCount
+          : pageCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      page: null == page
+          ? _self.page
+          : page // ignore: cast_nullable_to_non_nullable
+              as int,
+      exerciseTemplates: null == exerciseTemplates
+          ? _self._exerciseTemplates
+          : exerciseTemplates // ignore: cast_nullable_to_non_nullable
+              as List<Exercise>,
+    ));
+  }
 }
 
 /// @nodoc
 mixin _$Exercise {
-  String get id => throw _privateConstructorUsedError;
-  String get title => throw _privateConstructorUsedError;
-  String get type => throw _privateConstructorUsedError;
-  String get primaryMuscleGroup => throw _privateConstructorUsedError;
-  List<String> get secondaryMuscleGroups => throw _privateConstructorUsedError;
-  String get equipment => throw _privateConstructorUsedError;
-  bool get isCustom => throw _privateConstructorUsedError;
-
-  /// Serializes this Exercise to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  String get id;
+  String get title;
+  String get type;
+  String get primaryMuscleGroup;
+  List<String> get secondaryMuscleGroups;
+  String get equipment;
+  bool get isCustom;
 
   /// Create a copy of Exercise
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ExerciseCopyWith<Exercise> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ExerciseCopyWith<$Res> {
-  factory $ExerciseCopyWith(Exercise value, $Res Function(Exercise) then) =
-      _$ExerciseCopyWithImpl<$Res, Exercise>;
-  @useResult
-  $Res call(
-      {String id,
-      String title,
-      String type,
-      String primaryMuscleGroup,
-      List<String> secondaryMuscleGroups,
-      String equipment,
-      bool isCustom});
-}
-
-/// @nodoc
-class _$ExerciseCopyWithImpl<$Res, $Val extends Exercise>
-    implements $ExerciseCopyWith<$Res> {
-  _$ExerciseCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of Exercise
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $ExerciseCopyWith<Exercise> get copyWith =>
+      _$ExerciseCopyWithImpl<Exercise>(this as Exercise, _$identity);
+
+  /// Serializes this Exercise to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? id = null,
-    Object? title = null,
-    Object? type = null,
-    Object? primaryMuscleGroup = null,
-    Object? secondaryMuscleGroups = null,
-    Object? equipment = null,
-    Object? isCustom = null,
-  }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      primaryMuscleGroup: null == primaryMuscleGroup
-          ? _value.primaryMuscleGroup
-          : primaryMuscleGroup // ignore: cast_nullable_to_non_nullable
-              as String,
-      secondaryMuscleGroups: null == secondaryMuscleGroups
-          ? _value.secondaryMuscleGroups
-          : secondaryMuscleGroups // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      equipment: null == equipment
-          ? _value.equipment
-          : equipment // ignore: cast_nullable_to_non_nullable
-              as String,
-      isCustom: null == isCustom
-          ? _value.isCustom
-          : isCustom // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is Exercise &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.title, title) || other.title == title) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.primaryMuscleGroup, primaryMuscleGroup) ||
+                other.primaryMuscleGroup == primaryMuscleGroup) &&
+            const DeepCollectionEquality()
+                .equals(other.secondaryMuscleGroups, secondaryMuscleGroups) &&
+            (identical(other.equipment, equipment) ||
+                other.equipment == equipment) &&
+            (identical(other.isCustom, isCustom) ||
+                other.isCustom == isCustom));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      title,
+      type,
+      primaryMuscleGroup,
+      const DeepCollectionEquality().hash(secondaryMuscleGroups),
+      equipment,
+      isCustom);
+
+  @override
+  String toString() {
+    return 'Exercise(id: $id, title: $title, type: $type, primaryMuscleGroup: $primaryMuscleGroup, secondaryMuscleGroups: $secondaryMuscleGroups, equipment: $equipment, isCustom: $isCustom)';
   }
 }
 
 /// @nodoc
-abstract class _$$ExerciseImplCopyWith<$Res>
-    implements $ExerciseCopyWith<$Res> {
-  factory _$$ExerciseImplCopyWith(
-          _$ExerciseImpl value, $Res Function(_$ExerciseImpl) then) =
-      __$$ExerciseImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $ExerciseCopyWith<$Res> {
+  factory $ExerciseCopyWith(Exercise value, $Res Function(Exercise) _then) =
+      _$ExerciseCopyWithImpl;
   @useResult
   $Res call(
       {String id,
@@ -332,12 +277,11 @@ abstract class _$$ExerciseImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$ExerciseImplCopyWithImpl<$Res>
-    extends _$ExerciseCopyWithImpl<$Res, _$ExerciseImpl>
-    implements _$$ExerciseImplCopyWith<$Res> {
-  __$$ExerciseImplCopyWithImpl(
-      _$ExerciseImpl _value, $Res Function(_$ExerciseImpl) _then)
-      : super(_value, _then);
+class _$ExerciseCopyWithImpl<$Res> implements $ExerciseCopyWith<$Res> {
+  _$ExerciseCopyWithImpl(this._self, this._then);
+
+  final Exercise _self;
+  final $Res Function(Exercise) _then;
 
   /// Create a copy of Exercise
   /// with the given fields replaced by the non-null parameter values.
@@ -352,33 +296,33 @@ class __$$ExerciseImplCopyWithImpl<$Res>
     Object? equipment = null,
     Object? isCustom = null,
   }) {
-    return _then(_$ExerciseImpl(
+    return _then(_self.copyWith(
       id: null == id
-          ? _value.id
+          ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
       title: null == title
-          ? _value.title
+          ? _self.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
       type: null == type
-          ? _value.type
+          ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
       primaryMuscleGroup: null == primaryMuscleGroup
-          ? _value.primaryMuscleGroup
+          ? _self.primaryMuscleGroup
           : primaryMuscleGroup // ignore: cast_nullable_to_non_nullable
               as String,
       secondaryMuscleGroups: null == secondaryMuscleGroups
-          ? _value._secondaryMuscleGroups
+          ? _self.secondaryMuscleGroups
           : secondaryMuscleGroups // ignore: cast_nullable_to_non_nullable
               as List<String>,
       equipment: null == equipment
-          ? _value.equipment
+          ? _self.equipment
           : equipment // ignore: cast_nullable_to_non_nullable
               as String,
       isCustom: null == isCustom
-          ? _value.isCustom
+          ? _self.isCustom
           : isCustom // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
@@ -387,8 +331,8 @@ class __$$ExerciseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ExerciseImpl implements _Exercise {
-  const _$ExerciseImpl(
+class _Exercise implements Exercise {
+  const _Exercise(
       {required this.id,
       required this.title,
       required this.type,
@@ -397,9 +341,8 @@ class _$ExerciseImpl implements _Exercise {
       required this.equipment,
       required this.isCustom})
       : _secondaryMuscleGroups = secondaryMuscleGroups;
-
-  factory _$ExerciseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ExerciseImplFromJson(json);
+  factory _Exercise.fromJson(Map<String, dynamic> json) =>
+      _$ExerciseFromJson(json);
 
   @override
   final String id;
@@ -423,16 +366,26 @@ class _$ExerciseImpl implements _Exercise {
   @override
   final bool isCustom;
 
+  /// Create a copy of Exercise
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'Exercise(id: $id, title: $title, type: $type, primaryMuscleGroup: $primaryMuscleGroup, secondaryMuscleGroups: $secondaryMuscleGroups, equipment: $equipment, isCustom: $isCustom)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ExerciseCopyWith<_Exercise> get copyWith =>
+      __$ExerciseCopyWithImpl<_Exercise>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$ExerciseToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ExerciseImpl &&
+            other is _Exercise &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.type, type) || other.type == type) &&
@@ -458,141 +411,128 @@ class _$ExerciseImpl implements _Exercise {
       equipment,
       isCustom);
 
-  /// Create a copy of Exercise
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$ExerciseImplCopyWith<_$ExerciseImpl> get copyWith =>
-      __$$ExerciseImplCopyWithImpl<_$ExerciseImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ExerciseImplToJson(
-      this,
-    );
+  String toString() {
+    return 'Exercise(id: $id, title: $title, type: $type, primaryMuscleGroup: $primaryMuscleGroup, secondaryMuscleGroups: $secondaryMuscleGroups, equipment: $equipment, isCustom: $isCustom)';
   }
 }
 
-abstract class _Exercise implements Exercise {
-  const factory _Exercise(
-      {required final String id,
-      required final String title,
-      required final String type,
-      required final String primaryMuscleGroup,
-      required final List<String> secondaryMuscleGroups,
-      required final String equipment,
-      required final bool isCustom}) = _$ExerciseImpl;
+/// @nodoc
+abstract mixin class _$ExerciseCopyWith<$Res>
+    implements $ExerciseCopyWith<$Res> {
+  factory _$ExerciseCopyWith(_Exercise value, $Res Function(_Exercise) _then) =
+      __$ExerciseCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String id,
+      String title,
+      String type,
+      String primaryMuscleGroup,
+      List<String> secondaryMuscleGroups,
+      String equipment,
+      bool isCustom});
+}
 
-  factory _Exercise.fromJson(Map<String, dynamic> json) =
-      _$ExerciseImpl.fromJson;
+/// @nodoc
+class __$ExerciseCopyWithImpl<$Res> implements _$ExerciseCopyWith<$Res> {
+  __$ExerciseCopyWithImpl(this._self, this._then);
 
-  @override
-  String get id;
-  @override
-  String get title;
-  @override
-  String get type;
-  @override
-  String get primaryMuscleGroup;
-  @override
-  List<String> get secondaryMuscleGroups;
-  @override
-  String get equipment;
-  @override
-  bool get isCustom;
+  final _Exercise _self;
+  final $Res Function(_Exercise) _then;
 
   /// Create a copy of Exercise
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ExerciseImplCopyWith<_$ExerciseImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-RoutineTemplate _$RoutineTemplateFromJson(Map<String, dynamic> json) {
-  return _RoutineTemplate.fromJson(json);
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? id = null,
+    Object? title = null,
+    Object? type = null,
+    Object? primaryMuscleGroup = null,
+    Object? secondaryMuscleGroups = null,
+    Object? equipment = null,
+    Object? isCustom = null,
+  }) {
+    return _then(_Exercise(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      title: null == title
+          ? _self.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _self.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      primaryMuscleGroup: null == primaryMuscleGroup
+          ? _self.primaryMuscleGroup
+          : primaryMuscleGroup // ignore: cast_nullable_to_non_nullable
+              as String,
+      secondaryMuscleGroups: null == secondaryMuscleGroups
+          ? _self._secondaryMuscleGroups
+          : secondaryMuscleGroups // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      equipment: null == equipment
+          ? _self.equipment
+          : equipment // ignore: cast_nullable_to_non_nullable
+              as String,
+      isCustom: null == isCustom
+          ? _self.isCustom
+          : isCustom // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
 }
 
 /// @nodoc
 mixin _$RoutineTemplate {
-  String get title => throw _privateConstructorUsedError;
-  List<RoutineTemplateExercise> get exercises =>
-      throw _privateConstructorUsedError;
-  String? get notes => throw _privateConstructorUsedError;
-  int? get folderId => throw _privateConstructorUsedError;
-
-  /// Serializes this RoutineTemplate to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  String get title;
+  List<RoutineTemplateExercise> get exercises;
+  String? get notes;
+  int? get folderId;
 
   /// Create a copy of RoutineTemplate
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $RoutineTemplateCopyWith<RoutineTemplate> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $RoutineTemplateCopyWith<$Res> {
-  factory $RoutineTemplateCopyWith(
-          RoutineTemplate value, $Res Function(RoutineTemplate) then) =
-      _$RoutineTemplateCopyWithImpl<$Res, RoutineTemplate>;
-  @useResult
-  $Res call(
-      {String title,
-      List<RoutineTemplateExercise> exercises,
-      String? notes,
-      int? folderId});
-}
-
-/// @nodoc
-class _$RoutineTemplateCopyWithImpl<$Res, $Val extends RoutineTemplate>
-    implements $RoutineTemplateCopyWith<$Res> {
-  _$RoutineTemplateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of RoutineTemplate
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $RoutineTemplateCopyWith<RoutineTemplate> get copyWith =>
+      _$RoutineTemplateCopyWithImpl<RoutineTemplate>(
+          this as RoutineTemplate, _$identity);
+
+  /// Serializes this RoutineTemplate to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? title = null,
-    Object? exercises = null,
-    Object? notes = freezed,
-    Object? folderId = freezed,
-  }) {
-    return _then(_value.copyWith(
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      exercises: null == exercises
-          ? _value.exercises
-          : exercises // ignore: cast_nullable_to_non_nullable
-              as List<RoutineTemplateExercise>,
-      notes: freezed == notes
-          ? _value.notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as String?,
-      folderId: freezed == folderId
-          ? _value.folderId
-          : folderId // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is RoutineTemplate &&
+            (identical(other.title, title) || other.title == title) &&
+            const DeepCollectionEquality().equals(other.exercises, exercises) &&
+            (identical(other.notes, notes) || other.notes == notes) &&
+            (identical(other.folderId, folderId) ||
+                other.folderId == folderId));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, title,
+      const DeepCollectionEquality().hash(exercises), notes, folderId);
+
+  @override
+  String toString() {
+    return 'RoutineTemplate(title: $title, exercises: $exercises, notes: $notes, folderId: $folderId)';
   }
 }
 
 /// @nodoc
-abstract class _$$RoutineTemplateImplCopyWith<$Res>
-    implements $RoutineTemplateCopyWith<$Res> {
-  factory _$$RoutineTemplateImplCopyWith(_$RoutineTemplateImpl value,
-          $Res Function(_$RoutineTemplateImpl) then) =
-      __$$RoutineTemplateImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $RoutineTemplateCopyWith<$Res> {
+  factory $RoutineTemplateCopyWith(
+          RoutineTemplate value, $Res Function(RoutineTemplate) _then) =
+      _$RoutineTemplateCopyWithImpl;
   @useResult
   $Res call(
       {String title,
@@ -602,12 +542,12 @@ abstract class _$$RoutineTemplateImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$RoutineTemplateImplCopyWithImpl<$Res>
-    extends _$RoutineTemplateCopyWithImpl<$Res, _$RoutineTemplateImpl>
-    implements _$$RoutineTemplateImplCopyWith<$Res> {
-  __$$RoutineTemplateImplCopyWithImpl(
-      _$RoutineTemplateImpl _value, $Res Function(_$RoutineTemplateImpl) _then)
-      : super(_value, _then);
+class _$RoutineTemplateCopyWithImpl<$Res>
+    implements $RoutineTemplateCopyWith<$Res> {
+  _$RoutineTemplateCopyWithImpl(this._self, this._then);
+
+  final RoutineTemplate _self;
+  final $Res Function(RoutineTemplate) _then;
 
   /// Create a copy of RoutineTemplate
   /// with the given fields replaced by the non-null parameter values.
@@ -619,21 +559,21 @@ class __$$RoutineTemplateImplCopyWithImpl<$Res>
     Object? notes = freezed,
     Object? folderId = freezed,
   }) {
-    return _then(_$RoutineTemplateImpl(
+    return _then(_self.copyWith(
       title: null == title
-          ? _value.title
+          ? _self.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
       exercises: null == exercises
-          ? _value._exercises
+          ? _self.exercises
           : exercises // ignore: cast_nullable_to_non_nullable
               as List<RoutineTemplateExercise>,
       notes: freezed == notes
-          ? _value.notes
+          ? _self.notes
           : notes // ignore: cast_nullable_to_non_nullable
               as String?,
       folderId: freezed == folderId
-          ? _value.folderId
+          ? _self.folderId
           : folderId // ignore: cast_nullable_to_non_nullable
               as int?,
     ));
@@ -642,16 +582,15 @@ class __$$RoutineTemplateImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$RoutineTemplateImpl implements _RoutineTemplate {
-  const _$RoutineTemplateImpl(
+class _RoutineTemplate implements RoutineTemplate {
+  const _RoutineTemplate(
       {required this.title,
       required final List<RoutineTemplateExercise> exercises,
       this.notes,
       this.folderId})
       : _exercises = exercises;
-
-  factory _$RoutineTemplateImpl.fromJson(Map<String, dynamic> json) =>
-      _$$RoutineTemplateImplFromJson(json);
+  factory _RoutineTemplate.fromJson(Map<String, dynamic> json) =>
+      _$RoutineTemplateFromJson(json);
 
   @override
   final String title;
@@ -668,16 +607,26 @@ class _$RoutineTemplateImpl implements _RoutineTemplate {
   @override
   final int? folderId;
 
+  /// Create a copy of RoutineTemplate
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'RoutineTemplate(title: $title, exercises: $exercises, notes: $notes, folderId: $folderId)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$RoutineTemplateCopyWith<_RoutineTemplate> get copyWith =>
+      __$RoutineTemplateCopyWithImpl<_RoutineTemplate>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$RoutineTemplateToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RoutineTemplateImpl &&
+            other is _RoutineTemplate &&
             (identical(other.title, title) || other.title == title) &&
             const DeepCollectionEquality()
                 .equals(other._exercises, _exercises) &&
@@ -691,142 +640,121 @@ class _$RoutineTemplateImpl implements _RoutineTemplate {
   int get hashCode => Object.hash(runtimeType, title,
       const DeepCollectionEquality().hash(_exercises), notes, folderId);
 
-  /// Create a copy of RoutineTemplate
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$RoutineTemplateImplCopyWith<_$RoutineTemplateImpl> get copyWith =>
-      __$$RoutineTemplateImplCopyWithImpl<_$RoutineTemplateImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$RoutineTemplateImplToJson(
-      this,
-    );
+  String toString() {
+    return 'RoutineTemplate(title: $title, exercises: $exercises, notes: $notes, folderId: $folderId)';
   }
 }
 
-abstract class _RoutineTemplate implements RoutineTemplate {
-  const factory _RoutineTemplate(
-      {required final String title,
-      required final List<RoutineTemplateExercise> exercises,
-      final String? notes,
-      final int? folderId}) = _$RoutineTemplateImpl;
+/// @nodoc
+abstract mixin class _$RoutineTemplateCopyWith<$Res>
+    implements $RoutineTemplateCopyWith<$Res> {
+  factory _$RoutineTemplateCopyWith(
+          _RoutineTemplate value, $Res Function(_RoutineTemplate) _then) =
+      __$RoutineTemplateCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String title,
+      List<RoutineTemplateExercise> exercises,
+      String? notes,
+      int? folderId});
+}
 
-  factory _RoutineTemplate.fromJson(Map<String, dynamic> json) =
-      _$RoutineTemplateImpl.fromJson;
+/// @nodoc
+class __$RoutineTemplateCopyWithImpl<$Res>
+    implements _$RoutineTemplateCopyWith<$Res> {
+  __$RoutineTemplateCopyWithImpl(this._self, this._then);
 
-  @override
-  String get title;
-  @override
-  List<RoutineTemplateExercise> get exercises;
-  @override
-  String? get notes;
-  @override
-  int? get folderId;
+  final _RoutineTemplate _self;
+  final $Res Function(_RoutineTemplate) _then;
 
   /// Create a copy of RoutineTemplate
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$RoutineTemplateImplCopyWith<_$RoutineTemplateImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-RoutineTemplateExercise _$RoutineTemplateExerciseFromJson(
-    Map<String, dynamic> json) {
-  return _RoutineTemplateExercise.fromJson(json);
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? title = null,
+    Object? exercises = null,
+    Object? notes = freezed,
+    Object? folderId = freezed,
+  }) {
+    return _then(_RoutineTemplate(
+      title: null == title
+          ? _self.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      exercises: null == exercises
+          ? _self._exercises
+          : exercises // ignore: cast_nullable_to_non_nullable
+              as List<RoutineTemplateExercise>,
+      notes: freezed == notes
+          ? _self.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
+      folderId: freezed == folderId
+          ? _self.folderId
+          : folderId // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
+  }
 }
 
 /// @nodoc
 mixin _$RoutineTemplateExercise {
-  String get exerciseTemplateId => throw _privateConstructorUsedError;
-  List<RoutineTemplateSet> get sets => throw _privateConstructorUsedError;
-  int? get supersetId => throw _privateConstructorUsedError;
-  int? get restSeconds => throw _privateConstructorUsedError;
-  String? get notes => throw _privateConstructorUsedError;
-
-  /// Serializes this RoutineTemplateExercise to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  String get exerciseTemplateId;
+  List<RoutineTemplateSet> get sets;
+  int? get supersetId;
+  int? get restSeconds;
+  String? get notes;
 
   /// Create a copy of RoutineTemplateExercise
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $RoutineTemplateExerciseCopyWith<RoutineTemplateExercise> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $RoutineTemplateExerciseCopyWith<$Res> {
-  factory $RoutineTemplateExerciseCopyWith(RoutineTemplateExercise value,
-          $Res Function(RoutineTemplateExercise) then) =
-      _$RoutineTemplateExerciseCopyWithImpl<$Res, RoutineTemplateExercise>;
-  @useResult
-  $Res call(
-      {String exerciseTemplateId,
-      List<RoutineTemplateSet> sets,
-      int? supersetId,
-      int? restSeconds,
-      String? notes});
-}
-
-/// @nodoc
-class _$RoutineTemplateExerciseCopyWithImpl<$Res,
-        $Val extends RoutineTemplateExercise>
-    implements $RoutineTemplateExerciseCopyWith<$Res> {
-  _$RoutineTemplateExerciseCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of RoutineTemplateExercise
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
+  $RoutineTemplateExerciseCopyWith<RoutineTemplateExercise> get copyWith =>
+      _$RoutineTemplateExerciseCopyWithImpl<RoutineTemplateExercise>(
+          this as RoutineTemplateExercise, _$identity);
+
+  /// Serializes this RoutineTemplateExercise to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? exerciseTemplateId = null,
-    Object? sets = null,
-    Object? supersetId = freezed,
-    Object? restSeconds = freezed,
-    Object? notes = freezed,
-  }) {
-    return _then(_value.copyWith(
-      exerciseTemplateId: null == exerciseTemplateId
-          ? _value.exerciseTemplateId
-          : exerciseTemplateId // ignore: cast_nullable_to_non_nullable
-              as String,
-      sets: null == sets
-          ? _value.sets
-          : sets // ignore: cast_nullable_to_non_nullable
-              as List<RoutineTemplateSet>,
-      supersetId: freezed == supersetId
-          ? _value.supersetId
-          : supersetId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      restSeconds: freezed == restSeconds
-          ? _value.restSeconds
-          : restSeconds // ignore: cast_nullable_to_non_nullable
-              as int?,
-      notes: freezed == notes
-          ? _value.notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is RoutineTemplateExercise &&
+            (identical(other.exerciseTemplateId, exerciseTemplateId) ||
+                other.exerciseTemplateId == exerciseTemplateId) &&
+            const DeepCollectionEquality().equals(other.sets, sets) &&
+            (identical(other.supersetId, supersetId) ||
+                other.supersetId == supersetId) &&
+            (identical(other.restSeconds, restSeconds) ||
+                other.restSeconds == restSeconds) &&
+            (identical(other.notes, notes) || other.notes == notes));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      exerciseTemplateId,
+      const DeepCollectionEquality().hash(sets),
+      supersetId,
+      restSeconds,
+      notes);
+
+  @override
+  String toString() {
+    return 'RoutineTemplateExercise(exerciseTemplateId: $exerciseTemplateId, sets: $sets, supersetId: $supersetId, restSeconds: $restSeconds, notes: $notes)';
   }
 }
 
 /// @nodoc
-abstract class _$$RoutineTemplateExerciseImplCopyWith<$Res>
-    implements $RoutineTemplateExerciseCopyWith<$Res> {
-  factory _$$RoutineTemplateExerciseImplCopyWith(
-          _$RoutineTemplateExerciseImpl value,
-          $Res Function(_$RoutineTemplateExerciseImpl) then) =
-      __$$RoutineTemplateExerciseImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $RoutineTemplateExerciseCopyWith<$Res> {
+  factory $RoutineTemplateExerciseCopyWith(RoutineTemplateExercise value,
+          $Res Function(RoutineTemplateExercise) _then) =
+      _$RoutineTemplateExerciseCopyWithImpl;
   @useResult
   $Res call(
       {String exerciseTemplateId,
@@ -837,14 +765,12 @@ abstract class _$$RoutineTemplateExerciseImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$RoutineTemplateExerciseImplCopyWithImpl<$Res>
-    extends _$RoutineTemplateExerciseCopyWithImpl<$Res,
-        _$RoutineTemplateExerciseImpl>
-    implements _$$RoutineTemplateExerciseImplCopyWith<$Res> {
-  __$$RoutineTemplateExerciseImplCopyWithImpl(
-      _$RoutineTemplateExerciseImpl _value,
-      $Res Function(_$RoutineTemplateExerciseImpl) _then)
-      : super(_value, _then);
+class _$RoutineTemplateExerciseCopyWithImpl<$Res>
+    implements $RoutineTemplateExerciseCopyWith<$Res> {
+  _$RoutineTemplateExerciseCopyWithImpl(this._self, this._then);
+
+  final RoutineTemplateExercise _self;
+  final $Res Function(RoutineTemplateExercise) _then;
 
   /// Create a copy of RoutineTemplateExercise
   /// with the given fields replaced by the non-null parameter values.
@@ -857,25 +783,25 @@ class __$$RoutineTemplateExerciseImplCopyWithImpl<$Res>
     Object? restSeconds = freezed,
     Object? notes = freezed,
   }) {
-    return _then(_$RoutineTemplateExerciseImpl(
+    return _then(_self.copyWith(
       exerciseTemplateId: null == exerciseTemplateId
-          ? _value.exerciseTemplateId
+          ? _self.exerciseTemplateId
           : exerciseTemplateId // ignore: cast_nullable_to_non_nullable
               as String,
       sets: null == sets
-          ? _value._sets
+          ? _self.sets
           : sets // ignore: cast_nullable_to_non_nullable
               as List<RoutineTemplateSet>,
       supersetId: freezed == supersetId
-          ? _value.supersetId
+          ? _self.supersetId
           : supersetId // ignore: cast_nullable_to_non_nullable
               as int?,
       restSeconds: freezed == restSeconds
-          ? _value.restSeconds
+          ? _self.restSeconds
           : restSeconds // ignore: cast_nullable_to_non_nullable
               as int?,
       notes: freezed == notes
-          ? _value.notes
+          ? _self.notes
           : notes // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
@@ -884,17 +810,16 @@ class __$$RoutineTemplateExerciseImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$RoutineTemplateExerciseImpl implements _RoutineTemplateExercise {
-  const _$RoutineTemplateExerciseImpl(
+class _RoutineTemplateExercise implements RoutineTemplateExercise {
+  const _RoutineTemplateExercise(
       {required this.exerciseTemplateId,
       required final List<RoutineTemplateSet> sets,
       this.supersetId,
       this.restSeconds,
       this.notes})
       : _sets = sets;
-
-  factory _$RoutineTemplateExerciseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$RoutineTemplateExerciseImplFromJson(json);
+  factory _RoutineTemplateExercise.fromJson(Map<String, dynamic> json) =>
+      _$RoutineTemplateExerciseFromJson(json);
 
   @override
   final String exerciseTemplateId;
@@ -913,16 +838,27 @@ class _$RoutineTemplateExerciseImpl implements _RoutineTemplateExercise {
   @override
   final String? notes;
 
+  /// Create a copy of RoutineTemplateExercise
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'RoutineTemplateExercise(exerciseTemplateId: $exerciseTemplateId, sets: $sets, supersetId: $supersetId, restSeconds: $restSeconds, notes: $notes)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$RoutineTemplateExerciseCopyWith<_RoutineTemplateExercise> get copyWith =>
+      __$RoutineTemplateExerciseCopyWithImpl<_RoutineTemplateExercise>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$RoutineTemplateExerciseToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RoutineTemplateExerciseImpl &&
+            other is _RoutineTemplateExercise &&
             (identical(other.exerciseTemplateId, exerciseTemplateId) ||
                 other.exerciseTemplateId == exerciseTemplateId) &&
             const DeepCollectionEquality().equals(other._sets, _sets) &&
@@ -943,229 +879,96 @@ class _$RoutineTemplateExerciseImpl implements _RoutineTemplateExercise {
       restSeconds,
       notes);
 
-  /// Create a copy of RoutineTemplateExercise
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$RoutineTemplateExerciseImplCopyWith<_$RoutineTemplateExerciseImpl>
-      get copyWith => __$$RoutineTemplateExerciseImplCopyWithImpl<
-          _$RoutineTemplateExerciseImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$RoutineTemplateExerciseImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _RoutineTemplateExercise implements RoutineTemplateExercise {
-  const factory _RoutineTemplateExercise(
-      {required final String exerciseTemplateId,
-      required final List<RoutineTemplateSet> sets,
-      final int? supersetId,
-      final int? restSeconds,
-      final String? notes}) = _$RoutineTemplateExerciseImpl;
-
-  factory _RoutineTemplateExercise.fromJson(Map<String, dynamic> json) =
-      _$RoutineTemplateExerciseImpl.fromJson;
-
-  @override
-  String get exerciseTemplateId;
-  @override
-  List<RoutineTemplateSet> get sets;
-  @override
-  int? get supersetId;
-  @override
-  int? get restSeconds;
-  @override
-  String? get notes;
-
-  /// Create a copy of RoutineTemplateExercise
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$RoutineTemplateExerciseImplCopyWith<_$RoutineTemplateExerciseImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
-
-RoutineTemplateSet _$RoutineTemplateSetFromJson(Map<String, dynamic> json) {
-  return _RoutineTemplateSet.fromJson(json);
-}
-
-/// @nodoc
-mixin _$RoutineTemplateSet {
-  String get type => throw _privateConstructorUsedError;
-  num? get weightKg => throw _privateConstructorUsedError;
-  int? get reps => throw _privateConstructorUsedError;
-  int? get distanceMeters => throw _privateConstructorUsedError;
-  int? get durationSeconds => throw _privateConstructorUsedError;
-
-  /// Serializes this RoutineTemplateSet to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of RoutineTemplateSet
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $RoutineTemplateSetCopyWith<RoutineTemplateSet> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $RoutineTemplateSetCopyWith<$Res> {
-  factory $RoutineTemplateSetCopyWith(
-          RoutineTemplateSet value, $Res Function(RoutineTemplateSet) then) =
-      _$RoutineTemplateSetCopyWithImpl<$Res, RoutineTemplateSet>;
-  @useResult
-  $Res call(
-      {String type,
-      num? weightKg,
-      int? reps,
-      int? distanceMeters,
-      int? durationSeconds});
-}
-
-/// @nodoc
-class _$RoutineTemplateSetCopyWithImpl<$Res, $Val extends RoutineTemplateSet>
-    implements $RoutineTemplateSetCopyWith<$Res> {
-  _$RoutineTemplateSetCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of RoutineTemplateSet
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? type = null,
-    Object? weightKg = freezed,
-    Object? reps = freezed,
-    Object? distanceMeters = freezed,
-    Object? durationSeconds = freezed,
-  }) {
-    return _then(_value.copyWith(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      weightKg: freezed == weightKg
-          ? _value.weightKg
-          : weightKg // ignore: cast_nullable_to_non_nullable
-              as num?,
-      reps: freezed == reps
-          ? _value.reps
-          : reps // ignore: cast_nullable_to_non_nullable
-              as int?,
-      distanceMeters: freezed == distanceMeters
-          ? _value.distanceMeters
-          : distanceMeters // ignore: cast_nullable_to_non_nullable
-              as int?,
-      durationSeconds: freezed == durationSeconds
-          ? _value.durationSeconds
-          : durationSeconds // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ) as $Val);
+  String toString() {
+    return 'RoutineTemplateExercise(exerciseTemplateId: $exerciseTemplateId, sets: $sets, supersetId: $supersetId, restSeconds: $restSeconds, notes: $notes)';
   }
 }
 
 /// @nodoc
-abstract class _$$RoutineTemplateSetImplCopyWith<$Res>
-    implements $RoutineTemplateSetCopyWith<$Res> {
-  factory _$$RoutineTemplateSetImplCopyWith(_$RoutineTemplateSetImpl value,
-          $Res Function(_$RoutineTemplateSetImpl) then) =
-      __$$RoutineTemplateSetImplCopyWithImpl<$Res>;
+abstract mixin class _$RoutineTemplateExerciseCopyWith<$Res>
+    implements $RoutineTemplateExerciseCopyWith<$Res> {
+  factory _$RoutineTemplateExerciseCopyWith(_RoutineTemplateExercise value,
+          $Res Function(_RoutineTemplateExercise) _then) =
+      __$RoutineTemplateExerciseCopyWithImpl;
   @override
   @useResult
   $Res call(
-      {String type,
-      num? weightKg,
-      int? reps,
-      int? distanceMeters,
-      int? durationSeconds});
+      {String exerciseTemplateId,
+      List<RoutineTemplateSet> sets,
+      int? supersetId,
+      int? restSeconds,
+      String? notes});
 }
 
 /// @nodoc
-class __$$RoutineTemplateSetImplCopyWithImpl<$Res>
-    extends _$RoutineTemplateSetCopyWithImpl<$Res, _$RoutineTemplateSetImpl>
-    implements _$$RoutineTemplateSetImplCopyWith<$Res> {
-  __$$RoutineTemplateSetImplCopyWithImpl(_$RoutineTemplateSetImpl _value,
-      $Res Function(_$RoutineTemplateSetImpl) _then)
-      : super(_value, _then);
+class __$RoutineTemplateExerciseCopyWithImpl<$Res>
+    implements _$RoutineTemplateExerciseCopyWith<$Res> {
+  __$RoutineTemplateExerciseCopyWithImpl(this._self, this._then);
 
-  /// Create a copy of RoutineTemplateSet
+  final _RoutineTemplateExercise _self;
+  final $Res Function(_RoutineTemplateExercise) _then;
+
+  /// Create a copy of RoutineTemplateExercise
   /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
   @override
+  @pragma('vm:prefer-inline')
   $Res call({
-    Object? type = null,
-    Object? weightKg = freezed,
-    Object? reps = freezed,
-    Object? distanceMeters = freezed,
-    Object? durationSeconds = freezed,
+    Object? exerciseTemplateId = null,
+    Object? sets = null,
+    Object? supersetId = freezed,
+    Object? restSeconds = freezed,
+    Object? notes = freezed,
   }) {
-    return _then(_$RoutineTemplateSetImpl(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
+    return _then(_RoutineTemplateExercise(
+      exerciseTemplateId: null == exerciseTemplateId
+          ? _self.exerciseTemplateId
+          : exerciseTemplateId // ignore: cast_nullable_to_non_nullable
               as String,
-      weightKg: freezed == weightKg
-          ? _value.weightKg
-          : weightKg // ignore: cast_nullable_to_non_nullable
-              as num?,
-      reps: freezed == reps
-          ? _value.reps
-          : reps // ignore: cast_nullable_to_non_nullable
+      sets: null == sets
+          ? _self._sets
+          : sets // ignore: cast_nullable_to_non_nullable
+              as List<RoutineTemplateSet>,
+      supersetId: freezed == supersetId
+          ? _self.supersetId
+          : supersetId // ignore: cast_nullable_to_non_nullable
               as int?,
-      distanceMeters: freezed == distanceMeters
-          ? _value.distanceMeters
-          : distanceMeters // ignore: cast_nullable_to_non_nullable
+      restSeconds: freezed == restSeconds
+          ? _self.restSeconds
+          : restSeconds // ignore: cast_nullable_to_non_nullable
               as int?,
-      durationSeconds: freezed == durationSeconds
-          ? _value.durationSeconds
-          : durationSeconds // ignore: cast_nullable_to_non_nullable
-              as int?,
+      notes: freezed == notes
+          ? _self.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
 
 /// @nodoc
-@JsonSerializable()
-class _$RoutineTemplateSetImpl implements _RoutineTemplateSet {
-  const _$RoutineTemplateSetImpl(
-      {required this.type,
-      this.weightKg,
-      this.reps,
-      this.distanceMeters,
-      this.durationSeconds});
+mixin _$RoutineTemplateSet {
+  String get type;
+  num? get weightKg;
+  int? get reps;
+  int? get distanceMeters;
+  int? get durationSeconds;
 
-  factory _$RoutineTemplateSetImpl.fromJson(Map<String, dynamic> json) =>
-      _$$RoutineTemplateSetImplFromJson(json);
+  /// Create a copy of RoutineTemplateSet
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $RoutineTemplateSetCopyWith<RoutineTemplateSet> get copyWith =>
+      _$RoutineTemplateSetCopyWithImpl<RoutineTemplateSet>(
+          this as RoutineTemplateSet, _$identity);
 
-  @override
-  final String type;
-  @override
-  final num? weightKg;
-  @override
-  final int? reps;
-  @override
-  final int? distanceMeters;
-  @override
-  final int? durationSeconds;
-
-  @override
-  String toString() {
-    return 'RoutineTemplateSet._(type: $type, weightKg: $weightKg, reps: $reps, distanceMeters: $distanceMeters, durationSeconds: $durationSeconds)';
-  }
+  /// Serializes this RoutineTemplateSet to a JSON map.
+  Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$RoutineTemplateSetImpl &&
+            other is RoutineTemplateSet &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.weightKg, weightKg) ||
                 other.weightKg == weightKg) &&
@@ -1181,49 +984,192 @@ class _$RoutineTemplateSetImpl implements _RoutineTemplateSet {
   int get hashCode => Object.hash(
       runtimeType, type, weightKg, reps, distanceMeters, durationSeconds);
 
-  /// Create a copy of RoutineTemplateSet
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  @pragma('vm:prefer-inline')
-  _$$RoutineTemplateSetImplCopyWith<_$RoutineTemplateSetImpl> get copyWith =>
-      __$$RoutineTemplateSetImplCopyWithImpl<_$RoutineTemplateSetImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$RoutineTemplateSetImplToJson(
-      this,
-    );
+  String toString() {
+    return 'RoutineTemplateSet(type: $type, weightKg: $weightKg, reps: $reps, distanceMeters: $distanceMeters, durationSeconds: $durationSeconds)';
   }
 }
 
-abstract class _RoutineTemplateSet implements RoutineTemplateSet {
-  const factory _RoutineTemplateSet(
-      {required final String type,
-      final num? weightKg,
-      final int? reps,
-      final int? distanceMeters,
-      final int? durationSeconds}) = _$RoutineTemplateSetImpl;
+/// @nodoc
+abstract mixin class $RoutineTemplateSetCopyWith<$Res> {
+  factory $RoutineTemplateSetCopyWith(
+          RoutineTemplateSet value, $Res Function(RoutineTemplateSet) _then) =
+      _$RoutineTemplateSetCopyWithImpl;
+  @useResult
+  $Res call(
+      {String type,
+      num? weightKg,
+      int? reps,
+      int? distanceMeters,
+      int? durationSeconds});
+}
 
-  factory _RoutineTemplateSet.fromJson(Map<String, dynamic> json) =
-      _$RoutineTemplateSetImpl.fromJson;
+/// @nodoc
+class _$RoutineTemplateSetCopyWithImpl<$Res>
+    implements $RoutineTemplateSetCopyWith<$Res> {
+  _$RoutineTemplateSetCopyWithImpl(this._self, this._then);
+
+  final RoutineTemplateSet _self;
+  final $Res Function(RoutineTemplateSet) _then;
+
+  /// Create a copy of RoutineTemplateSet
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? type = null,
+    Object? weightKg = freezed,
+    Object? reps = freezed,
+    Object? distanceMeters = freezed,
+    Object? durationSeconds = freezed,
+  }) {
+    return _then(_self.copyWith(
+      type: null == type
+          ? _self.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      weightKg: freezed == weightKg
+          ? _self.weightKg
+          : weightKg // ignore: cast_nullable_to_non_nullable
+              as num?,
+      reps: freezed == reps
+          ? _self.reps
+          : reps // ignore: cast_nullable_to_non_nullable
+              as int?,
+      distanceMeters: freezed == distanceMeters
+          ? _self.distanceMeters
+          : distanceMeters // ignore: cast_nullable_to_non_nullable
+              as int?,
+      durationSeconds: freezed == durationSeconds
+          ? _self.durationSeconds
+          : durationSeconds // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _RoutineTemplateSet implements RoutineTemplateSet {
+  const _RoutineTemplateSet(
+      {required this.type,
+      this.weightKg,
+      this.reps,
+      this.distanceMeters,
+      this.durationSeconds});
+  factory _RoutineTemplateSet.fromJson(Map<String, dynamic> json) =>
+      _$RoutineTemplateSetFromJson(json);
 
   @override
-  String get type;
+  final String type;
   @override
-  num? get weightKg;
+  final num? weightKg;
   @override
-  int? get reps;
+  final int? reps;
   @override
-  int? get distanceMeters;
+  final int? distanceMeters;
   @override
-  int? get durationSeconds;
+  final int? durationSeconds;
 
   /// Create a copy of RoutineTemplateSet
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$RoutineTemplateSetImplCopyWith<_$RoutineTemplateSetImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  _$RoutineTemplateSetCopyWith<_RoutineTemplateSet> get copyWith =>
+      __$RoutineTemplateSetCopyWithImpl<_RoutineTemplateSet>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$RoutineTemplateSetToJson(
+      this,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _RoutineTemplateSet &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.weightKg, weightKg) ||
+                other.weightKg == weightKg) &&
+            (identical(other.reps, reps) || other.reps == reps) &&
+            (identical(other.distanceMeters, distanceMeters) ||
+                other.distanceMeters == distanceMeters) &&
+            (identical(other.durationSeconds, durationSeconds) ||
+                other.durationSeconds == durationSeconds));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, type, weightKg, reps, distanceMeters, durationSeconds);
+
+  @override
+  String toString() {
+    return 'RoutineTemplateSet._(type: $type, weightKg: $weightKg, reps: $reps, distanceMeters: $distanceMeters, durationSeconds: $durationSeconds)';
+  }
 }
+
+/// @nodoc
+abstract mixin class _$RoutineTemplateSetCopyWith<$Res>
+    implements $RoutineTemplateSetCopyWith<$Res> {
+  factory _$RoutineTemplateSetCopyWith(
+          _RoutineTemplateSet value, $Res Function(_RoutineTemplateSet) _then) =
+      __$RoutineTemplateSetCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {String type,
+      num? weightKg,
+      int? reps,
+      int? distanceMeters,
+      int? durationSeconds});
+}
+
+/// @nodoc
+class __$RoutineTemplateSetCopyWithImpl<$Res>
+    implements _$RoutineTemplateSetCopyWith<$Res> {
+  __$RoutineTemplateSetCopyWithImpl(this._self, this._then);
+
+  final _RoutineTemplateSet _self;
+  final $Res Function(_RoutineTemplateSet) _then;
+
+  /// Create a copy of RoutineTemplateSet
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? type = null,
+    Object? weightKg = freezed,
+    Object? reps = freezed,
+    Object? distanceMeters = freezed,
+    Object? durationSeconds = freezed,
+  }) {
+    return _then(_RoutineTemplateSet(
+      type: null == type
+          ? _self.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      weightKg: freezed == weightKg
+          ? _self.weightKg
+          : weightKg // ignore: cast_nullable_to_non_nullable
+              as num?,
+      reps: freezed == reps
+          ? _self.reps
+          : reps // ignore: cast_nullable_to_non_nullable
+              as int?,
+      distanceMeters: freezed == distanceMeters
+          ? _self.distanceMeters
+          : distanceMeters // ignore: cast_nullable_to_non_nullable
+              as int?,
+      durationSeconds: freezed == durationSeconds
+          ? _self.durationSeconds
+          : durationSeconds // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
+  }
+}
+
+// dart format on

@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,33 +10,60 @@ part of 'config.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$SmolovJrConfig {
   /// 1rm _without_ bodyweight included, in case this is a body weight lift
-  Exercise? get exercise => throw _privateConstructorUsedError;
-  num get oneRepMax => throw _privateConstructorUsedError;
-  num get bodyWeight => throw _privateConstructorUsedError;
-  int? get restSeconds => throw _privateConstructorUsedError;
-  num get increment => throw _privateConstructorUsedError;
-  WeightUnit get unit => throw _privateConstructorUsedError;
+  Exercise? get exercise;
+  num get oneRepMax;
+  num get bodyWeight;
+  int? get restSeconds;
+  num get increment;
+  WeightUnit get unit;
 
   /// Create a copy of SmolovJrConfig
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
   $SmolovJrConfigCopyWith<SmolovJrConfig> get copyWith =>
-      throw _privateConstructorUsedError;
+      _$SmolovJrConfigCopyWithImpl<SmolovJrConfig>(
+          this as SmolovJrConfig, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is SmolovJrConfig &&
+            (identical(other.exercise, exercise) ||
+                other.exercise == exercise) &&
+            (identical(other.oneRepMax, oneRepMax) ||
+                other.oneRepMax == oneRepMax) &&
+            (identical(other.bodyWeight, bodyWeight) ||
+                other.bodyWeight == bodyWeight) &&
+            (identical(other.restSeconds, restSeconds) ||
+                other.restSeconds == restSeconds) &&
+            (identical(other.increment, increment) ||
+                other.increment == increment) &&
+            (identical(other.unit, unit) || other.unit == unit));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, exercise, oneRepMax, bodyWeight,
+      restSeconds, increment, unit);
+
+  @override
+  String toString() {
+    return 'SmolovJrConfig(exercise: $exercise, oneRepMax: $oneRepMax, bodyWeight: $bodyWeight, restSeconds: $restSeconds, increment: $increment, unit: $unit)';
+  }
 }
 
 /// @nodoc
-abstract class $SmolovJrConfigCopyWith<$Res> {
+abstract mixin class $SmolovJrConfigCopyWith<$Res> {
   factory $SmolovJrConfigCopyWith(
-          SmolovJrConfig value, $Res Function(SmolovJrConfig) then) =
-      _$SmolovJrConfigCopyWithImpl<$Res, SmolovJrConfig>;
+          SmolovJrConfig value, $Res Function(SmolovJrConfig) _then) =
+      _$SmolovJrConfigCopyWithImpl;
   @useResult
   $Res call(
       {Exercise? exercise,
@@ -49,14 +77,12 @@ abstract class $SmolovJrConfigCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$SmolovJrConfigCopyWithImpl<$Res, $Val extends SmolovJrConfig>
+class _$SmolovJrConfigCopyWithImpl<$Res>
     implements $SmolovJrConfigCopyWith<$Res> {
-  _$SmolovJrConfigCopyWithImpl(this._value, this._then);
+  _$SmolovJrConfigCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final SmolovJrConfig _self;
+  final $Res Function(SmolovJrConfig) _then;
 
   /// Create a copy of SmolovJrConfig
   /// with the given fields replaced by the non-null parameter values.
@@ -70,32 +96,32 @@ class _$SmolovJrConfigCopyWithImpl<$Res, $Val extends SmolovJrConfig>
     Object? increment = null,
     Object? unit = null,
   }) {
-    return _then(_value.copyWith(
+    return _then(_self.copyWith(
       exercise: freezed == exercise
-          ? _value.exercise
+          ? _self.exercise
           : exercise // ignore: cast_nullable_to_non_nullable
               as Exercise?,
       oneRepMax: null == oneRepMax
-          ? _value.oneRepMax
+          ? _self.oneRepMax
           : oneRepMax // ignore: cast_nullable_to_non_nullable
               as num,
       bodyWeight: null == bodyWeight
-          ? _value.bodyWeight
+          ? _self.bodyWeight
           : bodyWeight // ignore: cast_nullable_to_non_nullable
               as num,
       restSeconds: freezed == restSeconds
-          ? _value.restSeconds
+          ? _self.restSeconds
           : restSeconds // ignore: cast_nullable_to_non_nullable
               as int?,
       increment: null == increment
-          ? _value.increment
+          ? _self.increment
           : increment // ignore: cast_nullable_to_non_nullable
               as num,
       unit: null == unit
-          ? _value.unit
+          ? _self.unit
           : unit // ignore: cast_nullable_to_non_nullable
               as WeightUnit,
-    ) as $Val);
+    ));
   }
 
   /// Create a copy of SmolovJrConfig
@@ -103,89 +129,20 @@ class _$SmolovJrConfigCopyWithImpl<$Res, $Val extends SmolovJrConfig>
   @override
   @pragma('vm:prefer-inline')
   $ExerciseCopyWith<$Res>? get exercise {
-    if (_value.exercise == null) {
+    if (_self.exercise == null) {
       return null;
     }
 
-    return $ExerciseCopyWith<$Res>(_value.exercise!, (value) {
-      return _then(_value.copyWith(exercise: value) as $Val);
+    return $ExerciseCopyWith<$Res>(_self.exercise!, (value) {
+      return _then(_self.copyWith(exercise: value));
     });
   }
 }
 
 /// @nodoc
-abstract class _$$SmolovJrConfigImplCopyWith<$Res>
-    implements $SmolovJrConfigCopyWith<$Res> {
-  factory _$$SmolovJrConfigImplCopyWith(_$SmolovJrConfigImpl value,
-          $Res Function(_$SmolovJrConfigImpl) then) =
-      __$$SmolovJrConfigImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {Exercise? exercise,
-      num oneRepMax,
-      num bodyWeight,
-      int? restSeconds,
-      num increment,
-      WeightUnit unit});
 
-  @override
-  $ExerciseCopyWith<$Res>? get exercise;
-}
-
-/// @nodoc
-class __$$SmolovJrConfigImplCopyWithImpl<$Res>
-    extends _$SmolovJrConfigCopyWithImpl<$Res, _$SmolovJrConfigImpl>
-    implements _$$SmolovJrConfigImplCopyWith<$Res> {
-  __$$SmolovJrConfigImplCopyWithImpl(
-      _$SmolovJrConfigImpl _value, $Res Function(_$SmolovJrConfigImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of SmolovJrConfig
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? exercise = freezed,
-    Object? oneRepMax = null,
-    Object? bodyWeight = null,
-    Object? restSeconds = freezed,
-    Object? increment = null,
-    Object? unit = null,
-  }) {
-    return _then(_$SmolovJrConfigImpl(
-      exercise: freezed == exercise
-          ? _value.exercise
-          : exercise // ignore: cast_nullable_to_non_nullable
-              as Exercise?,
-      oneRepMax: null == oneRepMax
-          ? _value.oneRepMax
-          : oneRepMax // ignore: cast_nullable_to_non_nullable
-              as num,
-      bodyWeight: null == bodyWeight
-          ? _value.bodyWeight
-          : bodyWeight // ignore: cast_nullable_to_non_nullable
-              as num,
-      restSeconds: freezed == restSeconds
-          ? _value.restSeconds
-          : restSeconds // ignore: cast_nullable_to_non_nullable
-              as int?,
-      increment: null == increment
-          ? _value.increment
-          : increment // ignore: cast_nullable_to_non_nullable
-              as num,
-      unit: null == unit
-          ? _value.unit
-          : unit // ignore: cast_nullable_to_non_nullable
-              as WeightUnit,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$SmolovJrConfigImpl implements _SmolovJrConfig {
-  const _$SmolovJrConfigImpl(
+class _SmolovJrConfig implements SmolovJrConfig {
+  const _SmolovJrConfig(
       {required this.exercise,
       required this.oneRepMax,
       required this.bodyWeight,
@@ -207,16 +164,19 @@ class _$SmolovJrConfigImpl implements _SmolovJrConfig {
   @override
   final WeightUnit unit;
 
+  /// Create a copy of SmolovJrConfig
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'SmolovJrConfig(exercise: $exercise, oneRepMax: $oneRepMax, bodyWeight: $bodyWeight, restSeconds: $restSeconds, increment: $increment, unit: $unit)';
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$SmolovJrConfigCopyWith<_SmolovJrConfig> get copyWith =>
+      __$SmolovJrConfigCopyWithImpl<_SmolovJrConfig>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SmolovJrConfigImpl &&
+            other is _SmolovJrConfig &&
             (identical(other.exercise, exercise) ||
                 other.exercise == exercise) &&
             (identical(other.oneRepMax, oneRepMax) ||
@@ -234,43 +194,93 @@ class _$SmolovJrConfigImpl implements _SmolovJrConfig {
   int get hashCode => Object.hash(runtimeType, exercise, oneRepMax, bodyWeight,
       restSeconds, increment, unit);
 
+  @override
+  String toString() {
+    return 'SmolovJrConfig(exercise: $exercise, oneRepMax: $oneRepMax, bodyWeight: $bodyWeight, restSeconds: $restSeconds, increment: $increment, unit: $unit)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$SmolovJrConfigCopyWith<$Res>
+    implements $SmolovJrConfigCopyWith<$Res> {
+  factory _$SmolovJrConfigCopyWith(
+          _SmolovJrConfig value, $Res Function(_SmolovJrConfig) _then) =
+      __$SmolovJrConfigCopyWithImpl;
+  @override
+  @useResult
+  $Res call(
+      {Exercise? exercise,
+      num oneRepMax,
+      num bodyWeight,
+      int? restSeconds,
+      num increment,
+      WeightUnit unit});
+
+  @override
+  $ExerciseCopyWith<$Res>? get exercise;
+}
+
+/// @nodoc
+class __$SmolovJrConfigCopyWithImpl<$Res>
+    implements _$SmolovJrConfigCopyWith<$Res> {
+  __$SmolovJrConfigCopyWithImpl(this._self, this._then);
+
+  final _SmolovJrConfig _self;
+  final $Res Function(_SmolovJrConfig) _then;
+
   /// Create a copy of SmolovJrConfig
   /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$SmolovJrConfigImplCopyWith<_$SmolovJrConfigImpl> get copyWith =>
-      __$$SmolovJrConfigImplCopyWithImpl<_$SmolovJrConfigImpl>(
-          this, _$identity);
-}
-
-abstract class _SmolovJrConfig implements SmolovJrConfig {
-  const factory _SmolovJrConfig(
-      {required final Exercise? exercise,
-      required final num oneRepMax,
-      required final num bodyWeight,
-      required final int? restSeconds,
-      required final num increment,
-      required final WeightUnit unit}) = _$SmolovJrConfigImpl;
-
-  /// 1rm _without_ bodyweight included, in case this is a body weight lift
-  @override
-  Exercise? get exercise;
-  @override
-  num get oneRepMax;
-  @override
-  num get bodyWeight;
-  @override
-  int? get restSeconds;
-  @override
-  num get increment;
-  @override
-  WeightUnit get unit;
+  $Res call({
+    Object? exercise = freezed,
+    Object? oneRepMax = null,
+    Object? bodyWeight = null,
+    Object? restSeconds = freezed,
+    Object? increment = null,
+    Object? unit = null,
+  }) {
+    return _then(_SmolovJrConfig(
+      exercise: freezed == exercise
+          ? _self.exercise
+          : exercise // ignore: cast_nullable_to_non_nullable
+              as Exercise?,
+      oneRepMax: null == oneRepMax
+          ? _self.oneRepMax
+          : oneRepMax // ignore: cast_nullable_to_non_nullable
+              as num,
+      bodyWeight: null == bodyWeight
+          ? _self.bodyWeight
+          : bodyWeight // ignore: cast_nullable_to_non_nullable
+              as num,
+      restSeconds: freezed == restSeconds
+          ? _self.restSeconds
+          : restSeconds // ignore: cast_nullable_to_non_nullable
+              as int?,
+      increment: null == increment
+          ? _self.increment
+          : increment // ignore: cast_nullable_to_non_nullable
+              as num,
+      unit: null == unit
+          ? _self.unit
+          : unit // ignore: cast_nullable_to_non_nullable
+              as WeightUnit,
+    ));
+  }
 
   /// Create a copy of SmolovJrConfig
   /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SmolovJrConfigImplCopyWith<_$SmolovJrConfigImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @pragma('vm:prefer-inline')
+  $ExerciseCopyWith<$Res>? get exercise {
+    if (_self.exercise == null) {
+      return null;
+    }
+
+    return $ExerciseCopyWith<$Res>(_self.exercise!, (value) {
+      return _then(_self.copyWith(exercise: value));
+    });
+  }
 }
+
+// dart format on

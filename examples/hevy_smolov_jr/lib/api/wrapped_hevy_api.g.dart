@@ -1,16 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: require_trailing_commas
-
 part of 'wrapped_hevy_api.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ExerciseTemplatesResponseImpl _$$ExerciseTemplatesResponseImplFromJson(
+_ExerciseTemplatesResponse _$ExerciseTemplatesResponseFromJson(
         Map<String, dynamic> json) =>
-    _$ExerciseTemplatesResponseImpl(
+    _ExerciseTemplatesResponse(
       pageCount: (json['page_count'] as num).toInt(),
       page: (json['page'] as num).toInt(),
       exerciseTemplates: (json['exercise_templates'] as List<dynamic>)
@@ -18,16 +16,15 @@ _$ExerciseTemplatesResponseImpl _$$ExerciseTemplatesResponseImplFromJson(
           .toList(),
     );
 
-Map<String, dynamic> _$$ExerciseTemplatesResponseImplToJson(
-        _$ExerciseTemplatesResponseImpl instance) =>
+Map<String, dynamic> _$ExerciseTemplatesResponseToJson(
+        _ExerciseTemplatesResponse instance) =>
     <String, dynamic>{
       'page_count': instance.pageCount,
       'page': instance.page,
       'exercise_templates': instance.exerciseTemplates,
     };
 
-_$ExerciseImpl _$$ExerciseImplFromJson(Map<String, dynamic> json) =>
-    _$ExerciseImpl(
+_Exercise _$ExerciseFromJson(Map<String, dynamic> json) => _Exercise(
       id: json['id'] as String,
       title: json['title'] as String,
       type: json['type'] as String,
@@ -39,8 +36,7 @@ _$ExerciseImpl _$$ExerciseImplFromJson(Map<String, dynamic> json) =>
       isCustom: json['is_custom'] as bool,
     );
 
-Map<String, dynamic> _$$ExerciseImplToJson(_$ExerciseImpl instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ExerciseToJson(_Exercise instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
       'type': instance.type,
@@ -50,9 +46,8 @@ Map<String, dynamic> _$$ExerciseImplToJson(_$ExerciseImpl instance) =>
       'is_custom': instance.isCustom,
     };
 
-_$RoutineTemplateImpl _$$RoutineTemplateImplFromJson(
-        Map<String, dynamic> json) =>
-    _$RoutineTemplateImpl(
+_RoutineTemplate _$RoutineTemplateFromJson(Map<String, dynamic> json) =>
+    _RoutineTemplate(
       title: json['title'] as String,
       exercises: (json['exercises'] as List<dynamic>)
           .map((e) =>
@@ -62,8 +57,7 @@ _$RoutineTemplateImpl _$$RoutineTemplateImplFromJson(
       folderId: (json['folder_id'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$$RoutineTemplateImplToJson(
-        _$RoutineTemplateImpl instance) =>
+Map<String, dynamic> _$RoutineTemplateToJson(_RoutineTemplate instance) =>
     <String, dynamic>{
       'title': instance.title,
       'exercises': instance.exercises,
@@ -71,9 +65,9 @@ Map<String, dynamic> _$$RoutineTemplateImplToJson(
       'folder_id': instance.folderId,
     };
 
-_$RoutineTemplateExerciseImpl _$$RoutineTemplateExerciseImplFromJson(
+_RoutineTemplateExercise _$RoutineTemplateExerciseFromJson(
         Map<String, dynamic> json) =>
-    _$RoutineTemplateExerciseImpl(
+    _RoutineTemplateExercise(
       exerciseTemplateId: json['exercise_template_id'] as String,
       sets: (json['sets'] as List<dynamic>)
           .map((e) => RoutineTemplateSet.fromJson(e as Map<String, dynamic>))
@@ -83,8 +77,8 @@ _$RoutineTemplateExerciseImpl _$$RoutineTemplateExerciseImplFromJson(
       notes: json['notes'] as String?,
     );
 
-Map<String, dynamic> _$$RoutineTemplateExerciseImplToJson(
-        _$RoutineTemplateExerciseImpl instance) =>
+Map<String, dynamic> _$RoutineTemplateExerciseToJson(
+        _RoutineTemplateExercise instance) =>
     <String, dynamic>{
       'exercise_template_id': instance.exerciseTemplateId,
       'sets': instance.sets,
@@ -93,9 +87,8 @@ Map<String, dynamic> _$$RoutineTemplateExerciseImplToJson(
       'notes': instance.notes,
     };
 
-_$RoutineTemplateSetImpl _$$RoutineTemplateSetImplFromJson(
-        Map<String, dynamic> json) =>
-    _$RoutineTemplateSetImpl(
+_RoutineTemplateSet _$RoutineTemplateSetFromJson(Map<String, dynamic> json) =>
+    _RoutineTemplateSet(
       type: json['type'] as String,
       weightKg: json['weight_kg'] as num?,
       reps: (json['reps'] as num?)?.toInt(),
@@ -103,8 +96,7 @@ _$RoutineTemplateSetImpl _$$RoutineTemplateSetImplFromJson(
       durationSeconds: (json['duration_seconds'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$$RoutineTemplateSetImplToJson(
-        _$RoutineTemplateSetImpl instance) =>
+Map<String, dynamic> _$RoutineTemplateSetToJson(_RoutineTemplateSet instance) =>
     <String, dynamic>{
       'type': instance.type,
       'weight_kg': instance.weightKg,

@@ -42,40 +42,38 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   ///
   /// This is a more powerful alternative to [lazyState].
   ValueWrapper<T> lazyData<T>(T Function() init) {
-    // We use register directly to keep the same setter function across rebuilds
-    // (but we need to return a new getter on each build, see below for more)
-    final (getter, setter) = use.register((api) {
-      var hasBeenInit = false;
-      late T state;
+    // Create a place to store the data, which should be lazily initialized
+    final dataWrapper = use.callonce(() => _LazyMutable(init));
 
-      T getter() {
-        if (!hasBeenInit) {
-          state = init();
-          hasBeenInit = true;
-        }
-        return state;
-      }
-
-      void setter(T newState) {
-        api.rebuild((cancelRebuild) {
-          if (hasBeenInit && newState == state) {
-            cancelRebuild();
-            return;
-          }
-
-          state = newState;
-          hasBeenInit = true;
-        });
-      }
-
-      return (getter, setter);
+    // Create a getter on first build, but allow it to be changed
+    final getterWrapper = use.callonce(() {
+      return _Mutable(() => dataWrapper.value);
     });
 
-    // We *MUST* return a new getter function here,
-    // which we do simply by making a new closure. See here for why:
-    // https://github.com/GregoryConrad/rearch-dart/issues/32#issuecomment-1868399873
-    // ignore: unnecessary_lambdas
-    return (() => getter(), setter);
+    // Keep the same setter between builds to prevent unnecessary rebuilds
+    final setter = use.register((api) {
+      return (T newState) {
+        api.rebuild((_) => dataWrapper.value = newState);
+      };
+    });
+
+    // If the data has changed, then we need to recreate the getter
+    // NOTE: https://github.com/GregoryConrad/rearch-dart/issues/277
+    final lastSeenDataWrapper = use.callonce(() {
+      // NOTE: We want to compare against something that definitely isn't equal
+      // the first time the state has been mutated.
+      // Thus, we use a private const object (const _Nothing()),
+      // since that is guaranteed to be equal to nothing else.
+      return _Mutable<Object?>(const _Nothing());
+    });
+    final hasDataChanged = dataWrapper.hasBeenMutated &&
+        dataWrapper.value != lastSeenDataWrapper.value;
+    if (hasDataChanged) {
+      getterWrapper.value = () => dataWrapper.value;
+      lastSeenDataWrapper.value = dataWrapper.value;
+    }
+
+    return (getterWrapper.value, setter);
   }
 
   /// Side effect that provides a way for capsules to contain some state,
@@ -526,6 +524,33 @@ bool _didDepsListChange(List<Object?> newDeps, List<Object?>? oldDeps) {
       newDeps.length != oldDeps.length ||
       Iterable<int>.generate(newDeps.length)
           .any((i) => newDeps[i] != oldDeps[i]);
+}
+
+/// Purpose-driven mutable lazy wrapper
+final class _LazyMutable<T> {
+  _LazyMutable(this._init);
+
+  final T Function() _init;
+  late T _value = _init();
+
+  bool hasBeenMutated = false;
+
+  T get value => _value;
+  set value(T newValue) {
+    _value = newValue;
+    hasBeenMutated = true;
+  }
+}
+
+/// A poor man's interior mutability wrapper
+final class _Mutable<T> {
+  _Mutable(this.value);
+  T value;
+}
+
+/// Used to make a `const _Nothing()`, which is equal to nothing else.
+final class _Nothing {
+  const _Nothing();
 }
 
 /// A reducer [Function] that consumes some [State] and [Action] and returns

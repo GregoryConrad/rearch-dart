@@ -423,6 +423,29 @@ void main() {
     expect(initCalls, equals(1));
   });
 
+  test('use.lazyData() getter is memoized (#277)', () {
+    final stateCapsule = capsule((use) => use.lazyData(() => 0));
+
+    final container = useContainer();
+    final originalGetter = container.read(stateCapsule).$1;
+
+    container.read(stateCapsule).value = 0;
+    final unchangedGetter = container.read(stateCapsule).$1;
+    expect(unchangedGetter, isNot(equals(originalGetter)));
+
+    container.read(stateCapsule).value = 1;
+    final changedGetter = container.read(stateCapsule).$1;
+    expect(changedGetter, isNot(equals(originalGetter)));
+
+    container.read(stateCapsule).value = 1;
+    final unchangedGetter2 = container.read(stateCapsule).$1;
+    expect(unchangedGetter2, equals(changedGetter));
+
+    container.read(stateCapsule).value = 2;
+    final changedGetter2 = container.read(stateCapsule).$1;
+    expect(changedGetter2, isNot(equals(unchangedGetter2)));
+  });
+
   group('disposable creates and disposes objects', () {
     test('without dependencies', () {
       var check = 0;

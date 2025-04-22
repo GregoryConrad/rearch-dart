@@ -1,3 +1,7 @@
+## 1.16.1
+
+ - **FIX**: memoize the use.lazyData getter across builds ([#279](https://github.com/GregoryConrad/rearch-dart/issues/279)).
+
 ## 1.16.0+0
 
  - Bump "rearch" to `1.16.0+0`.

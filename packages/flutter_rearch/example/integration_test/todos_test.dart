@@ -4,9 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('todos can be created and toggled', (tester) async {
-    // NOTE: We need this since the splash circle animations will prevent
-    // tester.pumpAndSettle from settling until the timeout is up.
-    Future<void> pump() => tester.pump(const Duration(milliseconds: 200));
+    Future<void> pump() => tester.pumpAndSettle();
 
     Future<void> createTodo({
       required String title,
@@ -47,7 +45,7 @@ void main() {
       await pump();
     }
 
-    await tester.pumpWidget(const TodoApp());
+    await tester.pumpWidget(const TodoApp(showAnimatedBackground: false));
     await pump();
 
     expect(find.text('0'), findsNothing);

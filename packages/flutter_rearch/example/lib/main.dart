@@ -126,7 +126,10 @@ AsyncValue<int> todoListLengthCapsule(CapsuleHandle use) =>
 /// {@endtemplate}
 class TodoApp extends StatelessWidget {
   /// {@macro TodoApp}
-  const TodoApp({super.key});
+  const TodoApp({super.key, this.showAnimatedBackground = true});
+
+  /// Whether to show the animated background.
+  final bool showAnimatedBackground;
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +138,11 @@ class TodoApp extends StatelessWidget {
         title: 'Rearch Todos',
         theme: ThemeData.light(useMaterial3: true),
         darkTheme: ThemeData.dark(useMaterial3: true),
-        home: const GlobalWarmUps(child: Body()),
+        home: GlobalWarmUps(
+          child: Body(
+            showAnimatedBackground: showAnimatedBackground,
+          ),
+        ),
       ),
     );
   }
@@ -174,7 +181,10 @@ final class GlobalWarmUps extends RearchConsumer {
 /// {@endtemplate}
 class Body extends RearchConsumer {
   /// {@macro Body}
-  const Body({super.key});
+  const Body({super.key, this.showAnimatedBackground = true});
+
+  /// Whether to show the animated background.
+  final bool showAnimatedBackground;
 
   @override
   Widget build(BuildContext context, WidgetHandle use) {
@@ -225,7 +235,8 @@ class Body extends RearchConsumer {
           return Stack(
             children: [
               // The dynamic background
-              const Positioned.fill(child: DynamicBackground()),
+              if (showAnimatedBackground)
+                const Positioned.fill(child: DynamicBackground()),
 
               // The main todos content
               Positioned.fill(

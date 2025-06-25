@@ -148,7 +148,7 @@ class _WidgetSideEffectApiProxyImpl implements WidgetSideEffectApi {
       if (isCanceled) return;
     }
 
-    manager.markNeedsBuild();
+    if (manager.mounted) manager.markNeedsBuild();
   }
 
   @override

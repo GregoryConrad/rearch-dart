@@ -1,3 +1,7 @@
+## 1.7.2
+
+ - **FIX**: ensure widget is mounted before marking dirty ([#305](https://github.com/GregoryConrad/rearch-dart/issues/305)).
+
 ## 1.7.1
 
  - Update a dependency to the latest release.

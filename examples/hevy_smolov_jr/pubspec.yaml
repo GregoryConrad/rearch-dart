@@ -8,7 +8,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_rearch: ^1.7.1
+  flutter_rearch: ^1.7.2
   freezed_annotation: ^3.0.0
   fuzzywuzzy: ^1.2.0
   http: ^1.2.2

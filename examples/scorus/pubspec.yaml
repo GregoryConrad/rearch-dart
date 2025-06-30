@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_rearch: ^1.7.1
+  flutter_rearch: ^1.7.2
   rearch: ^1.16.1
 
 dev_dependencies:

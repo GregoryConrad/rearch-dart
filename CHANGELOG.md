@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-06-30
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`flutter_rearch` - `v1.7.2`](#flutter_rearch---v172)
+
+---
+
+#### `flutter_rearch` - `v1.7.2`
+
+ - **FIX**: ensure widget is mounted before marking dirty ([#305](https://github.com/GregoryConrad/rearch-dart/issues/305)).
+
+
 ## 2025-04-22
 
 ### Changes

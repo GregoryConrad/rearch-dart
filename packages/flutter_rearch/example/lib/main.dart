@@ -60,10 +60,8 @@ extension TodoDocumentUtilities on Todo {
 }
 
 /// Provides a way to create/update and delete todos.
-({
-  void Function(Todo) updateTodo,
-  void Function(int) deleteTodo,
-}) todoListManagerCapsule(CapsuleHandle use) {
+({void Function(Todo) updateTodo, void Function(int) deleteTodo})
+todoListManagerCapsule(CapsuleHandle use) {
   final index = use(indexCapsule);
   return (
     updateTodo: (todo) => index.addDocument(todo.toDocument()),
@@ -72,10 +70,7 @@ extension TodoDocumentUtilities on Todo {
 }
 
 /// Represents the filter for a list of todos.
-typedef TodoListFilter = ({
-  String query,
-  bool completionStatus,
-});
+typedef TodoListFilter = ({String query, bool completionStatus});
 
 /// Represents the current filter to search with
 /// ('' as a query string represents no current query).
@@ -83,7 +78,8 @@ typedef TodoListFilter = ({
   TodoListFilter filter,
   void Function(String) setQueryString,
   void Function() toggleCompletionStatus,
-}) filterCapsule(CapsuleHandle use) {
+})
+filterCapsule(CapsuleHandle use) {
   final (query, setQuery) = use.state('');
   final (completionStatus, setCompletionStatus) = use.state(false);
   return (
@@ -99,8 +95,10 @@ AsyncValue<List<Todo>> todoListCapsule(CapsuleHandle use) {
   final (
     filter: (:query, :completionStatus),
     setQueryString: _,
-    toggleCompletionStatus: _
-  ) = use(filterCapsule);
+    toggleCompletionStatus: _,
+  ) = use(
+    filterCapsule,
+  );
 
   // When query is null/empty, it does not affect the search.
   final documentsStream = use.memo(
@@ -112,8 +110,9 @@ AsyncValue<List<Todo>> todoListCapsule(CapsuleHandle use) {
   );
   final todoDocumentsState = use.stream(documentsStream);
   return todoDocumentsState.map(
-    (todoDocs) => todoDocs.map(TodoDocumentUtilities.toTodo).toList()
-      ..sort((todo1, todo2) => todo1.timestamp.compareTo(todo2.timestamp)),
+    (todoDocs) =>
+        todoDocs.map(TodoDocumentUtilities.toTodo).toList()
+          ..sort((todo1, todo2) => todo1.timestamp.compareTo(todo2.timestamp)),
   );
 }
 
@@ -195,7 +194,9 @@ class Body extends RearchConsumer {
       filter: (query: _, :completionStatus),
       setQueryString: _,
       :toggleCompletionStatus,
-    ) = use(filterCapsule);
+    ) = use(
+      filterCapsule,
+    );
     final completionText = completionStatus ? 'completed' : 'incomplete';
 
     final todoListLengthState = use(todoListLengthCapsule);
@@ -203,15 +204,17 @@ class Body extends RearchConsumer {
     final statusWidget = switch (todoListLengthState) {
       AsyncLoading() => const CircularProgressIndicator.adaptive(),
       AsyncError(:final error) => Text('$error'),
-      AsyncData(data: final length) when length == 0 =>
-        Text('No $completionText todos found'),
+      AsyncData(data: final length) when length == 0 => Text(
+        'No $completionText todos found',
+      ),
       _ => null,
     };
 
     final (:updateTodo, deleteTodo: _) = use(todoListManagerCapsule);
 
-    final bottomHeightAnimationController =
-        use.animationController(duration: animationDuration);
+    final bottomHeightAnimationController = use.animationController(
+      duration: animationDuration,
+    );
 
     final (isSearching, setIsSearching) = use.state(false);
     use.effect(
@@ -351,8 +354,9 @@ class CustomAppBar extends StatelessWidget {
             ),
             elevation: 2,
             scrolledUnderElevation: 2,
-            backgroundColor:
-                Theme.of(context).colorScheme.surface.withValues(alpha: 0.7),
+            backgroundColor: Theme.of(
+              context,
+            ).colorScheme.surface.withValues(alpha: 0.7),
             actions: [
               IconButton(
                 tooltip: completionStatus
@@ -382,8 +386,9 @@ class CustomAppBar extends StatelessWidget {
                 height: bottomHeight,
                 child: AnimatedSwitcher(
                   duration: animationDuration,
-                  child:
-                      isSearching ? SearchBar(close: toggleIsSearching) : null,
+                  child: isSearching
+                      ? SearchBar(close: toggleIsSearching)
+                      : null,
                 ),
               ),
             ),
@@ -413,7 +418,9 @@ class SearchBar extends RearchConsumer {
       filter: _,
       :setQueryString,
       toggleCompletionStatus: _,
-    ) = use(filterCapsule);
+    ) = use(
+      filterCapsule,
+    );
 
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
@@ -539,9 +546,13 @@ class DynamicBackground extends RearchConsumer {
               id: i,
               centerX: random.nextDouble(),
               centerY: random.nextDouble(),
-              color: Color.lerp(color1, color2, random.nextDouble())!
-                  .withValues(alpha: 0.3),
-              radius: avgCircleRadius +
+              color: Color.lerp(
+                color1,
+                color2,
+                random.nextDouble(),
+              )!.withValues(alpha: 0.3),
+              radius:
+                  avgCircleRadius +
                   avgCircleRadius * (random.nextDouble() - 0.5),
               appear: Duration(
                 seconds: 2 + (random.nextDouble() * 3).round(),
@@ -574,8 +585,9 @@ class DynamicBackground extends RearchConsumer {
                   radius: circle.radius * constraints.maxHeight,
                   appear: circle.appear,
                   disappear: circle.disappear,
-                  remove: () => circles.value =
-                      circles.value.where((c) => c.id != circle.id).toSet(),
+                  remove: () => circles.value = circles.value
+                      .where((c) => c.id != circle.id)
+                      .toSet(),
                 ),
               ),
             BackdropFilter(

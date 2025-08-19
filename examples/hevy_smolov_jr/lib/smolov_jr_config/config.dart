@@ -89,7 +89,7 @@ extension SmolovJrConfigConvenience on SmolovJrConfig {
                 restSeconds: restSeconds,
                 notes: isBodyWeight
                     ? 'Calculated weight assumes a body weight of $bodyWeight; '
-                        'adjust your set weight up/down accordingly.'
+                          'adjust your set weight up/down accordingly.'
                     : null,
                 sets: List.generate(
                   sets,
@@ -113,8 +113,9 @@ extension SmolovJrConfigConvenience on SmolovJrConfig {
 }
 
 /// Provides the current [SmolovJrConfig] to descendants in the [Widget] tree.
-class SmolovJrConfigInjection extends RearchInjection<SmolovJrConfigInjection,
-    ValueWrapper<SmolovJrConfig>> {
+class SmolovJrConfigInjection
+    extends
+        RearchInjection<SmolovJrConfigInjection, ValueWrapper<SmolovJrConfig>> {
   /// Provides the current [SmolovJrConfig] to descendants in the [Widget] tree.
   const SmolovJrConfigInjection({required super.child, super.key});
 
@@ -125,7 +126,9 @@ class SmolovJrConfigInjection extends RearchInjection<SmolovJrConfigInjection,
 
   /// Provides the current [SmolovJrConfig] to descendants in the [Widget] tree.
   static ValueWrapper<SmolovJrConfig> of(BuildContext context) {
-    return RearchInjection.of<SmolovJrConfigInjection,
-        ValueWrapper<SmolovJrConfig>>(context);
+    return RearchInjection.of<
+      SmolovJrConfigInjection,
+      ValueWrapper<SmolovJrConfig>
+    >(context);
   }
 }

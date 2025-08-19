@@ -55,24 +55,26 @@ class WeatherHome extends RearchConsumer {
 
             // Location display
             if (locationQuery.isEmpty) const Text('Enter a city above!'),
-            if (location case AsyncError(:final error)
-                when locationQuery.isNotEmpty)
+            if (location case AsyncError(
+              :final error,
+            ) when locationQuery.isNotEmpty)
               Text('Location not found: $error'),
-            if (location.data case Some(value: Location(:final name))
-                when location is! AsyncError)
+            if (location.data case Some(
+              value: Location(:final name),
+            ) when location is! AsyncError)
               Text(name, style: textTheme.displayMedium),
 
             // Weather display
-            if (weather.data
-                case Some(
-                  value: Weather(:final temperature, :final weatherCondition)
-                ) when weather is! AsyncError) ...[
+            if (weather.data case Some(
+              value: Weather(:final temperature, :final weatherCondition),
+            ) when weather is! AsyncError) ...[
               Text(weatherCondition.emoji, style: textTheme.displayLarge),
               Text(weatherCondition.fullName, style: textTheme.headlineLarge),
               Text('${temperature.toInt()}°C', style: textTheme.headlineMedium),
             ],
-            if (weather case AsyncError(:final error)
-                when location is! AsyncError)
+            if (weather case AsyncError(
+              :final error,
+            ) when location is! AsyncError)
               Text('Failed to fetch weather: $error'),
 
             // Loading display

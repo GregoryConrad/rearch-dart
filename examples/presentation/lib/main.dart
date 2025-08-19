@@ -7,6 +7,7 @@ import 'package:graphview/GraphView.dart';
 import 'package:rearch/rearch.dart';
 import 'package:url_strategy/url_strategy.dart';
 
+// NOTE: this is simple example code
 // ignore_for_file: public_member_api_docs
 
 void main() {
@@ -31,8 +32,9 @@ class PresentationApp extends StatelessWidget {
           // Override controls so that TextFields can receive "m" and "."
           controls: const FlutterDeckControlsConfiguration(
             shortcuts: FlutterDeckShortcutsConfiguration(
-              toggleNavigationDrawer:
-                  SingleActivator(LogicalKeyboardKey.arrowUp),
+              toggleNavigationDrawer: SingleActivator(
+                LogicalKeyboardKey.arrowUp,
+              ),
               toggleMarker: SingleActivator(LogicalKeyboardKey.arrowDown),
             ),
           ),
@@ -345,7 +347,8 @@ class RemoveSplitSlidePadding extends StatelessWidget {
       builder: (context, constraints) {
         const footerHeight = 80.0;
         const horizontalPadding = 16.0;
-        final headerHeight = MediaQuery.of(context).size.height -
+        final headerHeight =
+            MediaQuery.of(context).size.height -
             constraints.maxHeight -
             footerHeight;
         return Stack(
@@ -368,7 +371,8 @@ class RemoveSplitSlidePadding extends StatelessWidget {
 FlutterDeckSlide intro(BuildContext context) {
   return FlutterDeckSlide.title(
     title: 'ReArch',
-    subtitle: 'A Reactive Approach to Application Architecture '
+    subtitle:
+        'A Reactive Approach to Application Architecture '
         'Supporting Side Effects',
   );
 }
@@ -628,9 +632,9 @@ FlutterDeckSlide sideEffects(BuildContext context) {
               return Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: FlutterDeckTheme.of(context)
-                      .splitSlideTheme
-                      .leftBackgroundColor,
+                  color: FlutterDeckTheme.of(
+                    context,
+                  ).splitSlideTheme.leftBackgroundColor,
                 ),
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -920,7 +924,7 @@ FlutterDeckSlide implementations(BuildContext context) {
 }
 
 ({Graph graph, String? infoDisplayText, int? selectedNode})
-    calculateGraphViewStateFromStep(int step) {
+calculateGraphViewStateFromStep(int step) {
   // Graph:
   //   0 -> 1 -> 2 -> 3
   //     \      /  \   \
@@ -1051,7 +1055,7 @@ FlutterDeckSlide implementations(BuildContext context) {
   return (
     graph: graph,
     infoDisplayText: infoDisplayText,
-    selectedNode: selectedNode
+    selectedNode: selectedNode,
   );
 }
 
@@ -1099,8 +1103,8 @@ FlutterDeckSlide algorithms(BuildContext context) {
                 final color = id == selectedNode
                     ? Colors.pinkAccent
                     : (id == 0 || id == 3
-                        ? Colors.purpleAccent
-                        : Colors.blueAccent);
+                          ? Colors.purpleAccent
+                          : Colors.blueAccent);
 
                 return Container(
                   decoration: BoxDecoration(
@@ -1120,7 +1124,8 @@ FlutterDeckSlide algorithms(BuildContext context) {
             builder: (context, constraints) {
               const footerHeight = 80.0;
               const horizontalPadding = 16.0;
-              final headerHeight = MediaQuery.of(context).size.height -
+              final headerHeight =
+                  MediaQuery.of(context).size.height -
                   constraints.maxHeight -
                   footerHeight;
               return Stack(
@@ -1148,9 +1153,9 @@ FlutterDeckSlide algorithms(BuildContext context) {
                                   .textTheme
                                   .subtitle
                                   .copyWith(
-                                    color: FlutterDeckTheme.of(context)
-                                        .splitSlideTheme
-                                        .rightBackgroundColor,
+                                    color: FlutterDeckTheme.of(
+                                      context,
+                                    ).splitSlideTheme.rightBackgroundColor,
                                   ),
                             ),
                           ),
@@ -1222,8 +1227,9 @@ FlutterDeckSlide dartAndFlutterLibrary(BuildContext context) {
                 style: TextStyle(
                   fontSize: 16,
                   fontStyle: FontStyle.italic,
-                  color:
-                      FlutterDeckTheme.of(context).splitSlideTheme.rightColor,
+                  color: FlutterDeckTheme.of(
+                    context,
+                  ).splitSlideTheme.rightColor,
                 ),
               ),
             ],

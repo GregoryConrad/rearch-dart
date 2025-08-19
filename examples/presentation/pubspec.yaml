@@ -1,9 +1,10 @@
 name: presentation
 description: Interactive presentation introducing ReArch.
 publish_to: 'none'
+resolution: workspace
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ^3.9.0
 
 dependencies:
   device_frame: ^1.1.0

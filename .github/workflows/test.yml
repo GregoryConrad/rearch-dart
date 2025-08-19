@@ -16,12 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
-      - uses: bluefireteam/melos-action@v2
+      - uses: bluefireteam/melos-action@v3
 
       - name: Check code format
         run: melos format --set-exit-if-changed
       - name: Run code analysis
-        run: melos analyze --fatal-infos --fatal-warnings
+        run: dart analyze --fatal-infos --fatal-warnings
       - name: Run tests
         run: melos run test
 
@@ -34,6 +34,6 @@ jobs:
         run: sudo apt update && sudo apt-get install -y libglu1-mesa ninja-build clang cmake pkg-config libgtk-3-dev liblzma-dev
       - uses: pyvista/setup-headless-display-action@v3
       - uses: subosito/flutter-action@v2
-      - uses: bluefireteam/melos-action@v2
+      - uses: bluefireteam/melos-action@v3
       - name: Run integration tests
         run: melos run test:linux-integration --no-select

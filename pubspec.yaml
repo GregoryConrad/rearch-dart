@@ -1,10 +1,50 @@
 name: rearch_workspace
+repository: https://github.com/GregoryConrad/rearch-dart
 publish_to: none
 
 environment:
-  sdk: ">=3.3.0 <4.0.0"
+  sdk: ^3.9.0
 
 dev_dependencies:
-  analyzer: ^8.0.0
   melos: ^7.0.0
   very_good_analysis: ^9.0.0
+
+workspace:
+  - packages/flutter_rearch
+  - packages/flutter_rearch/example
+  - packages/ramen
+  - packages/rearch
+  - packages/rearch/example
+  - examples/count_warm_up
+  - examples/hevy_smolov_jr
+  - examples/presentation
+  - examples/infinite_scroll
+  - examples/scorus
+  - examples/weather_app
+
+melos:
+  scripts:
+    test:
+      run: melos run test:dart --no-select && melos run test:flutter --no-select
+      description: Run all Dart & Flutter tests in this project.
+
+    test:dart:
+      run: melos exec -c 1 --fail-fast -- "dart test test"
+      description: Run Dart tests for a specific package in this project.
+      packageFilters:
+        flutter: false
+        dirExists: test
+
+    test:flutter:
+      run: melos exec -c 1 --fail-fast -- "flutter test test"
+      description: Run Flutter tests for a specific package in this project.
+      packageFilters:
+        flutter: true
+        dirExists: test
+
+    test:linux-integration:
+      run: melos exec -c 1 --fail-fast -- "flutter test -d linux integration_test"
+      description: Run Flutter integration tests for a specific package in this project on linux.
+      packageFilters:
+        flutter: true
+        dirExists: integration_test

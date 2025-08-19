@@ -51,8 +51,8 @@ class SaveProgramButton extends RearchConsumer {
         if (config.exercise == null) return null;
         final (:programName, :routines) = config.toProgram();
         return () => mutate(
-              rawCreateProgram(programName: programName, routines: routines),
-            );
+          rawCreateProgram(programName: programName, routines: routines),
+        );
       },
       [config, rawCreateProgram],
     );
@@ -62,25 +62,25 @@ class SaveProgramButton extends RearchConsumer {
 
     return switch (state) {
       AsyncLoading<void>() => ElevatedButton.icon(
-          icon: const CircularProgressIndicator(),
-          onPressed: null,
-          label: const Text('Save Program'),
-        ),
+        icon: const CircularProgressIndicator(),
+        onPressed: null,
+        label: const Text('Save Program'),
+      ),
       AsyncError<void>() => ElevatedButton.icon(
-          icon: const Icon(Icons.error),
-          onPressed: createProgram,
-          label: const Text('Retry Save Program'),
-        ),
+        icon: const Icon(Icons.error),
+        onPressed: createProgram,
+        label: const Text('Retry Save Program'),
+      ),
       AsyncData<void>() => ElevatedButton.icon(
-          icon: const Icon(Icons.check),
-          onPressed: createProgram,
-          label: const Text('Save Program'),
-        ),
+        icon: const Icon(Icons.check),
+        onPressed: createProgram,
+        label: const Text('Save Program'),
+      ),
       null => ElevatedButton.icon(
-          icon: const Icon(Icons.save),
-          onPressed: createProgram,
-          label: const Text('Save Program'),
-        ),
+        icon: const Icon(Icons.save),
+        onPressed: createProgram,
+        label: const Text('Save Program'),
+      ),
     };
   }
 }

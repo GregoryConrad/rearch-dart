@@ -16,20 +16,21 @@ class ExerciseSelectionStep extends RearchConsumer {
     final exercisesFuture = use(_curatedExercisesCapsule);
     final exercises = use.future(exercisesFuture);
     return switch (exercises) {
-      AsyncLoading<List<Exercise>>() =>
-        const Center(child: CircularProgressIndicator()),
+      AsyncLoading<List<Exercise>>() => const Center(
+        child: CircularProgressIndicator(),
+      ),
       AsyncError<List<Exercise>>(:final error) => Text(
-          'Error encountered while loading your exercises; '
-          'try checking your API key and/or refreshing the page.\n'
-          '$error',
-        ),
+        'Error encountered while loading your exercises; '
+        'try checking your API key and/or refreshing the page.\n'
+        '$error',
+      ),
       AsyncData<List<Exercise>>(:final data) => Column(
-          children: [
-            const _AllExercisePicker(),
-            const SizedBox(height: 16),
-            _CuratedExercisePicker(curatedExercises: data),
-          ],
-        ),
+        children: [
+          const _AllExercisePicker(),
+          const SizedBox(height: 16),
+          _CuratedExercisePicker(curatedExercises: data),
+        ],
+      ),
     };
   }
 }
@@ -74,8 +75,9 @@ final Capsule<List<String>> _curatedExerciseNamesCapsule = capsule((use) {
 
 /// Pre-selected exercises from the entire exercise list,
 /// including SBD and Weighted Pull/Chin Up.
-final Capsule<Future<List<Exercise>>> _curatedExercisesCapsule =
-    capsule((use) async {
+final Capsule<Future<List<Exercise>>> _curatedExercisesCapsule = capsule((
+  use,
+) async {
   final curatedExerciseNames = use(_curatedExerciseNamesCapsule);
   final exercises = await use(exercisesCapsule);
   return curatedExerciseNames
@@ -116,7 +118,7 @@ class _AllExercisePicker extends RearchConsumer {
 
 /// Provides a mechanism to search for exercises based on a provided query.
 final Capsule<Future<List<Exercise>> Function(String query)>
-    _searchExercisesAction = capsule((use) {
+_searchExercisesAction = capsule((use) {
   final exercisesFuture = use(exercisesCapsule);
   return (query) async {
     final exercises = await exercisesFuture;

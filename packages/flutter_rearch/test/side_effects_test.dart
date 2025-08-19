@@ -38,8 +38,12 @@ void main() {
             return MaterialApp(
               home: Column(
                 children: [
-                  for (final (i, value)
-                      in [state1, state2, state3, state4].indexed)
+                  for (final (i, value) in [
+                    state1,
+                    state2,
+                    state3,
+                    state4,
+                  ].indexed)
                     Text('$i: $value'),
                   TextButton(
                     onPressed: () => runTransaction(() {

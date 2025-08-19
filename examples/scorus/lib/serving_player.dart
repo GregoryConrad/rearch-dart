@@ -13,9 +13,9 @@ enum ServingPlayer {
 extension NextPlayer on ServingPlayer {
   /// Returns the next [ServingPlayer] in the serving order.
   ServingPlayer get next => switch (this) {
-        ServingPlayer.player1 => ServingPlayer.player2,
-        ServingPlayer.player2 => ServingPlayer.player1,
-      };
+    ServingPlayer.player1 => ServingPlayer.player2,
+    ServingPlayer.player2 => ServingPlayer.player1,
+  };
 }
 
 /// Represents what a [ServingPlayer] manager should be able to do.

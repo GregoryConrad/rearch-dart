@@ -6,8 +6,9 @@ import 'package:rearch/rearch.dart';
 import 'util.dart';
 
 void main() {
-  testWidgets('RearchConsumer rebuilds when constructor params change (#163)',
-      (tester) async {
+  testWidgets('RearchConsumer rebuilds when constructor params change (#163)', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       const RearchBootstrapper(
         child: MaterialApp(home: Scaffold(body: ParentConsumer())),
@@ -21,58 +22,59 @@ void main() {
     expect(find.text('1'), findsOneWidget);
   });
 
-  testWidgets('Used idempotent capsules will not dispose on each build (#170)',
-      (tester) async {
-    var builds = 0;
-    void idempotentCapsule(CapsuleHandle use) => builds++;
-    await tester.pumpWidget(
-      RearchBootstrapper(
-        child: MaterialApp(
-          home: Scaffold(
-            body: RearchBuilder(
-              builder: (context, use) {
-                final count = use.data(0);
-                if (count.value < 2 || count.value.isEven) {
-                  use(idempotentCapsule);
-                }
+  testWidgets(
+    'Used idempotent capsules will not dispose on each build (#170)',
+    (tester) async {
+      var builds = 0;
+      void idempotentCapsule(CapsuleHandle use) => builds++;
+      await tester.pumpWidget(
+        RearchBootstrapper(
+          child: MaterialApp(
+            home: Scaffold(
+              body: RearchBuilder(
+                builder: (context, use) {
+                  final count = use.data(0);
+                  if (count.value < 2 || count.value.isEven) {
+                    use(idempotentCapsule);
+                  }
 
-                return TextButton(
-                  onPressed: () => count.value++,
-                  child: Text(count.value.toString()),
-                );
-              },
+                  return TextButton(
+                    onPressed: () => count.value++,
+                    child: Text(count.value.toString()),
+                  );
+                },
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(builds, equals(1)); // count == 0
-    await tester.tap(find.byType(TextButton));
-    await tester.pump();
-    expect(builds, equals(1)); // count == 1
-    await tester.tap(find.byType(TextButton));
-    await tester.pump();
-    expect(builds, equals(1)); // count == 2
-    await tester.tap(find.byType(TextButton));
-    await tester.pump();
-    expect(builds, equals(1)); // count == 3, capsule not used, disposed
-    await tester.tap(find.byType(TextButton));
-    await tester.pump();
-    expect(builds, equals(2)); // count == 4, capsule used, rebuilt
-    await tester.tap(find.byType(TextButton));
-    await tester.pump();
-    expect(builds, equals(2)); // count == 5, capsule not used, disposed
-    await tester.tap(find.byType(TextButton));
-    await tester.pump();
-    expect(builds, equals(3)); // count == 6, capsule used, rebuilt
-  });
+      expect(builds, equals(1)); // count == 0
+      await tester.tap(find.byType(TextButton));
+      await tester.pump();
+      expect(builds, equals(1)); // count == 1
+      await tester.tap(find.byType(TextButton));
+      await tester.pump();
+      expect(builds, equals(1)); // count == 2
+      await tester.tap(find.byType(TextButton));
+      await tester.pump();
+      expect(builds, equals(1)); // count == 3, capsule not used, disposed
+      await tester.tap(find.byType(TextButton));
+      await tester.pump();
+      expect(builds, equals(2)); // count == 4, capsule used, rebuilt
+      await tester.tap(find.byType(TextButton));
+      await tester.pump();
+      expect(builds, equals(2)); // count == 5, capsule not used, disposed
+      await tester.tap(find.byType(TextButton));
+      await tester.pump();
+      expect(builds, equals(3)); // count == 6, capsule used, rebuilt
+    },
+  );
 
   group('capsule warm up widget extension', () {
     ValueWrapper<(AsyncValue<int>, AsyncValue<bool>)> manager(
       CapsuleHandle use,
-    ) =>
-        use.data(const (AsyncLoading(None()), AsyncLoading(None())));
+    ) => use.data(const (AsyncLoading(None()), AsyncLoading(None())));
     AsyncValue<int> c1(CapsuleHandle use) => use(manager).value.$1;
     AsyncValue<bool> c2(CapsuleHandle use) => use(manager).value.$2;
 
@@ -85,7 +87,9 @@ void main() {
             home: Scaffold(
               body: RearchBuilder(
                 builder: (context, use) {
-                  return [c1, c2].map(use.call).toWarmUpWidget(
+                  return [c1, c2]
+                      .map(use.call)
+                      .toWarmUpWidget(
                         loading: const Text('loading'),
                         child: const Text('warmed up'),
                         errorBuilder: (_) => throw UnsupportedError(
@@ -102,8 +106,10 @@ void main() {
       expect(find.text('loading'), findsOneWidget);
       expect(find.text('warmed up'), findsNothing);
 
-      container.read(manager).value =
-          const (AsyncData(123), AsyncLoading(None()));
+      container.read(manager).value = const (
+        AsyncData(123),
+        AsyncLoading(None()),
+      );
       await tester.pumpAndSettle();
       expect(find.text('loading'), findsOneWidget);
       expect(find.text('warmed up'), findsNothing);
@@ -123,7 +129,9 @@ void main() {
             home: Scaffold(
               body: RearchBuilder(
                 builder: (context, use) {
-                  return [c1, c2].map(use.call).toWarmUpWidget(
+                  return [c1, c2]
+                      .map(use.call)
+                      .toWarmUpWidget(
                         loading: const Text('loading'),
                         child: const Text('warmed up'),
                         errorBuilder: (errors) =>
@@ -140,8 +148,10 @@ void main() {
       expect(find.text('error'), findsNothing);
       expect(find.text('warmed up'), findsNothing);
 
-      container.read(manager).value =
-          const (AsyncData(123), AsyncLoading(None()));
+      container.read(manager).value = const (
+        AsyncData(123),
+        AsyncLoading(None()),
+      );
       await tester.pumpAndSettle();
       expect(find.text('loading'), findsOneWidget);
       expect(find.text('error'), findsNothing);

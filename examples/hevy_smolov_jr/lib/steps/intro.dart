@@ -52,7 +52,8 @@ class IntroStep extends StatelessWidget {
         const SizedBox(height: 16),
         const WarningCard(
           title: 'Hevy Pro Required',
-          details: "If you don't already have Hevy Pro, "
+          details:
+              "If you don't already have Hevy Pro, "
               'the lifetime plan is well worth it and supports the Hevy devs!',
           onPressed: _openHevyProSubscription,
         ),

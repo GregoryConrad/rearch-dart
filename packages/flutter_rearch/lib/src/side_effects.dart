@@ -47,18 +47,17 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
     double upperBound = 1,
     TickerProvider? vsync,
     AnimationBehavior animationBehavior = AnimationBehavior.normal,
-  }) =>
-      _animationController(
-        this,
-        vsync: vsync,
-        duration: duration,
-        reverseDuration: reverseDuration,
-        debugLabel: debugLabel,
-        lowerBound: lowerBound,
-        upperBound: upperBound,
-        animationBehavior: animationBehavior,
-        initialValue: initialValue,
-      );
+  }) => _animationController(
+    this,
+    vsync: vsync,
+    duration: duration,
+    reverseDuration: reverseDuration,
+    debugLabel: debugLabel,
+    lowerBound: lowerBound,
+    upperBound: upperBound,
+    animationBehavior: animationBehavior,
+    initialValue: initialValue,
+  );
 
   /// Prevents the associated [RearchConsumer] from being disposed when it
   /// normally would be by its lazy list container (such as in a [ListView]).
@@ -88,6 +87,7 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
   }) {
     return use.disposable(FocusNode.new, (node) => node.dispose())
       ..debugLabel = debugLabel
+      // NOTE: needed to keep backwards compat
       // ignore: deprecated_member_use
       ..onKey = onKey
       ..onKeyEvent = onKeyEvent
@@ -109,6 +109,7 @@ extension BuiltinWidgetSideEffects on WidgetSideEffectRegistrar {
   }) {
     return use.disposable(FocusScopeNode.new, (node) => node.dispose())
       ..debugLabel = debugLabel
+      // NOTE: needed to keep backwards compat
       // ignore: deprecated_member_use
       ..onKey = onKey
       ..onKeyEvent = onKeyEvent

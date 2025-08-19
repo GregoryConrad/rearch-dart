@@ -179,7 +179,7 @@ void main() {
 
   test('replay', () {
     (int?, void Function(int), {void Function()? undo, void Function()? redo})
-        replayCapsule(CapsuleHandle use) => use.replay();
+    replayCapsule(CapsuleHandle use) => use.replay();
 
     final container = useContainer();
     expect(container.read(replayCapsule).$1, equals(null));
@@ -243,10 +243,8 @@ void main() {
   });
 
   group('side effect transactions', () {
-    (
-      (int, void Function(int)),
-      (int, void Function(int)),
-    ) twoSideEffectsCapsule(CapsuleHandle use) => (use.state(0), use.state(1));
+    ((int, void Function(int)), (int, void Function(int)))
+    twoSideEffectsCapsule(CapsuleHandle use) => (use.state(0), use.state(1));
 
     (int, void Function(int)) anotherCapsule(CapsuleHandle use) => use.state(2);
 
@@ -255,10 +253,10 @@ void main() {
       final (_, setState3) = use(anotherCapsule);
       final runTransaction = use.transactionRunner();
       return (n) => runTransaction(() {
-            for (final setState in [setState1, setState2, setState3]) {
-              setState(n);
-            }
-          });
+        for (final setState in [setState1, setState2, setState3]) {
+          setState(n);
+        }
+      });
     }
 
     int buildCounterCapsule(CapsuleHandle use) {
@@ -277,8 +275,9 @@ void main() {
       {
         expect(container.read(buildCounterCapsule), equals(1));
 
-        final ((state1, setState1), (state2, setState2)) =
-            container.read(twoSideEffectsCapsule);
+        final ((state1, setState1), (state2, setState2)) = container.read(
+          twoSideEffectsCapsule,
+        );
         expect(state1, equals(0));
         expect(state2, equals(1));
 
@@ -291,8 +290,9 @@ void main() {
       {
         expect(container.read(buildCounterCapsule), equals(2));
 
-        final ((state1, _), (state2, _)) =
-            container.read(twoSideEffectsCapsule);
+        final ((state1, _), (state2, _)) = container.read(
+          twoSideEffectsCapsule,
+        );
         expect(state1, equals(1));
         expect(state2, equals(2));
       }
@@ -304,8 +304,9 @@ void main() {
       {
         expect(container.read(buildCounterCapsule), equals(1));
 
-        final ((state1, setState1), (state2, _)) =
-            container.read(twoSideEffectsCapsule);
+        final ((state1, setState1), (state2, _)) = container.read(
+          twoSideEffectsCapsule,
+        );
         final (state3, setState3) = container.read(anotherCapsule);
         expect(state1, equals(0));
         expect(state2, equals(1));
@@ -320,8 +321,9 @@ void main() {
       {
         expect(container.read(buildCounterCapsule), equals(2));
 
-        final ((state1, _), (state2, _)) =
-            container.read(twoSideEffectsCapsule);
+        final ((state1, _), (state2, _)) = container.read(
+          twoSideEffectsCapsule,
+        );
         final (state3, _) = container.read(anotherCapsule);
         expect(state1, equals(123));
         expect(state2, equals(1));
@@ -335,8 +337,9 @@ void main() {
       {
         expect(container.read(buildCounterCapsule), equals(1));
 
-        final ((state1, _), (state2, _)) =
-            container.read(twoSideEffectsCapsule);
+        final ((state1, _), (state2, _)) = container.read(
+          twoSideEffectsCapsule,
+        );
         final (state3, _) = container.read(anotherCapsule);
         expect(state1, equals(0));
         expect(state2, equals(1));
@@ -348,8 +351,9 @@ void main() {
       {
         expect(container.read(buildCounterCapsule), equals(2));
 
-        final ((state1, _), (state2, _)) =
-            container.read(twoSideEffectsCapsule);
+        final ((state1, _), (state2, _)) = container.read(
+          twoSideEffectsCapsule,
+        );
         final (state3, _) = container.read(anotherCapsule);
         expect(state1, equals(1234));
         expect(state2, equals(1234));
@@ -363,8 +367,9 @@ void main() {
       {
         expect(container.read(buildCounterCapsule), equals(1));
 
-        final ((state1, setState1), (state2, _)) =
-            container.read(twoSideEffectsCapsule);
+        final ((state1, setState1), (state2, _)) = container.read(
+          twoSideEffectsCapsule,
+        );
         final (state3, setState3) = container.read(anotherCapsule);
         expect(state1, equals(0));
         expect(state2, equals(1));
@@ -380,8 +385,9 @@ void main() {
       {
         expect(container.read(buildCounterCapsule), equals(2));
 
-        final ((state1, _), (state2, _)) =
-            container.read(twoSideEffectsCapsule);
+        final ((state1, _), (state2, _)) = container.read(
+          twoSideEffectsCapsule,
+        );
         final (state3, _) = container.read(anotherCapsule);
         expect(state1, equals(1234));
         expect(state2, equals(1234));

@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
-      - uses: bluefireteam/melos-action@v2
+      - uses: bluefireteam/melos-action@v3
       - name: Run tests
         run: melos run test
       - name: Build for web

@@ -75,7 +75,6 @@ class GlobalWarmUps extends RearchConsumer {
       // If there are no AsyncErrors or AsyncLoadings, child is shown.
       // Note: all loading happens in parallel automatically
       // to speed up your loading times!
-
       use(sharedPrefsWarmUpCapsule),
       // other warm ups here...
     ].toWarmUpWidget(
@@ -102,18 +101,20 @@ class CountBody extends RearchConsumer {
 
   @override
   Widget build(BuildContext context, WidgetHandle use) {
-    final countText = use(persistedCountCapsule)
-        .$1
-        .map((count) => count ?? 0)
-        .map((count) => count.toString());
+    final countText = use(
+      persistedCountCapsule,
+    ).$1.map((count) => count ?? 0).map((count) => count.toString());
     return Scaffold(
       body: Center(
         child: switch (countText) {
-          AsyncData(:final data) =>
-            Text(data, style: Theme.of(context).textTheme.headlineLarge),
+          AsyncData(:final data) => Text(
+            data,
+            style: Theme.of(context).textTheme.headlineLarge,
+          ),
           AsyncLoading() => const CircularProgressIndicator.adaptive(),
-          AsyncError(:final error, :final stackTrace) =>
-            Text('$error\n$stackTrace')
+          AsyncError(:final error, :final stackTrace) => Text(
+            '$error\n$stackTrace',
+          ),
         },
       ),
       floatingActionButton: FloatingActionButton(

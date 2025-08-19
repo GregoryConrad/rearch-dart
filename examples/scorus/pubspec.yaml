@@ -1,9 +1,10 @@
 name: scorus
 description: "Pickleball score tracker"
 publish_to: none
+resolution: workspace
 
 environment:
-  sdk: '>=3.2.5 <4.0.0'
+  sdk: ^3.9.0
   flutter: '>=3.16.9 <4.0.0'
 
 dependencies:

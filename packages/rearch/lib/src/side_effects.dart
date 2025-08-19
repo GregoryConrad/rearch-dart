@@ -17,7 +17,8 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// Convenience side effect that gives a copy of [SideEffectApi.rebuild].
   void Function([
     void Function(void Function() cancelRebuild)? sideEffectMutation,
-  ]) rebuilder() => use.api().rebuild;
+  ])
+  rebuilder() => use.api().rebuild;
 
   /// Convenience side effect that gives a copy of
   /// [SideEffectApi.runTransaction].
@@ -66,7 +67,8 @@ extension BuiltinSideEffects on SideEffectRegistrar {
       // since that is guaranteed to be equal to nothing else.
       return _Mutable<Object?>(const _Nothing());
     });
-    final hasDataChanged = dataWrapper.hasBeenMutated &&
+    final hasDataChanged =
+        dataWrapper.hasBeenMutated &&
         dataWrapper.value != lastSeenDataWrapper.value;
     if (hasDataChanged) {
       getterWrapper.value = () => dataWrapper.value;
@@ -199,7 +201,11 @@ extension BuiltinSideEffects on SideEffectRegistrar {
     List<Object?> dependencies = const [],
   ]) {
     final value = use.memo(init, dependencies);
-    use.effect(() => () => dispose(value), [value]);
+    use.effect(
+      () =>
+          () => dispose(value),
+      [value],
+    );
     return value;
   }
 
@@ -226,12 +232,8 @@ extension BuiltinSideEffects on SideEffectRegistrar {
   /// that sets the current state.
   /// The returned `undo` and `redo` [Function]s will both be null if
   /// there are no states available to undo and redo, respectively.
-  (
-    T?,
-    void Function(T), {
-    void Function()? undo,
-    void Function()? redo,
-  }) replay<T>() {
+  (T?, void Function(T), {void Function()? undo, void Function()? redo})
+  replay<T>() {
     final undoStack = use.value(<T>[]);
     final redoStack = use.value(<T>[]);
     final rebuild = use.rebuilder();
@@ -239,14 +241,14 @@ extension BuiltinSideEffects on SideEffectRegistrar {
     return (
       undoStack.lastOrNull,
       (newState) => rebuild((cancelRebuild) {
-            if (undoStack.isNotEmpty && newState == undoStack.last) {
-              cancelRebuild();
-              return;
-            }
+        if (undoStack.isNotEmpty && newState == undoStack.last) {
+          cancelRebuild();
+          return;
+        }
 
-            redoStack.clear();
-            undoStack.add(newState);
-          }),
+        redoStack.clear();
+        undoStack.add(newState);
+      }),
       undo: undoStack.isEmpty
           ? null
           : () => rebuild((_) => redoStack.add(undoStack.removeLast())),
@@ -487,8 +489,9 @@ extension BuiltinSideEffects on SideEffectRegistrar {
     Future<T> Function() futureFactory,
   ) {
     final runTxn = use.transactionRunner();
-    final (getAsyncState, setAsyncState) =
-        use.data<AsyncValue<T>>(AsyncLoading<T>(None<T>()));
+    final (getAsyncState, setAsyncState) = use.data<AsyncValue<T>>(
+      AsyncLoading<T>(None<T>()),
+    );
     final (getFutureCancel, setFutureCancel) = use.data<void Function()?>(null);
     use.register((api) => api.registerDispose(() => getFutureCancel()?.call()));
 
@@ -497,11 +500,11 @@ extension BuiltinSideEffects on SideEffectRegistrar {
         if (getFutureCancel() == null) {
           setAsyncState(AsyncLoading<T>(getAsyncState().data));
           final subscription = futureFactory().asStream().listen(
-                (data) => setAsyncState(AsyncData(data)),
-                onError: (Object error, StackTrace trace) => setAsyncState(
-                  AsyncError(error, trace, getAsyncState().data),
-                ),
-              );
+            (data) => setAsyncState(AsyncData(data)),
+            onError: (Object error, StackTrace trace) => setAsyncState(
+              AsyncError(error, trace, getAsyncState().data),
+            ),
+          );
           setFutureCancel(subscription.cancel);
         }
 
@@ -522,8 +525,9 @@ extension BuiltinSideEffects on SideEffectRegistrar {
 bool _didDepsListChange(List<Object?> newDeps, List<Object?>? oldDeps) {
   return oldDeps == null ||
       newDeps.length != oldDeps.length ||
-      Iterable<int>.generate(newDeps.length)
-          .any((i) => newDeps[i] != oldDeps[i]);
+      Iterable<int>.generate(
+        newDeps.length,
+      ).any((i) => newDeps[i] != oldDeps[i]);
 }
 
 /// Purpose-driven mutable lazy wrapper

@@ -1,8 +1,9 @@
 name: rearch_example
 publish_to: none
+resolution: workspace
 
 environment:
-  sdk: ^3.0.0
+  sdk: ^3.9.0
 
 dependencies:
   rearch: ^1.16.1

@@ -456,7 +456,6 @@ void main() {
     // Re-reading the capsule under a different type should not throw.
     () capsule(CapsuleHandle use) => ();
     useContainer()
-      // ignore: unnecessary_cast
       ..read(capsule as Capsule<Object>)
       ..read(capsule);
   });
@@ -464,8 +463,10 @@ void main() {
   test('use() in lists works correctly (spun off of issue #36)', () {
     int intCapsule(CapsuleHandle use) => 0;
     double doubleCapsule(CapsuleHandle use) => 0;
-    List<num> upcastedListCapsule1(CapsuleHandle use) =>
-        [use(intCapsule), use(doubleCapsule)];
+    List<num> upcastedListCapsule1(CapsuleHandle use) => [
+      use(intCapsule),
+      use(doubleCapsule),
+    ];
     List<num> upcastedListCapsule2(CapsuleHandle use) =>
         [intCapsule, doubleCapsule].map(use.call).toList();
 

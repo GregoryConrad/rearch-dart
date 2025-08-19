@@ -4,7 +4,7 @@
 /// items may come and go or experience breaking changes on any new release.
 /// Further, items here may be untested so use at your own risk!
 @experimental
-library experimental;
+library;
 
 import 'package:meta/meta.dart';
 import 'package:rearch/rearch.dart';
@@ -72,8 +72,8 @@ final class DynamicOrchestrator<Param, Return> {
 
 /// Shorthand for dynamic capsules,
 /// which are [Capsule]s whose data are [DynamicOrchestrator]s.
-typedef DynamicCapsule<Param, Return>
-    = Capsule<DynamicOrchestrator<Param, Return>>;
+typedef DynamicCapsule<Param, Return> =
+    Capsule<DynamicOrchestrator<Param, Return>>;
 
 /// Allows you to read dynamic capsules.
 ///

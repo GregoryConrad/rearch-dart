@@ -87,7 +87,9 @@ extension OptionConvenience<T> on Option<T> {
     };
   }
 
-  /// Maps an Option<T> into an Option<R> by applying the given [mapper].
+  /// Maps an Option&lt;T&gt; into an Option&lt;R&gt;
+  /// by applying the given [mapper].
+  ///
   /// Only calls [mapper] when this [Option] is [Some].
   Option<R> map<R>(R Function(T) mapper) {
     return switch (this) {
@@ -130,6 +132,8 @@ sealed class AsyncValue<T> {
   static Future<AsyncValue<T>> guard<T>(Future<T> Function() fn) async {
     try {
       return AsyncData(await fn());
+      // NOTE: we want to catch all exceptions
+      // ignore: avoid_catches_without_on_clauses
     } catch (error, stackTrace) {
       return AsyncError(error, stackTrace, None<T>());
     }
@@ -213,7 +217,8 @@ final class AsyncError<T> extends AsyncValue<T> {
       other.previousData == previousData;
 
   @override
-  String toString() => 'AsyncError(previousData: $previousData, '
+  String toString() =>
+      'AsyncError(previousData: $previousData, '
       'error: $error, stackTrace: $stackTrace)';
 }
 
@@ -315,18 +320,22 @@ extension AsyncValueConvenience<T> on AsyncValue<T> {
     return switch (this) {
       AsyncData() => this,
       AsyncLoading() => AsyncLoading(None<T>()),
-      AsyncError(:final error, :final stackTrace) =>
-        AsyncError(error, stackTrace, None<T>()),
+      AsyncError(:final error, :final stackTrace) => AsyncError(
+        error,
+        stackTrace,
+        None<T>(),
+      ),
     };
   }
 
-  /// Maps an AsyncValue<T> into an AsyncValue<R> by applying
+  /// Maps an AsyncValue&lt;T&gt; into an AsyncValue&lt;R&gt; by applying
   /// the given [mapper].
   AsyncValue<R> map<R>(R Function(T) mapper) {
     return switch (this) {
       AsyncData(:final data) => AsyncData(mapper(data)),
-      AsyncLoading(:final previousData) =>
-        AsyncLoading(previousData.map(mapper)),
+      AsyncLoading(:final previousData) => AsyncLoading(
+        previousData.map(mapper),
+      ),
       AsyncError(:final error, :final stackTrace, :final previousData) =>
         AsyncError(error, stackTrace, previousData.map(mapper)),
     };

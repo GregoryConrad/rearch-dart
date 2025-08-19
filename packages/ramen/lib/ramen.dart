@@ -8,6 +8,7 @@ import 'package:web/web.dart';
 
 // TODO(GregoryConrad): ensure we do an == check optimization on all views
 
+// NOTE: we want an actual interface here
 // ignore: one_member_abstracts
 abstract interface class Injector<T> {
   T build(ViewHandle use);
@@ -76,8 +77,7 @@ extension IntermediateViewBuilder on IntermediateView {
   TerminatedView terminateWithNode(
     Node node, {
     List<TerminatedView>? children,
-  }) =>
-      _TerminatedNodeView(this, node, children ?? []);
+  }) => _TerminatedNodeView(this, node, children ?? []);
 
   TerminatedView terminate(TerminatedView view) =>
       _AliasTerminatedView(this, view);
@@ -113,6 +113,7 @@ abstract interface class ViewHandle
 /// New methods may be added to this interface on any new _minor_ release
 /// (minor in terms of semver).
 @experimental
+// NOTE: we want an actual interface here
 // ignore: one_member_abstracts
 abstract interface class BuildContext {
   T injection<T>(InjectorKey<T> key);
@@ -159,6 +160,7 @@ void _inflateIntermediate(IntermediateView view) {
   }
 }
 
+// NOTE: this is prototype code
 // ignore: unused_element
 void _inflateTerminated({
   required TerminatedView view,

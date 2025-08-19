@@ -1,9 +1,10 @@
 name: weather_app
 description: "A weather application written in ReArch"
 publish_to: none
+resolution: workspace
 
 environment:
-  sdk: '>=3.3.2 <4.0.0'
+  sdk: ^3.9.0
 
 dependencies:
   equatable: ^2.0.5

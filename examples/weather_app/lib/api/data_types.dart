@@ -1,5 +1,6 @@
 part of '../api.dart';
 
+// NOTE: types in this file are pretty self-explanatory
 // ignore_for_file: public_member_api_docs
 
 // NOTE: This file was modified from the flutter_weather BLoC example app
@@ -41,11 +42,11 @@ class Location extends Equatable {
   });
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
-        id: json['id'] as int,
-        name: json['name'] as String,
-        latitude: json['latitude'] as double,
-        longitude: json['longitude'] as double,
-      );
+    id: json['id'] as int,
+    name: json['name'] as String,
+    latitude: json['latitude'] as double,
+    longitude: json['longitude'] as double,
+  );
 
   final int id;
   final String name;
@@ -60,9 +61,9 @@ class Weather extends Equatable {
   const Weather({required this.temperature, required this.weatherCode});
 
   factory Weather.fromJson(Map<String, dynamic> json) => Weather(
-        temperature: json['temperature'] as double,
-        weatherCode: json['weathercode'] as double,
-      );
+    temperature: json['temperature'] as double,
+    weatherCode: json['weathercode'] as double,
+  );
 
   final double temperature;
   final double weatherCode;
@@ -99,8 +100,7 @@ extension WeatherConditionConversion on Weather {
       82 ||
       95 ||
       96 ||
-      99 =>
-        WeatherCondition.rainy,
+      99 => WeatherCondition.rainy,
       71 || 73 || 75 || 77 || 85 || 86 => WeatherCondition.snowy,
       _ => WeatherCondition.unknown,
     };

@@ -7,21 +7,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// The underlying [Capsule] providing the app's [SharedPreferencesWithCache].
 final Capsule<Future<SharedPreferencesWithCache>> sharedPrefsAsyncCapsule =
     capsule((use) {
-  return SharedPreferencesWithCache.create(
-    cacheOptions: const SharedPreferencesWithCacheOptions(
-      allowList: {
-        sharedPrefsApiKeyKey,
-      },
-    ),
-  );
-});
+      return SharedPreferencesWithCache.create(
+        cacheOptions: const SharedPreferencesWithCacheOptions(
+          allowList: {
+            sharedPrefsApiKeyKey,
+          },
+        ),
+      );
+    });
 
 /// A wrapper around the [sharedPrefsAsyncCapsule]
 /// to be warmed up by the [SharedPrefsWarmUp].
 final Capsule<AsyncValue<SharedPreferencesWithCache>> sharedPrefsWarmUpCapsule =
     capsule((use) {
-  return use.future(use(sharedPrefsAsyncCapsule));
-});
+      return use.future(use(sharedPrefsAsyncCapsule));
+    });
 
 ///The [Capsule] providing the [SharedPreferencesWithCache] to other [Capsule]s.
 final Capsule<SharedPreferencesWithCache> sharedPrefsCapsule = capsule((use) {

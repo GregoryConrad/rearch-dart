@@ -12,6 +12,7 @@ TickerProvider _singleTickerProvider(
       // so we must insert a gap into the event loop to check if the ticker
       // was actually disposed a little bit later.
       return () {
+        // NOTE: this assert is a workaround to run code only in debug mode
         // ignore: prefer_asserts_with_message
         assert(
           () {
@@ -71,18 +72,18 @@ AnimationController _animationController(
   vsync ??= use.singleTickerProvider();
 
   return use.disposable(
-    () => AnimationController(
-      vsync: vsync!,
-      duration: duration,
-      reverseDuration: reverseDuration,
-      debugLabel: debugLabel,
-      lowerBound: lowerBound,
-      upperBound: upperBound,
-      animationBehavior: animationBehavior,
-      value: initialValue,
-    ),
-    (controller) => controller.dispose(),
-  )
+      () => AnimationController(
+        vsync: vsync!,
+        duration: duration,
+        reverseDuration: reverseDuration,
+        debugLabel: debugLabel,
+        lowerBound: lowerBound,
+        upperBound: upperBound,
+        animationBehavior: animationBehavior,
+        value: initialValue,
+      ),
+      (controller) => controller.dispose(),
+    )
     ..duration = duration
     ..reverseDuration = reverseDuration;
 }

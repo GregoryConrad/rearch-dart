@@ -58,7 +58,7 @@ final Capsule<Future<List<Exercise>>> exercisesCapsule = capsule((use) async {
 });
 
 final Capsule<Future<int> Function({required String folderName})>
-    createRoutineFolderAction = capsule((use) {
+createRoutineFolderAction = capsule((use) {
   final post = use(apiPostAction);
   return ({required String folderName}) async {
     final response = await post(
@@ -176,20 +176,22 @@ sealed class RoutineTemplateSet with _$RoutineTemplateSet {
 
 final Capsule<Future<void> Function(RoutineTemplate)> createRoutineAction =
     capsule((use) {
-  final post = use(apiPostAction);
-  return (RoutineTemplate routine) {
-    return post(
-      path: '/v1/routines',
-      jsonBody: {'routine': routine.toJson()},
-    );
-  };
-});
+      final post = use(apiPostAction);
+      return (RoutineTemplate routine) {
+        return post(
+          path: '/v1/routines',
+          jsonBody: {'routine': routine.toJson()},
+        );
+      };
+    });
 
 final Capsule<
-    Future<void> Function({
-      required String programName,
-      required List<RoutineTemplate> routines,
-    })> createProgramAction = capsule((use) {
+  Future<void> Function({
+    required String programName,
+    required List<RoutineTemplate> routines,
+  })
+>
+createProgramAction = capsule((use) {
   final createFolder = use(createRoutineFolderAction);
   final createRoutine = use(createRoutineAction);
 

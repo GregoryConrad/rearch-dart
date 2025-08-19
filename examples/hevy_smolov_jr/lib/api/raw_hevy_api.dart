@@ -10,8 +10,9 @@ const sharedPrefsApiKeyKey = 'api-key';
 /// [Capsule] representing the user's Hevy API key.
 final Capsule<(String, void Function(String))> apiKeyCapsule = capsule((use) {
   final sharedPrefs = use(sharedPrefsCapsule);
-  final (apiKey, setApiKey) =
-      use.state(sharedPrefs.getString(sharedPrefsApiKeyKey) ?? '');
+  final (apiKey, setApiKey) = use.state(
+    sharedPrefs.getString(sharedPrefsApiKeyKey) ?? '',
+  );
   return (
     apiKey,
     (newApiKey) {
@@ -87,7 +88,7 @@ final class HevyApiResponseParseException implements HevyApiException {
 /// - returns the response body as the decoded `Map<String, dynamic>`
 /// - throws the appropriate type of [Exception] as needed
 final Capsule<Future<Map<String, dynamic>> Function(Future<http.Response>)>
-    _parseApiRequestAction = capsule((use) {
+_parseApiRequestAction = capsule((use) {
   return (hevyApiRequest) async {
     late http.Response response;
     try {
@@ -125,10 +126,11 @@ final Capsule<Future<Map<String, dynamic>> Function(Future<http.Response>)>
 });
 
 /// Represents an HTTP GET request that returns JSON.
-typedef GetRequest = Future<Map<String, dynamic>> Function({
-  required String path,
-  Map<String, String>? queryParams,
-});
+typedef GetRequest =
+    Future<Map<String, dynamic>> Function({
+      required String path,
+      Map<String, String>? queryParams,
+    });
 
 /// Represents an HTTP GET request to the Hevy API.
 final Capsule<GetRequest> apiGetAction = capsule((use) {
@@ -150,11 +152,12 @@ final Capsule<GetRequest> apiGetAction = capsule((use) {
 });
 
 /// Represents an HTTP POST request that returns JSON.
-typedef PostRequest = Future<Map<String, dynamic>> Function({
-  required String path,
-  Object? jsonBody,
-  Map<String, String>? queryParams,
-});
+typedef PostRequest =
+    Future<Map<String, dynamic>> Function({
+      required String path,
+      Object? jsonBody,
+      Map<String, String>? queryParams,
+    });
 
 /// Represents an HTTP POST request to the Hevy API.
 final Capsule<PostRequest> apiPostAction = capsule((use) {

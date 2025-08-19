@@ -1,8 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:rearch/rearch.dart';
 
-// ignore_for_file: public_member_api_docs
-
 @internal
 abstract class DataflowGraphNode implements Disposable {
   final _dependencies = <DataflowGraphNode>{};
@@ -31,8 +29,9 @@ abstract class DataflowGraphNode implements Disposable {
 
   static void buildNodesAndDependents(Set<DataflowGraphNode> nodes) {
     final buildOrderStack = _createBuildOrderStack(nodes);
-    final disposableNodes =
-        _getDisposableNodesFromBuildOrderStack(buildOrderStack);
+    final disposableNodes = _getDisposableNodesFromBuildOrderStack(
+      buildOrderStack,
+    );
     final changedNodes = <DataflowGraphNode>{};
 
     for (final node in buildOrderStack.reversed) {
@@ -91,11 +90,14 @@ abstract class DataflowGraphNode implements Disposable {
   ) {
     final disposable = <DataflowGraphNode>{};
 
-    buildOrderStack.where((node) {
-      final dependentsAllDisposable =
-          node._dependents.every(disposable.contains);
-      return node.isIdempotent && dependentsAllDisposable;
-    }).forEach(disposable.add);
+    buildOrderStack
+        .where((node) {
+          final dependentsAllDisposable = node._dependents.every(
+            disposable.contains,
+          );
+          return node.isIdempotent && dependentsAllDisposable;
+        })
+        .forEach(disposable.add);
 
     return disposable;
   }

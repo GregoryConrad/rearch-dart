@@ -21,11 +21,11 @@ void main() {
       const latitude = 123.0;
       const longitude = 321.0;
       Future<http.Response> expectedCall() => mockClient.get(
-            Uri.https('geocoding-api.open-meteo.com', '/v1/search', {
-              'name': queryString,
-              'count': '1',
-            }),
-          );
+        Uri.https('geocoding-api.open-meteo.com', '/v1/search', {
+          'name': queryString,
+          'count': '1',
+        }),
+      );
       when(expectedCall).thenAnswer(
         (_) async => http.Response(
           jsonEncode({
@@ -42,8 +42,9 @@ void main() {
         ),
       );
 
-      final actualLocation =
-          await container.read(searchLocationAction)(queryString);
+      final actualLocation = await container.read(searchLocationAction)(
+        queryString,
+      );
       verify(expectedCall).called(1);
       expect(
         actualLocation,
@@ -64,12 +65,12 @@ void main() {
       const temperature = 20.0;
       const weatherCode = 1.0; // = cloudy
       Future<http.Response> expectedCall() => mockClient.get(
-            Uri.https('api.open-meteo.com', '/v1/forecast', {
-              'latitude': '$latitude',
-              'longitude': '$longitude',
-              'current_weather': 'true',
-            }),
-          );
+        Uri.https('api.open-meteo.com', '/v1/forecast', {
+          'latitude': '$latitude',
+          'longitude': '$longitude',
+          'current_weather': 'true',
+        }),
+      );
       when(expectedCall).thenAnswer(
         (_) async => http.Response(
           jsonEncode({
@@ -116,18 +117,20 @@ void main() {
         },
       )
       ..mock(fetchWeatherAction).apply(
-        (use) => ({
-          required double latitude,
-          required double longitude,
-        }) async {
-          if (latitude != expectedLatitude && longitude != expectedLongitude) {
-            throw Exception('Weather query did not match expectations');
-          }
-          return const Weather(
-            temperature: expectedTemperature,
-            weatherCode: expectedWeatherCode,
-          );
-        },
+        (use) =>
+            ({
+              required double latitude,
+              required double longitude,
+            }) async {
+              if (latitude != expectedLatitude &&
+                  longitude != expectedLongitude) {
+                throw Exception('Weather query did not match expectations');
+              }
+              return const Weather(
+                temperature: expectedTemperature,
+                weatherCode: expectedWeatherCode,
+              );
+            },
       );
 
     await tester.pumpWidget(

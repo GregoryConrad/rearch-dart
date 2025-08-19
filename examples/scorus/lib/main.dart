@@ -1,10 +1,12 @@
-// ignore_for_file: public_member_api_docs
 import 'package:flutter/material.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
 import 'package:scorus/game_management.dart';
 import 'package:scorus/score.dart';
 import 'package:scorus/serving_player.dart';
 import 'package:scorus/volley.dart';
+
+// NOTE: this is simple example code
+// ignore_for_file: public_member_api_docs
 
 void main() {
   runApp(const ScorusApp());

@@ -118,14 +118,14 @@ void main() {
   });
 }
 
-final team1Stack = find.byWidgetPredicate(
+final Finder team1Stack = find.byWidgetPredicate(
   (widget) =>
       widget is Stack &&
       widget.children.any(
         (child) => child is ColoredBox && child.color == Colors.red,
       ),
 );
-final team2Stack = find.byWidgetPredicate(
+final Finder team2Stack = find.byWidgetPredicate(
   (widget) =>
       widget is Stack &&
       widget.children.any(

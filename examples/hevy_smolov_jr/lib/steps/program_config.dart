@@ -62,8 +62,9 @@ class ProgramConfigInputStep extends StatelessWidget {
             const SizedBox(width: 16),
             Expanded(
               child: TextFormField(
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 initialValue: smolovJrConfig.value.increment.toString(),
                 onChanged: (s) => smolovJrConfig.updateWith(
                   (config) => config.copyWith(increment: num.parse(s)),
@@ -85,8 +86,9 @@ class ProgramConfigInputStep extends StatelessWidget {
             const SizedBox(width: 16),
             Expanded(
               child: TextFormField(
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 initialValue: smolovJrConfig.value.oneRepMax.toString(),
                 onChanged: (s) => smolovJrConfig.updateWith(
                   (config) => config.copyWith(oneRepMax: num.parse(s)),
@@ -107,8 +109,9 @@ class ProgramConfigInputStep extends StatelessWidget {
               const SizedBox(width: 16),
               Expanded(
                 child: TextFormField(
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   initialValue: smolovJrConfig.value.bodyWeight.toString(),
                   onChanged: (s) => smolovJrConfig.updateWith(
                     (config) => config.copyWith(bodyWeight: num.parse(s)),

@@ -15,9 +15,9 @@ enum Team {
 extension NextTeam on Team {
   /// Returns the next [Team] up for possesion.
   Team get next => switch (this) {
-        Team.team1 => Team.team2,
-        Team.team2 => Team.team1,
-      };
+    Team.team1 => Team.team2,
+    Team.team2 => Team.team1,
+  };
 }
 
 /// Manages the current team with possesion.
@@ -25,7 +25,8 @@ extension NextTeam on Team {
   Team teamWithPossesion,
   void Function() givePossesionToNextTeam,
   void Function() resetTeamWithPossesion,
-}) teamWithPossesionManager(CapsuleHandle use) {
+})
+teamWithPossesionManager(CapsuleHandle use) {
   const startingTeam = Team.team1;
   final (team, setTeam) = use.state(startingTeam);
   return (
@@ -56,8 +57,8 @@ void Function() resetGameAction(CapsuleHandle use) {
   ];
   final runTxn = use.transactionRunner();
   return () => runTxn(() {
-        for (final reset in resets) {
-          reset();
-        }
-      });
+    for (final reset in resets) {
+      reset();
+    }
+  });
 }

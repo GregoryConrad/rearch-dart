@@ -87,9 +87,9 @@ class InfiniteScrollItem extends RearchConsumer {
       title: switch (echoState) {
         AsyncData(:final data) => Text('$data'),
         AsyncLoading() => const Align(
-            alignment: Alignment.centerLeft,
-            child: CircularProgressIndicator.adaptive(),
-          ),
+          alignment: Alignment.centerLeft,
+          child: CircularProgressIndicator.adaptive(),
+        ),
         AsyncError(:final error) => Text('$error'),
       },
     );

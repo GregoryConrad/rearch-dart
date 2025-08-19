@@ -90,9 +90,9 @@ class _RearchElement extends ComponentElement {
           .toSet()
           .difference(capsulesUsedInCurrBuild!)
           .forEach((capsule) {
-        // NOTE: this will call the dispose() returned from onNextUpdate
-        capsuleToRemoveDependency.remove(capsule)!.call();
-      });
+            // NOTE: this will call the dispose() returned from onNextUpdate
+            capsuleToRemoveDependency.remove(capsule)!.call();
+          });
 
       // Finally, let's reset everything for the next build.
       capsulesUsedInCurrBuild = null;
@@ -178,8 +178,9 @@ class _WidgetSideEffectApiProxyImpl implements WidgetSideEffectApi {
   /// widget and capsule side effects within a single transaction.
   @override
   void runTransaction(void Function() sideEffectTransaction) =>
-      CapsuleContainerProvider.containerOf(manager)
-          .runTransaction(sideEffectTransaction);
+      CapsuleContainerProvider.containerOf(
+        manager,
+      ).runTransaction(sideEffectTransaction);
 }
 
 class _WidgetHandleImpl implements WidgetHandle {

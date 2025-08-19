@@ -4,7 +4,7 @@
 /// items may come and go or experience breaking changes on any new release.
 /// Further, items here may be untested so use at your own risk!
 @experimental
-library experimental;
+library;
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
@@ -79,8 +79,10 @@ abstract class RearchInjection<W extends RearchInjection<W, Data>, Data>
   static T of<Injection extends RearchInjection<Injection, T>, T>(
     BuildContext context,
   ) {
-    final widget = context.dependOnInheritedWidgetOfExactType<
-        _RearchInjectionInheritedWidget<Injection, T>>();
+    final widget = context
+        .dependOnInheritedWidgetOfExactType<
+          _RearchInjectionInheritedWidget<Injection, T>
+        >();
     assert(widget != null, 'No $Injection in the widget tree above context!');
     return widget!.data;
   }
@@ -100,8 +102,10 @@ abstract class RearchInjection<W extends RearchInjection<W, Data>, Data>
   static T? maybeOf<Injection extends RearchInjection<Injection, T>, T>(
     BuildContext context,
   ) {
-    final widget = context.dependOnInheritedWidgetOfExactType<
-        _RearchInjectionInheritedWidget<Injection, T>>();
+    final widget = context
+        .dependOnInheritedWidgetOfExactType<
+          _RearchInjectionInheritedWidget<Injection, T>
+        >();
     return widget?.data;
   }
 }
@@ -140,6 +144,5 @@ class _RearchInjectionInheritedWidget<W extends RearchInjection<W, Data>, Data>
   @override
   bool updateShouldNotify(
     covariant _RearchInjectionInheritedWidget<W, Data> oldWidget,
-  ) =>
-      oldWidget.data != data;
+  ) => oldWidget.data != data;
 }

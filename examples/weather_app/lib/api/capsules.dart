@@ -81,7 +81,8 @@ Future<Location> Function(String) searchLocationAction(CapsuleHandle use) {
 Future<Weather> Function({
   required double latitude,
   required double longitude,
-}) fetchWeatherAction(CapsuleHandle use) {
+})
+fetchWeatherAction(CapsuleHandle use) {
   final client = use(httpClientCapsule);
   final baseWeatherUrl = use(_baseWeatherUrlCapsule);
 

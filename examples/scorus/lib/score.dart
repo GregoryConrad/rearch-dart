@@ -20,7 +20,7 @@ extension on SideEffectRegistrar {
     return (
       score: score,
       incrementScore: () => setScore(score + 1),
-      resetScore: () => setScore(0)
+      resetScore: () => setScore(0),
     );
   }
 }

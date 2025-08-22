@@ -22,8 +22,7 @@
 
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
-            # TODO uncomment when 3.35 is added to nixpkgs
-            # flutter
+            flutter335
           ];
 
           shellHook = ''

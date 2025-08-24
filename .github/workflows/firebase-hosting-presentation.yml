@@ -9,11 +9,11 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
       - uses: bluefireteam/melos-action@v3
       - name: Run tests
-        run: melos run test
+        run: melos run test --no-select
       - name: Build for web
         run: flutter build web
         working-directory: examples/presentation

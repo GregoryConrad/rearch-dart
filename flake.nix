@@ -24,13 +24,6 @@
           packages = with pkgs; [
             flutter335
           ];
-
-          shellHook = ''
-            if ! dart pub global list | grep -q melos; then
-              dart pub global activate melos
-            fi
-            export PATH="$PATH":"$HOME/.pub-cache/bin"
-          '';
         };
       }
     );

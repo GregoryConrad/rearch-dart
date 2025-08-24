@@ -25,21 +25,9 @@ workspace:
 melos:
   scripts:
     test:
-      run: melos run test:dart --no-select && melos run test:flutter --no-select
-      description: Run all Dart & Flutter tests in this project.
-
-    test:dart:
-      run: melos exec -c 1 --fail-fast -- "dart test test"
-      description: Run Dart tests for a specific package in this project.
-      packageFilters:
-        flutter: false
-        dirExists: test
-
-    test:flutter:
       run: melos exec -c 1 --fail-fast -- "flutter test test"
-      description: Run Flutter tests for a specific package in this project.
+      description: Run unit tests for a specific package in this project.
       packageFilters:
-        flutter: true
         dirExists: test
 
     test:linux-integration:

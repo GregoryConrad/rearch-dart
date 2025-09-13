@@ -18,13 +18,18 @@
         pkgs = import nixpkgs { inherit system; };
       in
       {
-        formatter = pkgs.nixfmt-rfc-style;
+        formatter = pkgs.nixfmt-tree;
 
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             flutter335
           ];
         };
+
+        shellHook = ''
+          export PATH=$HOME/.pub-cache/bin:$PATH
+          dart pub global activate melos
+        '';
       }
     );
 }

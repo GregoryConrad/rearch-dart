@@ -24,12 +24,12 @@
           packages = with pkgs; [
             flutter335
           ];
-        };
 
-        shellHook = ''
-          export PATH=$HOME/.pub-cache/bin:$PATH
-          dart pub global activate melos
-        '';
+          shellHook = ''
+            export PATH=$HOME/.pub-cache/bin:$PATH
+            dart pub global activate melos
+          '';
+        };
       }
     );
 }

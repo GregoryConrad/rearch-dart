@@ -26,3 +26,13 @@ filterManagerCapsule(CapsuleHandle use) {
 TodoListFilter currentFilterCapsule(CapsuleHandle use) {
   return use(filterManagerCapsule).filter;
 }
+
+({bool completionStatus, void Function() toggleCompletionStatus})
+completionStatusCapsule(CapsuleHandle use) {
+  final manager = use(filterManagerCapsule);
+
+  return (
+    completionStatus: manager.filter.completionStatus,
+    toggleCompletionStatus: manager.toggleCompletionStatus,
+  );
+}

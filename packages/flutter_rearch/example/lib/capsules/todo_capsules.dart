@@ -14,6 +14,10 @@ todoListManagerCapsule(CapsuleHandle use) {
   );
 }
 
+void Function(Todo todo) updateTodoAction(CapsuleHandle use) {
+  return use(todoListManagerCapsule).updateTodo;
+}
+
 /// Represents the todos list using the filter from the [filterManagerCapsule].
 AsyncValue<List<Todo>> todoListCapsule(CapsuleHandle use) {
   final index = use(indexCapsule);

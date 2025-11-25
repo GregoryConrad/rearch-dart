@@ -24,13 +24,10 @@ class Body extends RearchConsumer {
     const searchBarHeight = 56.0;
     const animationDuration = Duration(milliseconds: 125);
 
-    final (
-      filter: (query: _, :completionStatus),
-      setQueryString: _,
-      :toggleCompletionStatus,
-    ) = use(
-      filterManagerCapsule,
+    final (:completionStatus, :toggleCompletionStatus) = use(
+      completionStatusCapsule,
     );
+
     final completionText = completionStatus ? 'completed' : 'incomplete';
 
     final todoList = use(todoListCapsule);
@@ -44,7 +41,7 @@ class Body extends RearchConsumer {
       _ => null,
     };
 
-    final (:updateTodo, deleteTodo: _) = use(todoListManagerCapsule);
+    final updateTodo = use(updateTodoAction);
 
     final bottomHeightAnimationController = use.animationController(
       duration: animationDuration,

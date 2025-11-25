@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
-import 'package:flutter_rearch_example/widgets/dynamic_background.dart' show DynamicBackground;
+import 'package:flutter_rearch_example/widgets/dynamic_background.dart'
+    show DynamicBackground;
 import 'package:rearch/rearch.dart';
 
 /// {@template AnimatedSplashCircle}
@@ -39,49 +40,41 @@ class AnimatedSplashCircle extends RearchConsumer {
       duration: appear,
       reverseDuration: disappear,
     );
-    use.effect(
-      () {
-        controller.forward();
-        return null;
-      },
-      [controller],
-    );
+
+    use.effect(() {
+      controller.forward();
+
+      return null;
+    }, [controller]);
 
     final animation = use.memo(
-      () {
-        return CurvedAnimation(
-          parent: controller,
-          curve: Curves.easeInOutQuint,
-          reverseCurve: Curves.linear,
-        );
-      },
+      () => CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeInOutQuint,
+        reverseCurve: Curves.linear,
+      ),
       [controller],
     );
-    use.effect(
-      () {
-        void statusListener(AnimationStatus status) {
-          switch (status) {
-            case AnimationStatus.completed:
-              controller.reverse();
-            case AnimationStatus.dismissed:
-              remove();
-            case _:
-              break;
-          }
-        }
 
-        animation.addStatusListener(statusListener);
-        return animation.dispose;
-      },
-      [controller, remove, animation],
-    );
+    use.effect(() {
+      void statusListener(AnimationStatus status) {
+        switch (status) {
+          case AnimationStatus.completed:
+            controller.reverse();
+          case AnimationStatus.dismissed:
+            remove();
+          case _:
+            break;
+        }
+      }
+
+      animation.addStatusListener(statusListener);
+      return animation.dispose;
+    }, [controller, remove, animation]);
 
     return ScaleTransition(
       scale: animation,
-      child: CircleAvatar(
-        backgroundColor: color,
-        radius: radius,
-      ),
+      child: CircleAvatar(backgroundColor: color, radius: radius),
     );
   }
 }

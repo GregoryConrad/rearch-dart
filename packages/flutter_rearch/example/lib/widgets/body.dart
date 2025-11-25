@@ -57,6 +57,7 @@ class Body extends RearchConsumer {
       } else {
         bottomHeightAnimationController.reverse();
       }
+
       return null;
     }, [isSearching, bottomHeightAnimationController]);
 

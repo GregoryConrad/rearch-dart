@@ -2,7 +2,8 @@ import 'package:flutter_rearch_example/models/todo.dart';
 import 'package:rearch/rearch.dart';
 
 /// Manages the filter for the todo list.
-/// ('' as a query string represents no current query).
+///
+/// (An empty [String] as a query string represents no current query).
 ({
   TodoListFilter filter,
   void Function(String) setQueryString,
@@ -20,7 +21,8 @@ filterManagerCapsule(CapsuleHandle use) {
 }
 
 /// Represents the current filter to search with
-/// ('' as a query string represents no current query).
+///
+/// (An empty [String] as a query string represents no current query).
 TodoListFilter currentFilterCapsule(CapsuleHandle use) {
   return use(filterManagerCapsule).filter;
 }

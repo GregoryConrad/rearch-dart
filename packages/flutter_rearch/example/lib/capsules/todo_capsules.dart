@@ -17,13 +17,7 @@ todoListManagerCapsule(CapsuleHandle use) {
 /// Represents the todos list using the filter from the [filterManagerCapsule].
 AsyncValue<List<Todo>> todoListCapsule(CapsuleHandle use) {
   final index = use(indexCapsule);
-  final (
-    filter: (:query, :completionStatus),
-    setQueryString: _,
-    toggleCompletionStatus: _,
-  ) = use(
-    filterManagerCapsule,
-  );
+  final (:query, :completionStatus) = use(currentFilterCapsule);
 
   // When query is null/empty, it does not affect the search.
   final documentsStream = use.memo(

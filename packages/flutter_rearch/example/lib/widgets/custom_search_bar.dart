@@ -4,7 +4,7 @@ import 'package:flutter_rearch_example/capsules/filter_capsule.dart';
 
 /// {@template CustomSearchBar}
 /// Displays the search bar at the top of the application
-/// and mutates the [filterCapsule].
+/// and mutates the [filterManagerCapsule].
 /// {@endtemplate}
 class CustomSearchBar extends RearchConsumer {
   /// {@macro CustomSearchBar}
@@ -18,7 +18,7 @@ class CustomSearchBar extends RearchConsumer {
     final textController = use.textEditingController();
 
     final (filter: _, :setQueryString, toggleCompletionStatus: _) = use(
-      filterCapsule,
+      filterManagerCapsule,
     );
 
     return Padding(

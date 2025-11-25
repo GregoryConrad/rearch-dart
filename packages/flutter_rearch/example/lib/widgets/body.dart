@@ -29,16 +29,16 @@ class Body extends RearchConsumer {
       setQueryString: _,
       :toggleCompletionStatus,
     ) = use(
-      filterCapsule,
+      filterManagerCapsule,
     );
     final completionText = completionStatus ? 'completed' : 'incomplete';
 
-    final todoListLengthState = use(todoListLengthCapsule);
-    final todoListLength = todoListLengthState.dataOr(0);
-    final statusWidget = switch (todoListLengthState) {
+    final todoList = use(todoListCapsule);
+
+    final statusWidget = switch (todoList) {
       AsyncLoading() => const CircularProgressIndicator.adaptive(),
       AsyncError(:final error) => Text('$error'),
-      AsyncData(data: final length) when length == 0 => Text(
+      AsyncData(data: final todos) when todos.isEmpty => Text(
         'No $completionText todos found',
       ),
       _ => null,
@@ -51,17 +51,14 @@ class Body extends RearchConsumer {
     );
 
     final (isSearching, setIsSearching) = use.state(false);
-    use.effect(
-      () {
-        if (isSearching) {
-          bottomHeightAnimationController.forward();
-        } else {
-          bottomHeightAnimationController.reverse();
-        }
-        return null;
-      },
-      [isSearching, bottomHeightAnimationController],
-    );
+    use.effect(() {
+      if (isSearching) {
+        bottomHeightAnimationController.forward();
+      } else {
+        bottomHeightAnimationController.reverse();
+      }
+      return null;
+    }, [isSearching, bottomHeightAnimationController]);
 
     return Scaffold(
       body: AnimatedBuilder(
@@ -84,12 +81,16 @@ class Body extends RearchConsumer {
                         height: kToolbarHeight + bottomHeight + 12,
                       ),
                     ),
-                    SliverSafeArea(
-                      sliver: SliverList.builder(
-                        itemCount: todoListLength,
-                        itemBuilder: (context, index) => TodoItem(index: index),
+
+                    if (todoList case AsyncData(data: final todos))
+                      SliverSafeArea(
+                        sliver: SliverList.builder(
+                          itemCount: todos.length,
+                          itemBuilder: (context, index) {
+                            return TodoItem(todo: todos[index]);
+                          },
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),

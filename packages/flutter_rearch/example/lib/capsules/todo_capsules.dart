@@ -1,5 +1,5 @@
 import 'package:flutter_mimir/flutter_mimir.dart';
-import 'package:flutter_rearch_example/capsules/filter_capsule.dart';
+import 'package:flutter_rearch_example/capsules/filter_capsules.dart';
 import 'package:flutter_rearch_example/capsules/index_capsules.dart';
 import 'package:flutter_rearch_example/models/todo.dart';
 import 'package:rearch/rearch.dart';
@@ -14,6 +14,7 @@ todoListManagerCapsule(CapsuleHandle use) {
   );
 }
 
+/// An action capsule that updates a given [Todo].
 void Function(Todo todo) updateTodoAction(CapsuleHandle use) {
   return use(todoListManagerCapsule).updateTodo;
 }

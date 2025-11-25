@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
-import 'package:flutter_rearch_example/widgets/dynamic_background.dart'
-    show DynamicBackground;
+import 'package:flutter_rearch_example/widgets/dynamic_background.dart';
 import 'package:rearch/rearch.dart';
 
 /// {@template AnimatedSplashCircle}

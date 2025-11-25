@@ -27,6 +27,7 @@ TodoListFilter currentFilterCapsule(CapsuleHandle use) {
   return use(filterManagerCapsule).filter;
 }
 
+/// Represents the completion status of the todos.
 ({bool completionStatus, void Function() toggleCompletionStatus})
 completionStatusCapsule(CapsuleHandle use) {
   final manager = use(filterManagerCapsule);
@@ -35,4 +36,9 @@ completionStatusCapsule(CapsuleHandle use) {
     completionStatus: manager.filter.completionStatus,
     toggleCompletionStatus: manager.toggleCompletionStatus,
   );
+}
+
+/// An action capsule that sets the query string of the filter.
+void Function(String) setQueryStringAction(CapsuleHandle use) {
+  return use(filterManagerCapsule).setQueryString;
 }

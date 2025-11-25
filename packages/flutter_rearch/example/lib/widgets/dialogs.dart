@@ -34,7 +34,7 @@ Future<void> showCreateTodoDialog(
           TextButton(
             onPressed: () {
               todoCreator(
-                (
+                Todo(
                   title: title,
                   description: description == '' ? null : description,
                   completed: false,

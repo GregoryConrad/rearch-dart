@@ -18,18 +18,11 @@ class TodoItem extends RearchConsumer {
 
   @override
   Widget build(BuildContext context, WidgetHandle use) {
-    final (:title, :description, :timestamp, :completed) = todo;
+    final Todo(:title, :description, :timestamp, :completed) = todo;
     final (:updateTodo, :deleteTodo) = use(todoListManagerCapsule);
 
     void delete() => deleteTodo(todo);
-    void toggleCompletionStatus() {
-      updateTodo((
-        title: title,
-        description: description,
-        timestamp: timestamp,
-        completed: !completed,
-      ));
-    }
+    void toggleCompletionStatus() => updateTodo(todo.toggleCompletion());
 
     return Padding(
       key: ValueKey(timestamp),

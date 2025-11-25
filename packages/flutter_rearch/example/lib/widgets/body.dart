@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
-import 'package:flutter_rearch_example/capsules/filter_capsule.dart';
+import 'package:flutter_rearch_example/capsules/filter_capsules.dart';
 import 'package:flutter_rearch_example/capsules/todo_capsules.dart';
 import 'package:flutter_rearch_example/widgets/custom_app_bar.dart';
 import 'package:flutter_rearch_example/widgets/dynamic_background.dart';
@@ -48,6 +48,7 @@ class Body extends RearchConsumer {
     );
 
     final (isSearching, setIsSearching) = use.state(false);
+
     use.effect(() {
       if (isSearching) {
         bottomHeightAnimationController.forward();

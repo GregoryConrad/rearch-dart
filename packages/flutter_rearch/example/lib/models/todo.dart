@@ -2,19 +2,33 @@ import 'package:flutter_mimir/flutter_mimir.dart';
 
 /// Represents an item in the todos list.
 class Todo {
-  final int timestamp; // milliseconds since epoch
+  /// The timestamp of the todo in milliseconds since epoch.
+  ///
+  /// Used as the primary key for the todo.
+  final int timestamp;
+
+  /// The title of the todo.
   final String title;
+
+  /// The description of the todo.
   final String? description;
+
+  /// Whether the todo is completed.
   final bool completed;
 
-  Todo({
+  /// Creates a new [Todo].
+  const Todo({
     required this.timestamp,
     required this.title,
     this.description,
     required this.completed,
   });
 
-  Todo copyWith({
+  /// Toggles the completion status of the todo.
+  // Should have a @useResult annotation. Check if it is ok to import package:meta
+  Todo toggleCompletion() => _copyWith(completed: !completed);
+
+  Todo _copyWith({
     int? timestamp,
     String? title,
     String? Function()? description,
@@ -26,10 +40,6 @@ class Todo {
       description: description != null ? description() : this.description,
       completed: completed ?? this.completed,
     );
-  }
-
-  Todo toggleCompletion() {
-    return copyWith(completed: !completed);
   }
 }
 

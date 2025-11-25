@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart' hide SearchBar;
 import 'package:flutter_rearch_example/models/todo.dart';
-import 'package:flutter_rearch_example/widgets/dialogs.dart';
 import 'package:flutter_rearch_example/widgets/custom_search_bar.dart';
+import 'package:flutter_rearch_example/widgets/dialogs.dart';
 
 /// {@template CustomAppBar}
 /// The custom [AppBar] featured in the application.
@@ -30,7 +30,7 @@ class CustomAppBar extends StatelessWidget {
   /// Callback that toggles the type of todos we are displaying.
   final void Function() toggleCompletionStatus;
 
-  /// Whether or not the AppBar should be displayed with the [SearchBar].
+  /// Whether or not the AppBar should be displayed with the [CustomSearchBar].
   final bool isSearching;
 
   /// Toggle for [isSearching].
@@ -39,7 +39,7 @@ class CustomAppBar extends StatelessWidget {
   /// Function that creates/updates a given [Todo].
   final void Function(Todo) updateTodo;
 
-  /// The [Duration] of the [SearchBar] open/close animation.
+  /// The [Duration] of the [CustomSearchBar] open/close animation.
   final Duration animationDuration;
 
   @override

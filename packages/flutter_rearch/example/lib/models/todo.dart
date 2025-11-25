@@ -2,6 +2,14 @@ import 'package:flutter_mimir/flutter_mimir.dart';
 
 /// Represents an item in the todos list.
 class Todo implements Comparable<Todo> {
+  /// Creates a new [Todo].
+  const Todo({
+    required this.timestamp,
+    required this.title,
+    required this.completed,
+    this.description,
+  });
+
   /// The timestamp of the todo in milliseconds since epoch.
   ///
   /// Used as the primary key for the todo.
@@ -16,16 +24,9 @@ class Todo implements Comparable<Todo> {
   /// Whether the todo is completed.
   final bool completed;
 
-  /// Creates a new [Todo].
-  const Todo({
-    required this.timestamp,
-    required this.title,
-    this.description,
-    required this.completed,
-  });
-
   /// Toggles the completion status of the todo.
-  // Should have a @useResult annotation. Check if it is ok to import package:meta
+  // Should have a @useResult annotation. Check if it is ok to import
+  // package:meta
   Todo toggleCompletion() => _copyWith(completed: !completed);
 
   @override
@@ -63,10 +64,10 @@ extension TodoDocumentUtilities on Todo {
   /// Creates a [Todo] from a [MimirDocument].
   static Todo toTodo(MimirDocument document) {
     return Todo(
-      timestamp: document['timestamp']!,
-      title: document['title']!,
-      description: document['description'],
-      completed: document['completed']!,
+      timestamp: document['timestamp'] as int,
+      title: document['title'] as String,
+      description: document['description'] as String?,
+      completed: document['completed'] as bool,
     );
   }
 }

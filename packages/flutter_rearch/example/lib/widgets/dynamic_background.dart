@@ -6,6 +6,7 @@ import 'package:flutter_rearch/flutter_rearch.dart';
 import 'package:flutter_rearch_example/widgets/animated_splash_circle.dart';
 import 'package:rearch/rearch.dart';
 
+/// A record that represents the properties of a splash circle.
 typedef SplashCircleProperties = ({
   int id,
   double centerX,

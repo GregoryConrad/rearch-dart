@@ -3,9 +3,18 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
-import 'package:flutter_rearch_example/models/splash_circle.dart';
 import 'package:flutter_rearch_example/widgets/animated_splash_circle.dart';
 import 'package:rearch/rearch.dart';
+
+typedef SplashCircleProperties = ({
+  int id,
+  double centerX,
+  double centerY,
+  Color color,
+  double radius,
+  Duration appear,
+  Duration disappear,
+});
 
 /// {@template DynamicBackground}
 /// Displays the bubbly dynamic background effect.
@@ -25,36 +34,25 @@ class DynamicBackground extends RearchConsumer {
 
     final circles = use.data(<SplashCircleProperties>{});
 
-    final circlesStream = use.memo(
-      () {
-        final random = Random();
-        return Stream.periodic(
-          const Duration(milliseconds: 50),
-          (i) {
-            return (
-              id: i,
-              centerX: random.nextDouble(),
-              centerY: random.nextDouble(),
-              color: Color.lerp(
-                color1,
-                color2,
-                random.nextDouble(),
-              )!.withValues(alpha: 0.3),
-              radius:
-                  avgCircleRadius +
-                  avgCircleRadius * (random.nextDouble() - 0.5),
-              appear: Duration(
-                seconds: 2 + (random.nextDouble() * 3).round(),
-              ),
-              disappear: Duration(
-                seconds: 2 + (random.nextDouble() * 3).round(),
-              ),
-            );
-          },
+    final circlesStream = use.memo(() {
+      final random = Random();
+      return Stream.periodic(const Duration(milliseconds: 50), (i) {
+        return (
+          id: i,
+          centerX: random.nextDouble(),
+          centerY: random.nextDouble(),
+          color: Color.lerp(
+            color1,
+            color2,
+            random.nextDouble(),
+          )!.withValues(alpha: 0.3),
+          radius:
+              avgCircleRadius + avgCircleRadius * (random.nextDouble() - 0.5),
+          appear: Duration(seconds: 2 + (random.nextDouble() * 3).round()),
+          disappear: Duration(seconds: 2 + (random.nextDouble() * 3).round()),
         );
-      },
-      [color1, color2, avgCircleRadius],
-    );
+      });
+    }, [color1, color2, avgCircleRadius]);
     final currCircle = use.stream(circlesStream).data.asNullable();
     if (circles.value.length < goalCircleCount && currCircle != null) {
       circles.value = {...circles.value, currCircle};

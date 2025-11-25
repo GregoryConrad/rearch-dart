@@ -14,11 +14,6 @@ todoListManagerCapsule(CapsuleHandle use) {
   );
 }
 
-/// An action capsule that updates a given [Todo].
-void Function(Todo todo) updateTodoAction(CapsuleHandle use) {
-  return use(todoListManagerCapsule).updateTodo;
-}
-
 /// Represents the todos list using the filter from the [filterManagerCapsule].
 AsyncValue<List<Todo>> todoListCapsule(CapsuleHandle use) {
   final index = use(indexCapsule);
@@ -35,8 +30,12 @@ AsyncValue<List<Todo>> todoListCapsule(CapsuleHandle use) {
 
   final todoDocumentsState = use.stream(documentsStream);
   return todoDocumentsState.map(
-    (todoDocs) =>
-        todoDocs.map(TodoDocumentUtilities.toTodo).toList()
-          ..sort((todo1, todo2) => todo1.timestamp.compareTo(todo2.timestamp)),
+    // I prefer using .sorted() from package:collections
+    (todoDocs) => todoDocs.map(TodoDocumentUtilities.toTodo).toList()..sort(),
   );
+}
+
+/// An action capsule that updates a given [Todo].
+void Function(Todo todo) updateTodoAction(CapsuleHandle use) {
+  return use(todoListManagerCapsule).updateTodo;
 }

@@ -1,7 +1,7 @@
 import 'package:flutter_mimir/flutter_mimir.dart';
 
 /// Represents an item in the todos list.
-class Todo {
+class Todo implements Comparable<Todo> {
   /// The timestamp of the todo in milliseconds since epoch.
   ///
   /// Used as the primary key for the todo.
@@ -27,6 +27,11 @@ class Todo {
   /// Toggles the completion status of the todo.
   // Should have a @useResult annotation. Check if it is ok to import package:meta
   Todo toggleCompletion() => _copyWith(completed: !completed);
+
+  @override
+  int compareTo(Todo other) {
+    return timestamp.compareTo(other.timestamp);
+  }
 
   Todo _copyWith({
     int? timestamp,

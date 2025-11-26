@@ -28,7 +28,7 @@ We have 3 capsules that manage our Mimir dependency:
 - [indexWarmUpCapsule](lib/capsules/index_capsules.dart#L15): Warm up capsule that allows for the index to be warmed up for use in the indexCapsule.
 - [indexCapsule](lib/capsules/index_capsules.dart#L20): Capsule that provides the Mimir index.
 
-The initialization of the index is asynchronous, but we want to use it in a synchronous manner, so we have to warm up the capsule to wait for the index to be opened. [Warm Up CapsulesDocumentation](https://rearch.gsconrad.com/en/paradigms/warm-up-capsules)
+The initialization of the index is asynchronous, but we want to use it in a synchronous manner, so we have to warm up the capsule to wait for the index to be opened. [Warm Up Capsules Documentation](https://rearch.gsconrad.com/en/paradigms/warm-up-capsules)
 
 #### Todo list
 

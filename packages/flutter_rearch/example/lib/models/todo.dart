@@ -1,7 +1,7 @@
 import 'package:flutter_mimir/flutter_mimir.dart';
 
 /// Represents an item in the todos list.
-class Todo implements Comparable<Todo> {
+final class Todo implements Comparable<Todo> {
   /// Creates a new [Todo].
   const Todo({
     required this.timestamp,

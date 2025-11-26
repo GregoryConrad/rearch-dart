@@ -30,7 +30,7 @@ AsyncValue<List<Todo>> todoListCapsule(CapsuleHandle use) {
 
   final todoDocumentsState = use.stream(documentsStream);
   return todoDocumentsState.map(
-    (todoDocs) => todoDocs.map(TodoDocumentUtilities.toTodo).toList()..sort(),
+    (todoDocs) => todoDocs.map(Todo.fromDocument).toList()..sort(),
   );
 }
 

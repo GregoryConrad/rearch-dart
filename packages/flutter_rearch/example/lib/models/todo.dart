@@ -10,6 +10,26 @@ final class Todo implements Comparable<Todo> {
     this.description,
   });
 
+  /// Creates a [Todo] from a [MimirDocument].
+  factory Todo.fromDocument(MimirDocument document) {
+    return Todo(
+      timestamp: document['timestamp'] as int,
+      title: document['title'] as String,
+      description: document['description'] as String?,
+      completed: document['completed'] as bool,
+    );
+  }
+
+  /// Creates a [MimirDocument] from a [Todo].
+  MimirDocument toDocument() {
+    return {
+      'timestamp': timestamp,
+      'title': title,
+      'description': description,
+      'completed': completed,
+    };
+  }
+
   /// The timestamp of the todo in milliseconds since epoch.
   ///
   /// Used as the primary key for the todo.
@@ -45,29 +65,6 @@ final class Todo implements Comparable<Todo> {
       title: title ?? this.title,
       description: description != null ? description() : this.description,
       completed: completed ?? this.completed,
-    );
-  }
-}
-
-/// Utilities for handling conversion between [Todo] and [MimirDocument]s.
-extension TodoDocumentUtilities on Todo {
-  /// Creates a [MimirDocument] from a [Todo].
-  MimirDocument toDocument() {
-    return {
-      'timestamp': timestamp,
-      'title': title,
-      'description': description,
-      'completed': completed,
-    };
-  }
-
-  /// Creates a [Todo] from a [MimirDocument].
-  static Todo toTodo(MimirDocument document) {
-    return Todo(
-      timestamp: document['timestamp'] as int,
-      title: document['title'] as String,
-      description: document['description'] as String?,
-      completed: document['completed'] as bool,
     );
   }
 }

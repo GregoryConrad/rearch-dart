@@ -22,8 +22,12 @@
 
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
-            flutter335
+            flutter
           ];
+
+          env = {
+            FLUTTER_ROOT = "${pkgs.flutter}";
+          };
 
           shellHook = ''
             export PATH=$HOME/.pub-cache/bin:$PATH

@@ -45,27 +45,16 @@ final class Todo implements Comparable<Todo> {
   final bool completed;
 
   /// Toggles the completion status of the todo.
-  // Should have a @useResult annotation. Check if it is ok to import
-  // package:meta
-  Todo toggleCompletion() => _copyWith(completed: !completed);
+  Todo toggleCompletion() => Todo(
+    timestamp: timestamp,
+    title: title,
+    description: description,
+    completed: !completed,
+  );
 
   @override
   int compareTo(Todo other) {
     return timestamp.compareTo(other.timestamp);
-  }
-
-  Todo _copyWith({
-    int? timestamp,
-    String? title,
-    String? Function()? description,
-    bool? completed,
-  }) {
-    return Todo(
-      timestamp: timestamp ?? this.timestamp,
-      title: title ?? this.title,
-      description: description != null ? description() : this.description,
-      completed: completed ?? this.completed,
-    );
   }
 }
 

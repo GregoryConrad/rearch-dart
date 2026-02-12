@@ -1,3 +1,6 @@
+// NOTE: we're only using experimental APIs from this repo
+// ignore_for_file: experimental_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';

@@ -102,7 +102,7 @@ sealed class RoutineTemplateExercise with _$RoutineTemplateExercise {
 
 @freezed
 sealed class RoutineTemplateSet with _$RoutineTemplateSet {
-  const factory RoutineTemplateSet._({
+  const factory RoutineTemplateSet({
     required String type,
     num? weightKg,
     int? reps,
@@ -119,7 +119,7 @@ sealed class RoutineTemplateSet with _$RoutineTemplateSet {
     int? distanceMeters,
     int? durationSeconds,
   }) {
-    return RoutineTemplateSet._(
+    return RoutineTemplateSet(
       type: 'normal',
       weightKg: weightKg,
       reps: reps,
@@ -134,7 +134,7 @@ sealed class RoutineTemplateSet with _$RoutineTemplateSet {
     int? distanceMeters,
     int? durationSeconds,
   }) {
-    return RoutineTemplateSet._(
+    return RoutineTemplateSet(
       type: 'warmup',
       weightKg: weightKg,
       reps: reps,
@@ -149,7 +149,7 @@ sealed class RoutineTemplateSet with _$RoutineTemplateSet {
     int? distanceMeters,
     int? durationSeconds,
   }) {
-    return RoutineTemplateSet._(
+    return RoutineTemplateSet(
       type: 'failure',
       weightKg: weightKg,
       reps: reps,
@@ -164,7 +164,7 @@ sealed class RoutineTemplateSet with _$RoutineTemplateSet {
     int? distanceMeters,
     int? durationSeconds,
   }) {
-    return RoutineTemplateSet._(
+    return RoutineTemplateSet(
       type: 'dropset',
       weightKg: weightKg,
       reps: reps,

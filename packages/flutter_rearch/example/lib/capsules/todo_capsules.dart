@@ -1,7 +1,7 @@
-import 'package:flutter_mimir/flutter_mimir.dart';
 import 'package:flutter_rearch_example/capsules/filter_capsules.dart';
 import 'package:flutter_rearch_example/capsules/index_capsules.dart';
 import 'package:flutter_rearch_example/models/todo.dart';
+import 'package:mimir/mimir.dart';
 import 'package:rearch/rearch.dart';
 
 /// Provides a way to create/update and delete todos.

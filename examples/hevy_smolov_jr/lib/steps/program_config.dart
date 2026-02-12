@@ -1,3 +1,6 @@
+// NOTE: we're only using experimental APIs from this repo
+// ignore_for_file: experimental_member_use
+
 import 'package:flutter/material.dart';
 import 'package:hevy_smolov_jr/smolov_jr_config/config.dart';
 import 'package:rearch/experimental.dart';

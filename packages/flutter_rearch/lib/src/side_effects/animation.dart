@@ -34,7 +34,7 @@ TickerProvider _singleTickerProvider(
     [provider],
   );
 
-  provider._ticker?.muted = !TickerMode.of(context);
+  provider._ticker?.muted = !TickerMode.valuesOf(context).enabled;
 
   return provider;
 }

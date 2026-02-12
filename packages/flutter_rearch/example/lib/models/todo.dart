@@ -1,4 +1,4 @@
-import 'package:flutter_mimir/flutter_mimir.dart';
+import 'package:mimir/mimir.dart';
 
 /// Represents an item in the todos list.
 final class Todo implements Comparable<Todo> {

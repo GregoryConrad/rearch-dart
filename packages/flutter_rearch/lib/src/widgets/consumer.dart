@@ -49,6 +49,10 @@ class _RearchElement extends ComponentElement {
   /// remove the dependency of this [Element] on those capsules.
   final capsuleToRemoveDependency = <Capsule<Object?>, void Function()>{};
 
+  late final CapsuleContainer container = CapsuleContainerProvider.containerOf(
+    this,
+  );
+
   /// Represents the [Set] of `use`d capsules in the ongoing build.
   Set<Capsule<Object?>>? capsulesUsedInCurrBuild;
 
@@ -63,7 +67,6 @@ class _RearchElement extends ComponentElement {
   @override
   Widget build() {
     capsulesUsedInCurrBuild = {};
-    final container = CapsuleContainerProvider.containerOf(this);
     try {
       final consumer = super.widget as RearchConsumer;
       return consumer.build(
@@ -181,9 +184,7 @@ class _WidgetSideEffectApiProxyImpl implements WidgetSideEffectApi {
   /// widget and capsule side effects within a single transaction.
   @override
   void runTransaction(void Function() sideEffectTransaction) =>
-      CapsuleContainerProvider.containerOf(
-        manager,
-      ).runTransaction(sideEffectTransaction);
+      manager.container.runTransaction(sideEffectTransaction);
 }
 
 class _WidgetHandleImpl implements WidgetHandle {

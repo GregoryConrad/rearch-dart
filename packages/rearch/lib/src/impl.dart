@@ -40,11 +40,19 @@ class _CapsuleManager extends DataflowGraphNode
     final parentBuildingManager = container._currBuildingManager;
     container._currBuildingManager = this;
     try {
+      final oldDependencies = dependenciesSnapshot;
+
       // Clear dependency relationships as they will be repopulated via `read`
       clearDependencies();
 
       // Build the capsule's new data
       final newData = capsule(_CapsuleHandleImpl(this));
+
+      final detachedDependencies = oldDependencies.difference(
+        dependenciesSnapshot,
+      );
+      container._queueDetachedDependenciesForCleanup(detachedDependencies);
+
       final didChange = !hasBuilt || newData != data;
       data = newData;
       hasBuilt = true;
@@ -56,6 +64,21 @@ class _CapsuleManager extends DataflowGraphNode
 
   @override
   bool get isIdempotent => sideEffectData.isEmpty;
+
+  @override
+  bool disposeIfNoDependents() {
+    final currBuildingManager = container._currBuildingManager;
+    assert(
+      currBuildingManager == null,
+      'You are not allowed to dispose a capsule within an ongoing build! '
+      'This likely happened because you called disposeSelf() during a '
+      'capsule build. '
+      'See here for more: '
+      'https://rearch.gsconrad.com/core/effects#transactions',
+    );
+
+    return super.disposeIfNoDependents();
+  }
 
   @override
   void dispose() {

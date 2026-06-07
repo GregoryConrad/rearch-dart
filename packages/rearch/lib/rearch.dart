@@ -108,6 +108,7 @@ abstract interface class SideEffectApi {
 /// See the documentation for more.
 class CapsuleContainer implements Disposable {
   final _capsules = <_UntypedCapsule, _CapsuleManager>{};
+  final _orphanedNodesToTryDispose = <DataflowGraphNode>{};
 
   /// Non-null indicates we are currently in a transaction,
   /// with the side effect mutations to call in the [List].
@@ -134,12 +135,35 @@ class CapsuleContainer implements Disposable {
     sideEffectTransaction();
 
     if (isRootTxn) {
-      final managersToRebuild = _sideEffectMutationsToCallInTxn!
-          .map((mutation) => mutation())
-          .nonNulls
-          .toSet();
-      DataflowGraphNode.buildNodesAndDependents(managersToRebuild);
-      _sideEffectMutationsToCallInTxn = null;
+      try {
+        final managersToRebuild = _sideEffectMutationsToCallInTxn!
+            .map((mutation) => mutation())
+            .nonNulls
+            .toSet();
+        DataflowGraphNode.buildNodesAndDependents(managersToRebuild);
+        _disposeQueuedOrphans();
+      } finally {
+        _sideEffectMutationsToCallInTxn = null;
+      }
+    }
+  }
+
+  void _queueDetachedDependenciesForCleanup(
+    Iterable<DataflowGraphNode> dependencies,
+  ) {
+    _orphanedNodesToTryDispose.addAll(dependencies);
+  }
+
+  void _disposeQueuedOrphans() {
+    while (_orphanedNodesToTryDispose.isNotEmpty) {
+      final toCheck = _orphanedNodesToTryDispose.toList();
+      _orphanedNodesToTryDispose.clear();
+
+      for (final node in toCheck) {
+        if (node.isIdempotent) {
+          node.disposeIfNoDependents();
+        }
+      }
     }
   }
 

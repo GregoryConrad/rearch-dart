@@ -27,6 +27,14 @@ abstract class DataflowGraphNode implements Disposable {
 
   bool get hasNoDependents => _dependents.isEmpty;
 
+  Set<DataflowGraphNode> get dependenciesSnapshot => {..._dependencies};
+
+  bool disposeIfNoDependents() {
+    if (!hasNoDependents) return false;
+    dispose();
+    return true;
+  }
+
   static void buildNodesAndDependents(Set<DataflowGraphNode> nodes) {
     final buildOrderStack = _createBuildOrderStack(nodes);
     final disposableNodes = _getDisposableNodesFromBuildOrderStack(

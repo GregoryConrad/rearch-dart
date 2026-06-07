@@ -493,14 +493,14 @@ void main() {
     // NOTE: due to a Dart type system quirk (relating only to local variables),
     // this has to be written with `late final` and defined on a new line.
     late final DynamicCapsule<int, BigInt> fibonacciCapsule;
-    fibonacciCapsule = capsule.dynamic((use, int n) {
+    fibonacciCapsule = capsule.dynamic((use, int n, _) {
       return switch (n) {
         _ when n < 0 => throw ArgumentError.value(n),
         0 => BigInt.zero,
         1 => BigInt.one,
         _ => use(fibonacciCapsule[n - 1]) + use(fibonacciCapsule[n - 2]),
       };
-    });
+    }, (_) {});
 
     test('allow correct creation of fibonacci numbers', () {
       expect(

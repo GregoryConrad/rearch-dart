@@ -8,6 +8,7 @@ library;
 
 import 'package:meta/meta.dart';
 import 'package:rearch/rearch.dart';
+import 'package:rearch/src/node.dart';
 
 extension _UseConvenience on SideEffectRegistrar {
   SideEffectRegistrar get use => this;
@@ -45,9 +46,20 @@ extension ExperimentalSideEffects on SideEffectRegistrar {
   /// If what you are trying to do doesn't fit into one of the above categories,
   /// do _not_ use [dynamic]. Instead, write your code in a different way.
   DynamicOrchestrator<Param, Return> dynamic<Param, Return>(
-    Return Function(CapsuleHandle, Param) dyn,
+    Return Function(
+      CapsuleHandle,
+      Param,
+      // Manual disposal is restricted:
+      // - It is only allowed when there are no dependents.
+      // - It is not allowed during any ongoing capsule build.
+      void Function() disposeSelf,
+    )
+    dyn,
+    void Function(Param) onDispose,
   ) {
-    return use.lazyValue(() => DynamicOrchestrator._(dyn));
+    return use.lazyValue(
+      () => DynamicOrchestrator._(dyn, onDispose: onDispose),
+    );
   }
 }
 
@@ -57,16 +69,85 @@ extension ExperimentalSideEffects on SideEffectRegistrar {
 /// There is currently no publicly available API on this class;
 /// instead, use [DynamicCapsuleAccess] to read a dynamic capsule.
 final class DynamicOrchestrator<Param, Return> {
-  DynamicOrchestrator._(this._dyn);
-  final Return Function(CapsuleHandle, Param) _dyn;
+  DynamicOrchestrator._(this._dyn, {void Function(Param)? onDispose})
+    : _onDispose = onDispose;
+  final Return Function(
+    CapsuleHandle,
+    Param,
+    void Function() disposeSelf,
+  )
+  _dyn;
+  final void Function(Param)? _onDispose;
   final Map<Param, Capsule<Return>> _capsules = {};
+  final Map<Param, DataflowGraphNode> _nodes = {};
+  final Set<Param> _didCallOnDispose = {};
 
   Capsule<Return> _get(Param param) {
     return _capsules.putIfAbsent(param, () {
       return (CapsuleHandle handle) {
-        return _dyn(handle, param);
+        final api = handle.api();
+        final node = api as DataflowGraphNode;
+
+        handle.callonce(() {
+          _didCallOnDispose.remove(param);
+          _nodes[param] = node;
+          api.registerDispose(() => _finalizeDisposed(param));
+        });
+
+        void disposeSelf() {
+          if (!dispose(param)) {
+            throw DynamicCapsuleDisposeBlockedError(param);
+          }
+        }
+
+        return _dyn(handle, param, disposeSelf);
       };
     });
+  }
+
+  /// Attempts to manually dispose the dynamic capsule at [param].
+  ///
+  /// Returns true when disposal succeeds (or the capsule was already absent),
+  /// and false when disposal is blocked by existing dependents.
+  bool dispose(Param param) {
+    final capsule = _capsules[param];
+    if (capsule == null) return true;
+
+    final node = _nodes[param];
+    if (node != null) {
+      final didDispose = node.disposeIfNoDependents();
+      if (!didDispose) return false;
+    }
+
+    _finalizeDisposed(param);
+    return true;
+  }
+
+  void _finalizeDisposed(Param param) {
+    _evictParam(param);
+    if (_didCallOnDispose.contains(param)) return;
+    _didCallOnDispose.add(param);
+    _onDispose?.call(param);
+  }
+
+  void _evictParam(Param param) {
+    _capsules.remove(param);
+    _nodes.remove(param);
+  }
+}
+
+/// Thrown when a dynamic capsule manual disposal is blocked by dependents.
+final class DynamicCapsuleDisposeBlockedError<Param> extends Error {
+  /// Creates a blocked-disposal error for [param].
+  DynamicCapsuleDisposeBlockedError(this.param);
+
+  /// The dynamic capsule parameter that failed to dispose.
+  final Param param;
+
+  @override
+  String toString() {
+    return 'DynamicCapsuleDisposeBlockedError: cannot manually dispose '
+        'dynamic capsule with param $param while it still has dependents';
   }
 }
 
@@ -126,9 +207,15 @@ extension DynamicCapsuleCreationConvenience on CapsuleCreationConvenience {
   /// NOTE: I'd recommend specifying the return type under all situations
   /// regardless, as it'll increase code reability.
   DynamicCapsule<Param, Return> dynamic<Param, Return>(
-    Return Function(CapsuleHandle, Param) dyn,
+    Return Function(
+      CapsuleHandle,
+      Param,
+      void Function() disposeSelf,
+    )
+    dyn,
+    void Function(Param) onDispose,
   ) {
-    return (CapsuleHandle use) => use.dynamic(dyn);
+    return (CapsuleHandle use) => use.dynamic(dyn, onDispose);
   }
 }
 

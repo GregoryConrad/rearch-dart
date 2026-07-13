@@ -2,20 +2,31 @@ part of '../rearch.dart';
 
 typedef _UntypedCapsule = Capsule<Object?>;
 
-class _CapsuleManager extends DataflowGraphNode
-    implements SideEffectApi, Disposable {
+abstract class _BuildManager extends DataflowGraphNode
+    implements SideEffectApi {
+  CapsuleContainer get container;
+
+  List<Object?> get sideEffectData;
+
+  R read<R>(Capsule<R> otherCapsule);
+}
+
+class _CapsuleManager extends _BuildManager implements Disposable {
   _CapsuleManager(this.container, this.capsule) {
     buildSelf();
   }
 
+  @override
   final CapsuleContainer container;
   final _UntypedCapsule capsule;
 
   late Object? data;
   bool hasBuilt = false;
-  final sideEffectData = <Object?>[];
+  @override
+  final List<Object?> sideEffectData = <Object?>[];
   final toDispose = <SideEffectApiCallback>{};
 
+  @override
   R read<R>(Capsule<R> otherCapsule) {
     if (otherCapsule == capsule) {
       if (hasBuilt) {
@@ -39,6 +50,7 @@ class _CapsuleManager extends DataflowGraphNode
   bool buildSelf() {
     final parentBuildingManager = container._currBuildingManager;
     container._currBuildingManager = this;
+    container._buildDepth++;
     try {
       // Clear dependency relationships as they will be repopulated via `read`
       clearDependencies();
@@ -50,7 +62,9 @@ class _CapsuleManager extends DataflowGraphNode
       hasBuilt = true;
       return didChange;
     } finally {
+      container._buildDepth--;
       container._currBuildingManager = parentBuildingManager;
+      container._flushChangedNodeNotifications();
     }
   }
 
@@ -112,7 +126,7 @@ class _CapsuleManager extends DataflowGraphNode
 class _CapsuleHandleImpl implements CapsuleHandle {
   _CapsuleHandleImpl(this.manager);
 
-  final _CapsuleManager manager;
+  final _BuildManager manager;
 
   int sideEffectDataIndex = 0;
 

@@ -54,6 +54,31 @@ abstract class DataflowGraphNode implements Disposable {
     }
   }
 
+  static void notifyNodesChanged(Set<DataflowGraphNode> nodes) {
+    final buildOrderStack = _createBuildOrderStack(nodes);
+    final disposableNodes = _getDisposableNodesFromBuildOrderStack(
+      buildOrderStack,
+    );
+    final changedNodes = {...nodes};
+
+    for (final node in buildOrderStack.reversed) {
+      if (nodes.contains(node)) continue;
+
+      final haveDepsChanged = node._dependencies.any(changedNodes.contains);
+      if (!haveDepsChanged) continue;
+
+      if (disposableNodes.contains(node)) {
+        node.dispose();
+        changedNodes.add(node);
+      } else {
+        final didNodeChange = node.buildSelf();
+        if (didNodeChange) {
+          changedNodes.add(node);
+        }
+      }
+    }
+  }
+
   static List<DataflowGraphNode> _createBuildOrderStack(
     Set<DataflowGraphNode> start,
   ) {

@@ -10,6 +10,7 @@ export 'src/types.dart';
 
 part 'src/impl.dart';
 part 'src/capsule_warm_up.dart';
+part 'src/ephemeral_capsule.dart';
 
 /// Represents a disposable object.
 // ignore: one_member_abstracts
@@ -108,18 +109,23 @@ abstract interface class SideEffectApi {
 /// See the documentation for more.
 class CapsuleContainer implements Disposable {
   final _capsules = <_UntypedCapsule, _CapsuleManager>{};
+  final _ephemeralManagers = <DataflowGraphNode>{};
 
   /// Non-null indicates we are currently in a transaction,
   /// with the side effect mutations to call in the [List].
   /// When null, we are not in a transaction and we must make one for rebuilds.
   /// Side effect mutations return their _CapsuleManager when it should
   /// be rebuilt, and null when the side effect state wasn't updated.
-  List<_CapsuleManager? Function()>? _sideEffectMutationsToCallInTxn;
+  List<_BuildManager? Function()>? _sideEffectMutationsToCallInTxn;
+
+  final _changedNodesToNotify = <DataflowGraphNode>{};
+
+  int _buildDepth = 0;
 
   /// The currently building [_CapsuleManager].
   /// Needed so we can check whether a rebuild called within a build is valid;
   /// i.e., whether the rebuild was called within its own capsule's build.
-  _CapsuleManager? _currBuildingManager;
+  _BuildManager? _currBuildingManager;
 
   /// Runs the supplied [sideEffectTransaction] that combines all side effect
   /// state updates into a single container rebuild sweep.
@@ -140,14 +146,31 @@ class CapsuleContainer implements Disposable {
           .toSet();
       DataflowGraphNode.buildNodesAndDependents(managersToRebuild);
       _sideEffectMutationsToCallInTxn = null;
+      _flushChangedNodeNotifications();
+    }
+  }
+
+  void _notifyNodeChanged(DataflowGraphNode node) {
+    if (_buildDepth > 0 || _sideEffectMutationsToCallInTxn != null) {
+      _changedNodesToNotify.add(node);
+      return;
+    }
+
+    DataflowGraphNode.notifyNodesChanged({node});
+  }
+
+  void _flushChangedNodeNotifications() {
+    if (_buildDepth > 0 || _sideEffectMutationsToCallInTxn != null) return;
+
+    while (_changedNodesToNotify.isNotEmpty) {
+      final changedNodes = {..._changedNodesToNotify};
+      _changedNodesToNotify.clear();
+      DataflowGraphNode.notifyNodesChanged(changedNodes);
     }
   }
 
   _CapsuleManager _managerOf(_UntypedCapsule capsule) {
-    return _capsules.putIfAbsent(
-      capsule,
-      () => _CapsuleManager(this, capsule),
-    );
+    return _capsules.putIfAbsent(capsule, () => _CapsuleManager(this, capsule));
   }
 
   /// Reads the current data of the supplied [Capsule],
@@ -222,6 +245,10 @@ class CapsuleContainer implements Disposable {
 
   @override
   void dispose() {
+    for (final manager in _ephemeralManagers.toList()) {
+      manager.dispose();
+    }
+
     // We need toList() to copy the list in order to
     // prevent container modification during iteration
     // (dispose() removes the manager from the container).

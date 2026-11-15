@@ -519,6 +519,19 @@ void main() {
         throwsA(isA<UnsupportedError>()),
       );
     });
+
+    test('when capsule updates again before warm up completes', () async {
+      final container = useContainer();
+      (AsyncValue<int>, void Function(AsyncValue<int>)) stateful(
+        CapsuleHandle use,
+      ) => use.state(const AsyncData(0));
+      AsyncValue<int> intCapsule(CapsuleHandle use) => use(stateful).$1;
+
+      final warmUp = container.warmUp([intCapsule]);
+      container.read(stateful).$2(const AsyncData(1));
+      await warmUp;
+      expect(container.read(intCapsule), equals(const AsyncData(1)));
+    });
   });
 
   group('MockCapsuleContainer', () {

@@ -9,6 +9,10 @@ extension WarmUpCapsuleContainer on CapsuleContainer {
   ) {
     final completer = Completer<()>();
     final dispose = listen((use) {
+      // The listener is only disposed once the future completes (async),
+      // so it may still be called with updates after completion.
+      if (completer.isCompleted) return;
+
       final resolved = capsules.map((capsule) => use(capsule));
 
       if (resolved.every((capsule) => capsule is AsyncData)) {

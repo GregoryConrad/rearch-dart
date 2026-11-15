@@ -111,6 +111,18 @@ void main() {
     expect(states, equals([1, 2, 3, 5, 6, 7]));
   });
 
+  test('listener dispose after container dispose is a no-op', () {
+    final container = CapsuleContainer();
+    var disposeCount = 0;
+    final dispose = container.listen((use) {
+      use.register((api) => api.registerDispose(() => disposeCount++));
+    });
+
+    container.dispose();
+    dispose();
+    expect(disposeCount, equals(1));
+  });
+
   test('listeners cannot trigger rebuilds', () {
     (int, void Function(int)) statefulCapsule(CapsuleHandle use) =>
         use.state(0);

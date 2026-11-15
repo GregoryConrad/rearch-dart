@@ -301,6 +301,27 @@ void main() {
     );
   });
 
+  test('a throwing rebuild does not prevent later rebuilds', () {
+    (int, void Function(int)) stateful(CapsuleHandle use) => use.state(0);
+    int throwsOnOne(CapsuleHandle use) {
+      use.asListener();
+      final (state, _) = use(stateful);
+      if (state == 1) throw UnsupportedError('capsule should throw');
+      return state;
+    }
+
+    final container = useContainer();
+    expect(container.read(throwsOnOne), equals(0));
+    expect(
+      () => container.read(stateful).$2(1),
+      throwsA(isA<UnsupportedError>()),
+    );
+
+    container.read(stateful).$2(2);
+    expect(container.read(stateful).$1, equals(2));
+    expect(container.read(throwsOnOne), equals(2));
+  });
+
   // We use a more sophisticated graph here for a more thorough
   // test of all functionality
   //

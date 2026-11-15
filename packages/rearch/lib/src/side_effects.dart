@@ -183,7 +183,11 @@ extension BuiltinSideEffects on SideEffectRegistrar {
 
     if (dependencies == null ||
         _didDepsListChange(dependencies, oldDependencies)) {
-      getDispose()?.call();
+      // Clear the old dispose before calling it so it only runs once,
+      // even if it throws.
+      final oldDispose = getDispose();
+      setDispose(null);
+      oldDispose?.call();
       setDispose(effect());
     }
   }

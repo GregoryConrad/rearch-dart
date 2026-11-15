@@ -131,15 +131,20 @@ class CapsuleContainer implements Disposable {
     final isRootTxn = _sideEffectMutationsToCallInTxn == null;
     if (isRootTxn) _sideEffectMutationsToCallInTxn = [];
 
-    sideEffectTransaction();
+    try {
+      sideEffectTransaction();
 
-    if (isRootTxn) {
-      final managersToRebuild = _sideEffectMutationsToCallInTxn!
-          .map((mutation) => mutation())
-          .nonNulls
-          .toSet();
-      DataflowGraphNode.buildNodesAndDependents(managersToRebuild);
-      _sideEffectMutationsToCallInTxn = null;
+      if (isRootTxn) {
+        final managersToRebuild = _sideEffectMutationsToCallInTxn!
+            .map((mutation) => mutation())
+            .nonNulls
+            .toSet();
+        DataflowGraphNode.buildNodesAndDependents(managersToRebuild);
+      }
+    } finally {
+      // Always end the root txn, even if something above threw,
+      // so that future transactions are not treated as nested ones.
+      if (isRootTxn) _sideEffectMutationsToCallInTxn = null;
     }
   }
 

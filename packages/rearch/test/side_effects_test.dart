@@ -452,6 +452,28 @@ void main() {
     expect(changedGetter2, isNot(equals(unchangedGetter2)));
   });
 
+  test('use.effect() does not call a throwing cleanup again', () {
+    var cleanupCount = 0;
+    void throwingCleanup() {
+      cleanupCount++;
+      throw UnsupportedError('cleanup should throw');
+    }
+
+    (int, void Function(int)) stateful(CapsuleHandle use) => use.state(0);
+    void effectCapsule(CapsuleHandle use) =>
+        use.effect(() => throwingCleanup, [use(stateful).$1]);
+
+    final container = CapsuleContainer()..read(effectCapsule);
+    expect(
+      () => container.read(stateful).$2(1),
+      throwsA(isA<UnsupportedError>()),
+    );
+    expect(cleanupCount, equals(1));
+
+    expect(container.dispose, returnsNormally);
+    expect(cleanupCount, equals(1));
+  });
+
   group('disposable creates and disposes objects', () {
     test('without dependencies', () {
       var check = 0;

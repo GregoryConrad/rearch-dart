@@ -13,6 +13,7 @@ class _CapsuleManager extends DataflowGraphNode
 
   late Object? data;
   bool hasBuilt = false;
+  bool isDisposed = false;
   final sideEffectData = <Object?>[];
   final toDispose = <SideEffectApiCallback>{};
 
@@ -59,6 +60,11 @@ class _CapsuleManager extends DataflowGraphNode
 
   @override
   void dispose() {
+    // Disposal may be requested more than once (e.g., by a listener's dispose
+    // function after the container itself was disposed).
+    if (isDisposed) return;
+    isDisposed = true;
+
     super.dispose();
     container._capsules.remove(capsule);
     for (final callback in toDispose) {
